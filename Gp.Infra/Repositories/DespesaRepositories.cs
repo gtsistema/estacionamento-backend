@@ -31,7 +31,7 @@ namespace Gp.Infra.Repositories
                         .Where(x => string.IsNullOrEmpty(input.Search) || x.Descricao.ToLower().Contains(input.Search.ToLower())
                                && (!input.DataInicial.HasValue && !input.DataFinal.HasValue || x.DataCriacao.Date <= input.DataInicial && x.DataCriacao.Date >= input.DataFinal)
                                ).OrderByDescending(o => o.Id).ThenByDescending(t => t.DataCriacao)
-                               .ToPagedQuery(input.NumeroPagina, input.TamanhoPagina);
+                               .ToPagedQueryAsync(input.NumeroPagina, input.TamanhoPagina);
         }
     }
 }

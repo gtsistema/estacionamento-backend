@@ -11,9 +11,9 @@ namespace Gp.Domain.Input.Auth
     {
         [Required(ErrorMessage = "Campo obrigatório")]
         [EmailAddress(ErrorMessage = "Formato inválido")]
-        public string Email { get; set; }
+        public string UserName { get; set; }
 
         [Required(ErrorMessage = "Campo obrigatório")]
-        public string Senha { get; set; }
+        public string Password { get; set; }
     }
 }

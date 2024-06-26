@@ -13,5 +13,7 @@ namespace Gp.Domain.Input
         public DateTime? DataFinal { get; set; }
         public int NumeroPagina { get; set; } = 1;
         public int TamanhoPagina { get; set; } = 10;
+        public string Propriedade { get; set; } = "DataCriacao";
+        public string Sort { get; set; } = "asc";
     }
 }

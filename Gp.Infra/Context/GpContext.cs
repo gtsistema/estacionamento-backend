@@ -30,6 +30,7 @@ namespace Gp.Infra.Context
             modelBuilder.Entity<Receita>(new ReceitaMapping().Configure);
             modelBuilder.Entity<ReceitaLancamento>(new ReceitaLancamentoMapping().Configure);
             modelBuilder.Entity<Orcamento>(new OrcamentoMapping().Configure);
+            modelBuilder.Entity<Livro>(new LivroMapping().Configure);
 
         }
 
@@ -38,5 +39,6 @@ namespace Gp.Infra.Context
         public DbSet<Receita> Receita { get; set; }
         public DbSet<ReceitaLancamento> ReceitaLancamento { get; set; }
         public DbSet<Orcamento> Orcamento { get; set; }
+        public DbSet<Livro> Livro { get; set; }
     }
 }

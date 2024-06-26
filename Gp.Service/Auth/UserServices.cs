@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Gp.Domain.Auth;
-using Gp.Domain.Clock;
 using Gp.Domain.Input.Auth;
 using Gp.Domain.Interface.Services.Auth;
 using Gp.Domain.Output;
@@ -40,14 +39,14 @@ namespace Gp.Service.Auth
 
         public async Task<ServicesResult> LoginAsync(LoginInput dto)
         {
-            var result = await _signManager.PasswordSignInAsync(dto.Email, dto.Senha);
+            var result = await _signManager.PasswordSignInAsync(dto.UserName, dto.Password);
 
             if (!result.Succeeded)
             {
                 return new ServicesResult("Login", "Usuário ou senha invalido.");
             }
 
-            var user = await _userManager.FindByEmailAsync(dto.Email);
+            var user = await _userManager.FindByEmailAsync(dto.UserName);
 
             return new ServicesResult(await MontarLoginResponseAsync(user));
         }
@@ -56,8 +55,8 @@ namespace Gp.Service.Auth
         {
             try
             {
-                var user = new ApplicationUser { UserName = dto.Email, Email = dto.Email };
-                var result = await _userManager.CreateAsync(user, dto.Senha);
+                var user = new ApplicationUser { UserName = dto.UserName, Email = dto.UserName };
+                var result = await _userManager.CreateAsync(user, dto.Password);
 
                 if (!result.Succeeded)
                 {
@@ -82,6 +81,7 @@ namespace Gp.Service.Auth
             response.Jwt = GenerateJwt(user, roles);
             return response;
         }
+
         private TokenResponse GenerateJwt(ApplicationUser user, IEnumerable<string> roles)
         {
             var tokenHandler = new JwtSecurityTokenHandler();

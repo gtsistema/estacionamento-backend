@@ -2,12 +2,16 @@
 using Gp.Domain.Clock;
 using Gp.Domain.Extensions.Notifier;
 using Gp.Domain.Interface.Repositories;
+using Gp.Domain.Interface.Repositories.Cursos;
 using Gp.Domain.Interface.Services;
 using Gp.Domain.Interface.Services.Auth;
+using Gp.Domain.Interface.Services.Cursos;
 using Gp.Infra.Repositories;
+using Gp.Infra.Repositories.Cursos;
 using Gp.Infra.Repository;
 using Gp.Service;
 using Gp.Service.Auth;
+using Gp.Service.Cursos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,15 +27,19 @@ namespace Gp.CrossCutting.Dependencies
 
 
             services.AddScoped<IUserServices, UserServices>();
-
             services.AddScoped<IDespesaServices, DespesaServices>();
             services.AddScoped<IReceitaServices, ReceitaServices>();
             services.AddScoped<IOrcamentoServices, OrcamentoServices>();
+
+            // cursos
+            services.AddScoped<ILivroServices, LivroServices>();
+            services.AddScoped<ILivroRepositories, LivroRepositories>();
 
             services.AddScoped(typeof(IBaseRepositories<>), typeof(BaseRepositories<>));
             services.AddScoped<IDespesaRepositories, DespesaRepositories>();
             services.AddScoped<IReceitaRepositories, ReceitaRepositories>();
             services.AddScoped<IOrcamentoRepositories, OrcamentoRepositories>();
+
 
             return services;
         }

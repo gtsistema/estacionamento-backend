@@ -1,11 +1,8 @@
 ﻿using Gp.Domain.Input;
 using Gp.Domain.Input.Auth;
-using Gp.Domain.Interface.Services;
 using Gp.Domain.Interface.Services.Auth;
-using Gp.Domain.Output;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace Gp.Api.Controllers.Auth
 {
@@ -26,7 +23,7 @@ namespace Gp.Api.Controllers.Auth
         {
             var user = await _services.LoginAsync(login);
 
-            return user.Error.Any() ? Unauthorized(user.Error) : Ok(user);
+            return user.Error.Any() ? Unauthorized(user.Error) : Ok(user.Data);
         }
 
         [AllowAnonymous]
@@ -35,7 +32,7 @@ namespace Gp.Api.Controllers.Auth
         {
             var user = await _services.RegisterAsync(login);
 
-            return user.Error.Any() ? BadRequest(user.Error) : Ok(user);
+            return user.Error.Any() ? BadRequest(user.Error) : Ok(user.Data);
         }
     }
 }
