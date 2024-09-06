@@ -94,7 +94,11 @@ namespace Gp.Api
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GenesisX.Integracao.Db v1"));
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Meu API V1");
+                    c.RoutePrefix = "swagger"; // para acessar diretamente em '/'
+                });
             }
 
             app.UseRouting();

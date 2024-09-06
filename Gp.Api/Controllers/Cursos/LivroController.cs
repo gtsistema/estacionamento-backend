@@ -4,7 +4,6 @@ using Gp.Domain.Interface.Services.Cursos;
 using Gp.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 
 namespace Gp.Api.Controllers.Auth
 {
@@ -50,6 +49,14 @@ namespace Gp.Api.Controllers.Auth
             var resultado = await _services.ExcluirAsync(input);
 
             return resultado.Error.Any() ? BadRequest(resultado.Error) : Ok(resultado.Data);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("teste")]
+        public async Task<ActionResult> Obter()
+        {
+            return Ok(await _services.GetallTeste());
+
         }
     }
 }

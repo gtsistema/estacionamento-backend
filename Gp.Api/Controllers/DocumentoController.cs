@@ -1,7 +1,6 @@
 ﻿using Gp.Domain.Input;
 using Gp.Domain.Interface.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace Gp.Api.Controllers
 {

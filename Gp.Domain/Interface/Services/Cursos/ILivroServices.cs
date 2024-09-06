@@ -12,5 +12,7 @@ namespace Gp.Domain.Interface.Services.Cursos
         Task<ServicesResult> ObterAsync(Livro dto);
         Task<ServicesResult> NovoAsync(LivroInput dto);
         Task<ServicesResult> ExcluirAsync(Livro dto);
+
+        Task<IEnumerable<Livro>> GetallTeste();
     }
 }

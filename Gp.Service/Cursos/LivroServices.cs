@@ -9,6 +9,7 @@ using Gp.Domain.Input.Cursos;
 using Gp.Domain.Input;
 using AutoMapper;
 using Gp.Domain.Output.Cursos;
+using System.Collections.Generic;
 
 namespace Gp.Service.Cursos
 {
@@ -81,6 +82,11 @@ namespace Gp.Service.Cursos
             {
                 return new ServicesResult("exception", ex.Message);
             }
+        }
+
+        public async Task<IEnumerable<Livro>> GetallTeste()
+        {
+            return await _repositories.SelectAllAsync();
         }
     }
 }
