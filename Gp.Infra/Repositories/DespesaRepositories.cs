@@ -23,7 +23,7 @@ namespace Gp.Infra.Repositories
             _mapper = mapper;
         }
 
-        public async Task<PagedQuery<Despesa>> GetPageAsync(DespesaFilterInput input)
+        public async Task<PagedResult<Despesa>> GetPageAsync(DespesaFilterInput input)
         {
             return await _dataset
                         .Include(x => x.DespesaLancamentos)
@@ -31,7 +31,7 @@ namespace Gp.Infra.Repositories
                         .Where(x => string.IsNullOrEmpty(input.Search) || x.Descricao.ToLower().Contains(input.Search.ToLower())
                                && (!input.DataInicial.HasValue && !input.DataFinal.HasValue || x.DataCriacao.Date <= input.DataInicial && x.DataCriacao.Date >= input.DataFinal)
                                ).OrderByDescending(o => o.Id).ThenByDescending(t => t.DataCriacao)
-                               .ToPagedQueryAsync(input.NumeroPagina, input.TamanhoPagina);
+                               .GetPaged(input.NumeroPagina, input.TamanhoPagina);
         }
     }
 }

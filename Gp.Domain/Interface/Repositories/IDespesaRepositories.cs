@@ -7,6 +7,6 @@ namespace Gp.Domain.Interface.Repositories
 {
     public interface IDespesaRepositories : IBaseRepositories<Despesa>
     {
-        Task<PagedQuery<Despesa>> GetPageAsync(DespesaFilterInput input);
+        Task<PagedResult<Despesa>> GetPageAsync(DespesaFilterInput input);
     }
 }
