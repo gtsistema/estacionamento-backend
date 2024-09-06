@@ -6,6 +6,6 @@ namespace Gp.Domain.Interface.Repositories.Cursos
 {
     public interface ILivroRepositories : IBaseRepositories<Livro>
     {
-        Task<PagedQuery<Livro>> GetPageAsync(FilterInput input);
+        Task<PagedResult<Livro>> GetPageAsync(FilterInput input);
     }
 }

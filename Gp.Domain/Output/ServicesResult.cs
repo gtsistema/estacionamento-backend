@@ -1,41 +1,57 @@
-﻿namespace Gp.Domain.Output
+﻿using FluentValidation.Results;
+using Gp.Domain.Shared;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Gp.Domain.Output
 {
-    public class ServicesResult
+    public class ServicesResult<T> where T : class
     {
-        public object Data { get; set; }
-        public Dictionary<string, string> Error { get; set; } = new Dictionary<string, string>();
+        protected readonly IErrorApplication _errorApplication;
 
+        protected IList<ValidationFailure> _validation;
 
-        public ServicesResult()
+        public ApplicationResult(IErrorApplication errorApplication)
         {
-
+            _errorApplication = errorApplication;
+            _validation = new List<ValidationFailure>();
         }
 
-        public ServicesResult(Dictionary<string, string> error)
+        public Task<ActionResult> RetornOk(object data, string message = "Operação realizada com sucesso")
         {
-            Error = error;
+            return Task.FromResult(ResponseResult.GetResponse(sucess: true, message, data));
         }
 
-        public ServicesResult(object result)
+        public Task<ActionResult> RetornNo(object data = null, string message = null, int statusCode = 400, string errorCode = null)
         {
-            Data = result;
+            return Task.FromResult(ResponseResult.GetResponse(sucess: false, new string[1] { message }, data, statusCode, errorCode));
         }
 
-        public ServicesResult(string campo, string message)
+        public Task<ActionResult> RetornNo(object data = null, IList<ValidationFailure> message = null, int statusCode = 400, string errorCode = null)
         {
-            AdicionarErro(campo, message);
+            return Task.FromResult(ResponseResult.GetResponse(sucess: false, message, data, statusCode, errorCode));
         }
 
-        public ServicesResult(object data, Dictionary<string, string> error)
+        protected async Task<object> GetObjectPages<Dto>(PagedResult<Dto> result) where Dto : class
         {
-            Data = data;
-            Error = error;
+            return await Task.FromResult(new
+            {
+                PageCount = result.PageCount,
+                Data = result.Results,
+                RowCount = result.RowCount
+            });
         }
 
-        public void AdicionarErro(string campo, string texto)
+        protected object GetObjectPages<Dto>(IQueryable<Dto> result) where Dto : class
         {
-            Error ??= new Dictionary<string, string>();
-            Error.Add(campo, texto);
+            return new
+            {
+                Data = result
+            };
+        }
+
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
         }
     }
 }

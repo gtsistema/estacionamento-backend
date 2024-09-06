@@ -1,32 +1,91 @@
-﻿using Gp.Domain.Models;
+﻿using AutoMapper;
 using Gp.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Linq.Expressions;
+using LinqKit;
 
 namespace Gp.Domain.Extensions
 {
-   
+
     public static class QueryableExtesions
     {
-        public static async Task<PagedQuery<T>> ToPagedQueryAsync<T>(this IOrderedQueryable<T> query, int page, int pageSize)
-                where T : class
+        public static async Task<PagedResult<T>> GetPaged<T>(this IQueryable<T> query, int page, int pageSize) where T : class
         {
-            var result = new PagedQuery<T>
+            PagedResult<T> obj = new PagedResult<T>
             {
-                PaginaAtual = page,
-                TamanhoPagina = pageSize,
+                CurrentPage = page,
+                PageSize = pageSize,
+                RowCount = query.AsNoTracking().Count()
             };
-
-
-            var skip = (page - 1) * pageSize;
-            result.Dados = await query.Skip(skip).Take(pageSize).ToListAsync();
-            result.PaginaTotal = result.Dados.Count();
-
-            return result;
+            double a = (double)obj.RowCount / (double)pageSize;
+            obj.PageCount = (int)Math.Ceiling(a);
+            int count = (page - 1) * pageSize;
+            obj.Results = query.AsNoTracking().Skip(count).Take(pageSize)
+                .ToList();
+            return await Task.FromResult(obj);
         }
 
-        public static async Task<IOrderedQueryable<T>> ToPagedSortAsync<T>(this IQueryable<T> query, string sort, string propertyName)
-                         where T : class
+        public static IQueryable<T> ManyWhere<T>(this IQueryable<T> query, IQueryable<Expression<Func<T, bool>>> predicate)
+        {
+            foreach (Expression<Func<T, bool>> item in predicate)
+            {
+                query = query.Where(item.Expand());
+            }
+
+            return query;
+        }
+
+        public static IEnumerable<T> ManyWhere<T>(this IEnumerable<T> query, IEnumerable<Expression<Func<T, bool>>> predicate)
+        {
+            foreach (Expression<Func<T, bool>> item in predicate)
+            {
+                query = query.AsQueryable().Where(item.Expand());
+            }
+
+            return query;
+        }
+
+        public static IEnumerable<T> ManyOr<T>(this IEnumerable<T> query, string propert, string[] values, string prefix = "x", bool useDefaultPrefix = true, bool encaosuleOr = true)
+        {
+            string text = string.Empty;
+            for (int i = 0; i <= values.Length - 1; i++)
+            {
+                text += $" {prefix}.{propert} == \"{values[i]}\" ||";
+            }
+
+            text = text.Substring(0, text.Length - 2);
+            if (useDefaultPrefix)
+            {
+                text = " " + prefix + "=> " + text;
+            }
+
+            query = query.AsQueryable().Where(GetExpressionByString<T>(encaosuleOr ? (" (" + text + ") ") : text).Expand());
+            return query;
+        }
+
+        public static IEnumerable<T> ManyOrderBy<T>(this IEnumerable<T> query, IEnumerable<OrdernableEntity<T>> predicate) where T : class
+        {
+            foreach (OrdernableEntity<T> item in predicate)
+            {
+                query = (item.Ascending ? query.AsQueryable().OrderBy(item.Expression.Expand()) : query.AsQueryable().OrderByDescending(item.Expression.Expand()));
+            }
+
+            return query;
+        }
+
+        public static IEnumerable<T> ManyOrderBy<T>(this IEnumerable<T> query, IEnumerable<Expression<Func<T, object>>> predicate, bool asc = true)
+        {
+            foreach (Expression<Func<T, object>> item in predicate)
+            {
+                query = (asc ? query.AsQueryable().OrderBy(item.Expand()) : query.AsQueryable().OrderByDescending(item.Expand()));
+            }
+
+            return query;
+        }
+
+        public static async Task<IOrderedQueryable<T>> ToPagedSort<T>(this IQueryable<T> query, string sort, string propertyName)
+                        where T : class
         {
             return await Task.Run(() =>
             {
@@ -44,27 +103,6 @@ namespace Gp.Domain.Extensions
 
                 return (IOrderedQueryable<T>)genericMethod.Invoke(null, new object[] { query, sortExpression });
             });
-        }
-    }
-
-    public static class EnumerableExtesions
-    {
-        public static PagedQuery<T> ToPagedQuery<T>(this IEnumerable<T> query, int page, int pageSize)
-            where T : class
-        {
-            var result = new PagedQuery<T>
-            {
-                PaginaAtual = page,
-                TamanhoPagina = pageSize,
-                PaginaTotal = query.Count()
-            };
-
-
-            var skip = (page - 1) * pageSize;
-            result.Dados = query.Skip(skip).Take(pageSize).ToList();
-            result.PaginaTotal = result.Dados.Count();
-
-            return result;
         }
     }
 }
