@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="R\**" />
+    <Content Remove="R\**" />
+    <EmbeddedResource Remove="R\**" />
+    <None Remove="R\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="6.0.31" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.31" />
@@ -40,7 +47,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="R\" />
+    <Folder Include="RequestHttp\Interface\" />
   </ItemGroup>
 
 </Project>

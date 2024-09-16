@@ -4,7 +4,6 @@ using Gp.Domain.Input;
 using Gp.Domain.Interface.Repositories;
 using Gp.Domain.Interface.Services;
 using Gp.Domain.Models;
-using Gp.Domain.Output;
 
 namespace Gp.Service
 {

@@ -1,16 +1,17 @@
 ﻿using FluentValidation.Results;
+using Gp.Domain.Output;
 using Gp.Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Gp.Domain.Output
+namespace Gp.Service.Extensions
 {
-    public class ServicesResult<T> where T : class
+    public class ServiceResult<T> where T : class
     {
         protected readonly IErrorApplication _errorApplication;
 
         protected IList<ValidationFailure> _validation;
 
-        public ApplicationResult(IErrorApplication errorApplication)
+        public ServiceResult(IErrorApplication errorApplication)
         {
             _errorApplication = errorApplication;
             _validation = new List<ValidationFailure>();

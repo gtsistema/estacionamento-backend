@@ -1,5 +1,4 @@
-﻿using Gp.Domain.Input;
-using Gp.Domain.Input.Auth;
+﻿using Gp.Domain.Input.Auth;
 using Gp.Domain.Interface.Services.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,18 +20,14 @@ namespace Gp.Api.Controllers.Auth
         [HttpPost("login")]
         public async Task<ActionResult> Login(LoginInput login)
         {
-            var user = await _services.LoginAsync(login);
-
-            return user.Error.Any() ? Unauthorized(user.Error) : Ok(user.Data);
+            return await _services.LoginAsync(login);
         }
 
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult> Register(RegisterInput login)
         {
-            var user = await _services.RegisterAsync(login);
-
-            return user.Error.Any() ? BadRequest(user.Error) : Ok(user.Data);
+            return await _services.RegisterAsync(login);
         }
     }
 }
