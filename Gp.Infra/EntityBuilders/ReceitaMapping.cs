@@ -31,7 +31,7 @@ namespace Gp.Infra.EntityBuilders
                     TIpoReceita = TipoReceita.SalarioJean,
                     Descricao = TipoReceita.SalarioJean.GetDescription(),
                     DataCriacao = DateTime.Now,
-                    ValorPrevisto = 3240.00f,
+                    ValorPrevisto = 3240.00m,
                 },
 
                 new Receita
@@ -41,7 +41,7 @@ namespace Gp.Infra.EntityBuilders
                     TIpoReceita = TipoReceita.FlexBenner,
                     Descricao = TipoReceita.FlexBenner.GetDescription(),
                     DataCriacao = DateTime.Now,
-                    ValorPrevisto = 1250.00f,
+                    ValorPrevisto = 1250.00m,
                 },
 
                  new Receita
@@ -51,7 +51,7 @@ namespace Gp.Infra.EntityBuilders
                     TIpoReceita = TipoReceita.Bpc,
                     Descricao = TipoReceita.Bpc.GetDescription(),
                     DataCriacao = DateTime.Now,
-                    ValorPrevisto = 1450.00f,
+                    ValorPrevisto = 1450.00m,
                 },
             });
         }

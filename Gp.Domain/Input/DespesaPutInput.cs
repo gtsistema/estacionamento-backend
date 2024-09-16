@@ -5,7 +5,7 @@ using Gp.Domain.Shared;
 
 namespace Gp.Domain.Input
 {
-    public class DespesaPostInput
+    public class DespesaPutInput
     {
         public int Id { get; set; }
         public string Descricao { get; set; }
@@ -13,16 +13,19 @@ namespace Gp.Domain.Input
         public decimal ValorTotal { get; set; }
         public int OrcamentoId { get; set; }
 
-        public static ValidationResult Validar(DespesaPostInput input)
+        public static ValidationResult Validar(DespesaPutInput input)
         {
-            return new DespesaPostInputValidate().Validate(input);
+            return new DespesaPutInputValidate().Validate(input);
         }
     }
 
-    public class DespesaPostInputValidate : AbstractValidator<DespesaPostInput>
+    public class DespesaPutInputValidate : AbstractValidator<DespesaPutInput>
     {
-        public DespesaPostInputValidate()
+        public DespesaPutInputValidate()
         {
+            RuleFor(x => x.Id)
+            .NotEmpty().WithMessage(string.Format(ResourceDomain.MSG_Campo_Obrigatorio, ResourceDomain.Id));
+
             RuleFor(x => x.Descricao)
             .NotEmpty().WithMessage(string.Format(ResourceDomain.MSG_Campo_Obrigatorio, ResourceDomain.Descricao))
             .MinimumLength(Constantes.Tres).WithMessage((string.Format(ResourceDomain.MSG_Min_Lengh_Campo, ResourceDomain.Descricao, Constantes.Tres)))

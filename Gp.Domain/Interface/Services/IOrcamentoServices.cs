@@ -1,19 +1,14 @@
 ﻿using Gp.Domain.Models;
-using Gp.Domain.Output;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Gp.Domain.Interface.Services
 {
     public interface IOrcamentoServices
     {
-        Task<ServicesResult> GetAsync(int id);
-        Task<ServicesResult> GetAllAsync(Orcamento filter);
-        Task<ServicesResult> PostAsync(Orcamento input);
-        Task<ServicesResult> PutAsync(Orcamento input);
-        Task<ServicesResult> DeleteAsync(int id);
+        Task<ActionResult> GetAsync(int id);
+        Task<ActionResult> GetAllAsync(Orcamento filter);
+        Task<ActionResult> PostAsync(Orcamento input);
+        Task<ActionResult> PutAsync(Orcamento input);
+        Task<ActionResult> DeleteAsync(int id);
     }
 }

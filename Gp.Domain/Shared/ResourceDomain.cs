@@ -1,11 +1,12 @@
-﻿namespace Gp.Service.Resources
+﻿namespace Gp.Domain.Shared
 {
-    public static class Resources
+    public static class ResourceDomain
     {
         #region propriedades
+        public const string Id = "Id";
         public const string Nome = "nome";
         public const string Ativo = "ativo";
-        public const string Intencao = "intenção";
+        public const string Descricao = "Descrição";
         public const string IntencaoDeMissa = "intenção de missa";
         public const string DataInicio = "data inicio";
         public const string DataTermino = "data termino";
@@ -19,6 +20,10 @@
         public const string SelecaoDeDias = "Seleção do Dia";
         public const string DiaDeterminado = "Dia Determinado";
         public const string Produto = "Produto";
+
+        public const string TipoDespesa = "TipoDespesa";
+        public const string ValorTotal = "ValorTotal";
+        public const string OrcamentoId = "OrcamentoId";
 
         #endregion
 

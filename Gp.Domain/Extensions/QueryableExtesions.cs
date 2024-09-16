@@ -45,25 +45,7 @@ namespace Gp.Domain.Extensions
 
             return query;
         }
-
-        public static IEnumerable<T> ManyOr<T>(this IEnumerable<T> query, string propert, string[] values, string prefix = "x", bool useDefaultPrefix = true, bool encaosuleOr = true)
-        {
-            string text = string.Empty;
-            for (int i = 0; i <= values.Length - 1; i++)
-            {
-                text += $" {prefix}.{propert} == \"{values[i]}\" ||";
-            }
-
-            text = text.Substring(0, text.Length - 2);
-            if (useDefaultPrefix)
-            {
-                text = " " + prefix + "=> " + text;
-            }
-
-            query = query.AsQueryable().Where(GetExpressionByString<T>(encaosuleOr ? (" (" + text + ") ") : text).Expand());
-            return query;
-        }
-
+        
         public static IEnumerable<T> ManyOrderBy<T>(this IEnumerable<T> query, IEnumerable<OrdernableEntity<T>> predicate) where T : class
         {
             foreach (OrdernableEntity<T> item in predicate)

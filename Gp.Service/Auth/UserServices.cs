@@ -47,11 +47,11 @@ namespace Gp.Service.Auth
             var result = await _signManager.PasswordSignInAsync(dto.UserName, dto.Password);
 
             if (!result.Succeeded)
-                return await RetornNo(null, Resource.MSG_Usuario_Ou_Senha_Invalida);
+                return await RetornNo(null, Resources.Resources.MSG_Usuario_Ou_Senha_Invalida);
 
             var user = await _userManager.FindByEmailAsync(dto.UserName);
 
-            return await RetornOk(await MontarLoginResponseAsync(user), Resource.MSG_OperacaoRealizadaSucesso);
+            return await RetornOk(await MontarLoginResponseAsync(user), Resources.Resources.MSG_OperacaoRealizadaSucesso);
         }
 
         public async Task<ActionResult> RegisterAsync(RegisterInput dto)
@@ -62,13 +62,13 @@ namespace Gp.Service.Auth
                 var result = await _userManager.CreateAsync(user, dto.Password);
 
                 if (!result.Succeeded)
-                    return await RetornNo(result.Errors[0], Resource.MSG_OperacaoComErro);
+                    return await RetornNo(result.Errors[0], Resources.Resources.MSG_OperacaoComErro);
 
-                return await RetornOk(Resource.MSG_OperacaoRealizadaSucesso);
+                return await RetornOk(Resources.Resources.MSG_OperacaoRealizadaSucesso);
             }
             catch (Exception ex)
             {
-                return await RetornNo(ex.Message, Resource.MSG_OperacaoComErro, statusCode: 500);
+                return await RetornNo(ex.Message, Resources.Resources.MSG_OperacaoComErro, statusCode: 500);
             }
         }
 

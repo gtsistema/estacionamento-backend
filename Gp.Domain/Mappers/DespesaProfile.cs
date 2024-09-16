@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Gp.Domain.Dtos;
+using Gp.Domain.Input;
 using Gp.Domain.Models;
+using Gp.Domain.Output;
 using Gp.Domain.Shared;
 
 namespace Gp.Domain.Mappers
@@ -9,7 +11,11 @@ namespace Gp.Domain.Mappers
     {
         public DespesaProfile()
         {
-            CreateMap<DespesaGetDto, Despesa>().ReverseMap();
+            CreateMap<DespesaGetDto, Despesa>();
+            CreateMap<DespesaPostInput, Despesa>();
+            CreateMap<DespesaPutInput, Despesa>();
+
+            CreateMap<Despesa, DespesaPostOutput>();
         }
     }
 }

@@ -22,33 +22,25 @@ namespace Gp.Api.Controllers.Auth
         [HttpGet("todos")]
         public async Task<ActionResult> ObterTodos(FilterInput input)
         {
-            var resultado = await _services.ObterTodosAsync(input);
-
-            return resultado.Error.Any() ? BadRequest(resultado.Error) : Ok(resultado.Data);
+            return await _services.ObterTodosAsync(input);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult> Obter(Livro input)
         {
-            var resultado = await _services.ObterAsync(input);
-
-            return resultado.Error.Any() ? BadRequest(resultado.Error) : Ok(resultado.Data);
+            return await _services.ObterAsync(input);
         }
 
         [HttpPost]
         public async Task<ActionResult> Novo(LivroInput input)
         {
-            var resultado = await _services.NovoAsync(input);
-
-            return resultado.Error.Any() ? BadRequest(resultado.Error) : Ok(resultado.Data);
+            return await _services.NovoAsync(input);
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> Excluir(Livro input)
         {
-            var resultado = await _services.ExcluirAsync(input);
-
-            return resultado.Error.Any() ? BadRequest(resultado.Error) : Ok(resultado.Data);
+            return await _services.ExcluirAsync(input);
         }
 
         [AllowAnonymous]
@@ -56,7 +48,6 @@ namespace Gp.Api.Controllers.Auth
         public async Task<ActionResult> Obter()
         {
             return Ok(await _services.GetallTeste());
-
         }
     }
 }
