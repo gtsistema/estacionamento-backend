@@ -9,7 +9,7 @@ namespace Gp.Domain.Interface.Services
         Task<ActionResult> GetAsync(int id);
         Task<ActionResult> GetAllAsync(DespesaFilterInput filter);
         Task<ActionResult> PostAsync(DespesaPostInput input);
-        Task<ActionResult> PutAsync(Despesa item);
+        Task<ActionResult> PutAsync(DespesaPutInput item);
         Task<ActionResult> DeleteAsync(int id);
     }
 }

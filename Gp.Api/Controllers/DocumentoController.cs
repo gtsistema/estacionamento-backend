@@ -19,17 +19,13 @@ namespace Gp.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] DespesaFilterInput filter)
         {
-            var resultado = await _services.GetAllAsync(filter);
-
-            return resultado.Data != null ? Ok(resultado) : NoContent();
+            return await _services.GetAllAsync(filter);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var resultado = await _services.GetAsync(id);
-
-            return resultado.Data != null ? Ok(resultado) : NoContent();
+            return await _services.GetAsync(id);
         }
 
         //[HttpPost]

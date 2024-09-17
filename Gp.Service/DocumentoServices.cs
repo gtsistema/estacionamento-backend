@@ -54,7 +54,7 @@ namespace Gp.Service
             return await RetornOk(true);
         }
 
-        public async Task<ActionResult> PutAsync(Despesa item)
+        public async Task<ActionResult> PutAsync(DespesaPutInput item)
         {
             var resultado = _mapper.Map<Despesa>(item);
 
