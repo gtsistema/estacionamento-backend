@@ -6,14 +6,15 @@ using Gp.Domain.Input;
 using Microsoft.AspNetCore.Mvc;
 using Gp.Domain.Output;
 using Gp.Domain.Dtos.Curso;
+using Gp.Service.Extensions;
 
 namespace Gp.Service.Cursos
 {
-    public class LivroServices : ServicesResult<LivroDto>, ILivroServices
+    public class LivroServices : ServiceResult<LivroDto>, ILivroServices
     {
         private readonly ILivroRepositories _repositories;
         public LivroServices(IErrorServices _errorServices,
-                            ILivroRepositories _repositories) : base(_errorServices)
+                            ILivroRepositories repositories) : base(_errorServices)
         {
             _repositories  = repositories;
         }

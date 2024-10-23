@@ -6,10 +6,10 @@ namespace Gp.Domain.Interface.Repositories
     {
         Task<T> InsertAsync(T item);
         Task<T> UpdateAsync(T item);
-        Task<bool> DeleteAsync(int id);
-        Task<T> SelectAsync(int id);
+        Task<bool> DeleteAsync(long id);
+        Task<T> SelectAsync(long id);
         Task<IQueryable<T>> SelectAllAsync();
-        Task<bool> ExistAsync(int id);
-        int LastCodeTable();
+        Task<bool> ExistAsync(long id);
+        long LastCodeTable();
     }
 }

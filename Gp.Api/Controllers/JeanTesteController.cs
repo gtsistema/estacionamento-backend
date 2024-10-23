@@ -17,10 +17,5 @@ namespace Gp.Api.Controllers
             this._services = _services;
         }
 
-        [HttpGet]
-        public async Task<IEnumerable<Livro>> Get()
-        {
-            return  await _services.GetallTeste();
-        }
     }
 }

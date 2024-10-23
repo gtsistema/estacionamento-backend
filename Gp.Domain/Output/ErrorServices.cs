@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Gp.Domain.Output
 {
-    public class ErrorApplication : IErrorServices
+    public class ErrorServices : IErrorServices
     {
         public void GraveErroERetornaOCrodigo(Exception ex, string codigoErro, object obj)
         {

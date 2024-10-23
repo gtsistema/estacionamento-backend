@@ -31,7 +31,7 @@ namespace Gp.Service.Auth
                IOptions<BearerTokenSettings> bearerTokenSettings,
                IMapper mapper,
                GpContext context,
-               IErrorApplication _errorApplication
+               IErrorServices _errorApplication
                ) : base(_errorApplication)
         {
             _bearerTokenSettings = bearerTokenSettings.Value;

@@ -23,7 +23,7 @@ namespace Gp.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetById(int id)
+        public async Task<ActionResult> GetById(long id)
         {
             return await _services.GetAsync(id);
         }
@@ -41,7 +41,7 @@ namespace Gp.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(long id)
         {
             return await _services.DeleteAsync(id);
         }

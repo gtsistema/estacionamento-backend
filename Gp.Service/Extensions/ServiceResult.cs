@@ -11,7 +11,7 @@ namespace Gp.Service.Extensions
 
         protected IList<ValidationFailure> _validation;
 
-        public ServicesResult(IErrorServices errorServices)
+        public ServiceResult(IErrorServices errorServices)
         {
             _errorServices = errorServices;
             _validation = new List<ValidationFailure>();

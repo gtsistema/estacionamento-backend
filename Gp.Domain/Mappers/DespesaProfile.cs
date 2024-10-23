@@ -11,7 +11,7 @@ namespace Gp.Domain.Mappers
     {
         public DespesaProfile()
         {
-            CreateMap<DespesaGetDto, Despesa>();
+            CreateMap<DespesaDto, Despesa>();
             CreateMap<DespesaPostInput, Despesa>();
             CreateMap<DespesaPutInput, Despesa>();
 

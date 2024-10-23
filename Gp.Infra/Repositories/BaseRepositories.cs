@@ -13,7 +13,7 @@ namespace Gp.Infra.Repository
         {
             _context = context;
         }
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(long id)
         {
             try
             {
@@ -34,7 +34,7 @@ namespace Gp.Infra.Repository
             }
         }
 
-        public async Task<bool> ExistAsync(int id)
+        public async Task<bool> ExistAsync(long id)
         {
             return await _context.Set<T>().AsNoTracking().AnyAsync(p => p.Id.Equals(id));
         }
@@ -60,7 +60,7 @@ namespace Gp.Infra.Repository
             return item;
         }
 
-        public async Task<T> SelectAsync(int id)
+        public async Task<T> SelectAsync(long id)
         {
             try
             {
@@ -109,9 +109,9 @@ namespace Gp.Infra.Repository
             return item;
         }
 
-        public int LastCodeTable()
+        public long LastCodeTable()
         {
-            int? codigo = _context.Set<T>().OrderByDescending(s => s.Id).FirstOrDefault()?.Id;
+            long? codigo = _context.Set<T>().OrderByDescending(s => s.Id).FirstOrDefault()?.Id;
 
             return codigo == null ? 1 : codigo.Value + 1;
         }

@@ -54,5 +54,8 @@ namespace Gp.Domain.Models.Enuns
 
         [Display(Name = "Outros")]
         Outros = 16,
+
+        [Display(Name = "Compras Paraguai")]
+        ComprasParaguai = 17,
     }
 }

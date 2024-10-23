@@ -15,7 +15,7 @@ namespace Gp.Service
 
         public OrcamentoServices(IOrcamentoRepositories repo,
                                  IMapper mapper,
-                                 IErrorApplication _errorApplication
+                                 IErrorServices _errorApplication
                                  ) : base(_errorApplication)
         {
             _repo = repo;

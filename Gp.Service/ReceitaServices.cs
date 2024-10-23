@@ -16,7 +16,7 @@ namespace Gp.Service
 
         public ReceitaServices(IReceitaRepositories repo,
                                IMapper mapper,
-                               IErrorApplication _errorApplication
+                               IErrorServices _errorApplication
                                ) : base(_errorApplication)
         {
             _repo = repo;
@@ -27,7 +27,7 @@ namespace Gp.Service
         {
             var resultado = await _repo.SelectAsync(id);
 
-            return await RetornOk(_mapper.Map<DespesaGetDto>(resultado));
+            return await RetornOk(_mapper.Map<Despesa>(resultado));
         }
 
         public async Task<ActionResult> GetAllAsync(Receita item)

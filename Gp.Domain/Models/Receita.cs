@@ -10,7 +10,7 @@ namespace Gp.Domain.Models
         public decimal ValorTotal { get; set; }
         public decimal SaldoRestante => ValorPrevisto - ValorTotal;
         public decimal PorcentagemGasta => ValorTotal / ValorPrevisto * 100;
-        public int OrcamentoId { get; set; }
+        public long OrcamentoId { get; set; }
         public virtual Orcamento Orcamento { get; set; }
         public virtual ICollection<ReceitaLancamento> ReceitaLancamentos { get; set; }
     }

@@ -4,7 +4,7 @@ namespace Gp.Domain.Input
 {
     public class DespesaFilterInput
     {
-        public int? Id { get; set; }
+        public long? Id { get; set; }
         public string Search { get; set; }
         public DateTime? DataInicial { get; set; }
         public DateTime? DataFinal { get; set; }

@@ -4,7 +4,7 @@ namespace Gp.Domain.Output
 {
     public class DespesaPostOutput
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string Descricao { get; set; }
         public TipoDespesa TipoDespesa { get; set; }
         public decimal ValorTotal { get; set; }

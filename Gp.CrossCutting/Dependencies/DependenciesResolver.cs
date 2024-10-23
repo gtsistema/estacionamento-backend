@@ -25,7 +25,7 @@ namespace Gp.CrossCutting.Dependencies
             services.AddScoped<INotifier, Notifier>();
             services.AddScoped<IClock, Clock>();
             services.AddScoped<ICurrentUser, CurrentUser>();
-            services.AddScoped<IErrorApplication, ErrorApplication>();
+            services.AddScoped<IErrorServices, ErrorServices>();
 
 
             services.AddScoped<IUserServices, UserServices>();
