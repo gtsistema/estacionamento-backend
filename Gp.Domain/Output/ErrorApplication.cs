@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Gp.Domain.Output
 {
-    public class ErrorApplication : IErrorApplication
+    public class ErrorApplication : IErrorServices
     {
         public void GraveErroERetornaOCrodigo(Exception ex, string codigoErro, object obj)
         {

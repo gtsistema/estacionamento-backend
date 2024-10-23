@@ -1,11 +1,11 @@
 ﻿using Gp.Domain.Input.Auth;
-using Gp.Domain.Output;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Gp.Domain.Interface.Services.Auth
 {
     public interface IUserServices
     {
-        Task<ServicesResult> LoginAsync(LoginInput dto);
-        Task<ServicesResult> RegisterAsync(RegisterInput dto);
+        Task<ActionResult> LoginAsync(LoginInput dto);
+        Task<ActionResult> RegisterAsync(RegisterInput dto);
     }
 }

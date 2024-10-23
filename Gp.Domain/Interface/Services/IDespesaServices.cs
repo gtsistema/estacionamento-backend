@@ -1,15 +1,16 @@
 ﻿using Gp.Domain.Input;
 using Gp.Domain.Models;
 using Gp.Domain.Output;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Gp.Domain.Interface.Services
 {
     public interface IDespesaServices 
     {
-        Task<ServicesResult> GetAsync(int id);
-        Task<ServicesResult> GetAllAsync(DespesaFilterInput filter);
-        Task<ServicesResult> PostAsync(DespesaPostInput input);
-        Task<ServicesResult> PutAsync(Despesa input);
-        Task<ServicesResult> DeleteAsync(int id);
+        Task<ActionResult> GetAsync(int id);
+        Task<ActionResult> GetAllAsync(DespesaFilterInput filter);
+        Task<ActionResult> PostAsync(DespesaPostInput input);
+        Task<ActionResult> PutAsync(Despesa input);
+        Task<ActionResult> DeleteAsync(int id);
     }
 }

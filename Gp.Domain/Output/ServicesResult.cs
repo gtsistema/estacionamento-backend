@@ -6,13 +6,13 @@ namespace Gp.Domain.Output
 {
     public class ServicesResult<T> where T : class
     {
-        protected readonly IErrorApplication _errorApplication;
+        protected readonly IErrorServices _errorServices;
 
         protected IList<ValidationFailure> _validation;
 
-        public ApplicationResult(IErrorApplication errorApplication)
+        public ServicesResult(IErrorServices errorServices)
         {
-            _errorApplication = errorApplication;
+            _errorServices = errorServices;
             _validation = new List<ValidationFailure>();
         }
 

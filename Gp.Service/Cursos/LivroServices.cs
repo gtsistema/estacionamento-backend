@@ -1,50 +1,48 @@
-﻿using Gp.Domain.Auth;
-using Gp.Domain.Input.Auth;
-using Gp.Domain.Output.Auth;
-using Gp.Domain.Output;
-using Gp.Domain.Interface.Services.Cursos;
+﻿using Gp.Domain.Interface.Services.Cursos;
 using Gp.Domain.Interface.Repositories.Cursos;
 using Gp.Domain.Models;
 using Gp.Domain.Input.Cursos;
 using Gp.Domain.Input;
-using AutoMapper;
-using Gp.Domain.Output.Cursos;
+using Microsoft.AspNetCore.Mvc;
+using Gp.Domain.Output;
+using Gp.Domain.Dtos.Curso;
 
 namespace Gp.Service.Cursos
 {
-    public class LivroServices : ILivroServices
+    public class LivroServices : ServicesResult<LivroDto>, ILivroServices
     {
         private readonly ILivroRepositories _repositories;
-        public LivroServices(ILivroRepositories _repositories)
+        public LivroServices(IErrorServices _errorServices,
+                            ILivroRepositories _repositories) : base(_errorServices)
         {
             this._repositories  = _repositories;
         }
 
-        public async Task<ServicesResult> ObterTodosAsync(FilterInput input)
+        public async Task<ActionResult> ObterTodosAsync(FilterInput input)
         {
             try
             {
-                return new ServicesResult(await _repositories.GetPageAsync(input));
+                return await RetornOk(await _repositories.GetPageAsync(input));
             }
             catch (Exception ex)
             {
-                return new ServicesResult("exception", ex.Message);
+               return await RetornNo(ex.Message, "Erro", statusCode: 500);
             }
         }
 
-        public async Task<ServicesResult> ObterAsync(Livro dto)
+        public async Task<ActionResult> ObterAsync(Livro dto)
         {
             try
             {
-                return new ServicesResult(await _repositories.SelectAsync(dto.Id));
+                return await RetornOk(await _repositories.SelectAsync(dto.Id));
             }
             catch (Exception ex)
             {
-                return new ServicesResult("exception", ex.Message);
+                return await RetornNo(ex.Message, "Erro", statusCode: 500);
             }
         }
 
-        public async Task<ServicesResult> NovoAsync(LivroInput dto)
+        public async Task<ActionResult> NovoAsync(LivroInput dto)
         {
             try
             {
@@ -56,30 +54,30 @@ namespace Gp.Service.Cursos
                     Valor = dto.Valor
                 };
 
-                return new ServicesResult(await _repositories.InsertAsync(livro));
+                return await RetornOk(await _repositories.InsertAsync(livro));
             }
 
             catch (Exception ex)
             {
-                return new ServicesResult("exception", ex.Message);
+                return await RetornNo(ex.Message, "Erro", statusCode: 500);
             }
         }
 
-        public async Task<ServicesResult> ExcluirAsync(Livro dto)
+        public async Task<ActionResult> ExcluirAsync(Livro dto)
         {
             try
             {
                 if(!await _repositories.ExistAsync(dto.Id))
                 {
-                    return new ServicesResult("ID", "Livro não encontrado!");
+                    return await RetornNo("ID", "Livro não encontrado!");
                 }
 
-                return new ServicesResult(await _repositories.DeleteAsync(dto.Id));
+                return await RetornOk(await _repositories.DeleteAsync(dto.Id));
             }
 
             catch (Exception ex)
             {
-                return new ServicesResult("exception", ex.Message);
+                return await RetornNo(ex.Message, "Erro", statusCode: 500);
             }
         }
     }
