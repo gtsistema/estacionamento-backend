@@ -40,7 +40,7 @@ namespace Gp.Service
 
         public async Task<ActionResult> PostAsync(DespesaPostInput input)
         {
-            var validations = DespesaPostInput.Validar(input);
+            var validacao = DespesaPostInput.Validar(input);
 
             if (!validations.IsValid)
             {
@@ -53,9 +53,14 @@ namespace Gp.Service
 
         public async Task<ActionResult> PutAsync(Despesa item)
         {
-            var resultado = _mapper.Map<Despesa>(item);
+            var validacao = DespesaPutInput.Validar(input);
 
-            return new ActionResult(await _repo.UpdateAsync(resultado));
+            if (!validacao.IsValid)
+                return await RetornNo(false, validacao.Errors);
+
+            var resultado = _mapper.Map<Despesa>(input);
+
+            return new ServicesResult(await _repo.UpdateAsync(resultado));
         }
 
         public async Task<ActionResult> DeleteAsync(int id)

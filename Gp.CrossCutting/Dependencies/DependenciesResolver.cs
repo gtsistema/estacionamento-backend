@@ -6,6 +6,7 @@ using Gp.Domain.Interface.Repositories.Cursos;
 using Gp.Domain.Interface.Services;
 using Gp.Domain.Interface.Services.Auth;
 using Gp.Domain.Interface.Services.Cursos;
+using Gp.Domain.Output;
 using Gp.Infra.Repositories;
 using Gp.Infra.Repositories.Cursos;
 using Gp.Infra.Repository;
@@ -24,6 +25,7 @@ namespace Gp.CrossCutting.Dependencies
             services.AddScoped<INotifier, Notifier>();
             services.AddScoped<IClock, Clock>();
             services.AddScoped<ICurrentUser, CurrentUser>();
+            services.AddScoped<IErrorApplication, ErrorApplication>();
 
 
             services.AddScoped<IUserServices, UserServices>();
@@ -40,7 +42,7 @@ namespace Gp.CrossCutting.Dependencies
             services.AddScoped<IReceitaRepositories, ReceitaRepositories>();
             services.AddScoped<IOrcamentoRepositories, OrcamentoRepositories>();
 
-
+            
             return services;
         }
     }

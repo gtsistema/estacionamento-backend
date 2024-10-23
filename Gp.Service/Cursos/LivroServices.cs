@@ -15,7 +15,7 @@ namespace Gp.Service.Cursos
         public LivroServices(IErrorServices _errorServices,
                             ILivroRepositories _repositories) : base(_errorServices)
         {
-            this._repositories  = _repositories;
+            _repositories  = repositories;
         }
 
         public async Task<ActionResult> ObterTodosAsync(FilterInput input)

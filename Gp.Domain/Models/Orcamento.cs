@@ -8,32 +8,32 @@ namespace Gp.Domain.Models
         public string Descricao { get; set; }
         public MesDoAno? MesDoAno { get; set; }
         public int Ano { get; set; }
-        public float ValorTotalDespesas { get; set; }
-        public float ValorTotalReceitas { get; set; }
+        public decimal ValorTotalDespesas { get; set; }
+        public decimal ValorTotalReceitas { get; set; }
         public virtual ICollection<Despesa> Despesas { get; set; }
         public virtual ICollection<Receita> Receitas { get; set; }
 
-        public float CalcularValorRestante()
+        public decimal CalcularValorRestante()
         {
             return ValorTotalReceitas - ValorTotalDespesas;
         }
 
-        public float CalcularPorcentagemGastaDespesas()
+        public decimal CalcularPorcentagemGastaDespesas()
         {
             return ValorTotalDespesas / (ValorTotalDespesas + ValorTotalReceitas) * 100;
         }
 
-        public float CalcularPorcentagemGastaReceitas()
+        public decimal CalcularPorcentagemGastaReceitas()
         {
             return ValorTotalReceitas / (ValorTotalDespesas + ValorTotalReceitas) * 100;
         }
 
-        public float CalcularValorTotalFaltaGastar()
+        public decimal CalcularValorTotalFaltaGastar()
         {
             return ValorTotalReceitas - ValorTotalDespesas;
         }
 
-        public float CalcularValorFaltaParaReceitas()
+        public decimal CalcularValorFaltaParaReceitas()
         {
             return ValorTotalReceitas - ValorTotalDespesas;
         }

@@ -1,7 +1,6 @@
 ﻿using Gp.Domain.Input;
 using Gp.Domain.Models;
 using Gp.Domain.Output;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Gp.Domain.Interface.Services
 {

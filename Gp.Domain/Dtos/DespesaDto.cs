@@ -8,9 +8,9 @@ namespace Gp.Domain.Dtos
     {
         public TipoDespesa TipoDespesa { get; set; }
         public string Descricao => TipoDespesa.GetDescription();
-        public float ValorPrevisto { get; set; }
-        public float ValorTotal { get; set; }
-        public float SaldoRestante => ValorPrevisto - ValorTotal;
-        public float PorcentagemGasta => ValorTotal / ValorPrevisto * 100;
+        public decimal ValorPrevisto { get; set; }
+        public decimal ValorTotal { get; set; }
+        public decimal SaldoRestante => ValorPrevisto - ValorTotal;
+        public decimal PorcentagemGasta => ValorTotal / ValorPrevisto * 100;
     }
 }

@@ -5,7 +5,10 @@ using Gp.Domain.Interface.Services.Auth;
 using Gp.Domain.Output;
 using Gp.Domain.Output.Auth;
 using Gp.Infra.Context;
+using Gp.Service.Extensions;
+using Gp.Service.Resources;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -13,7 +16,7 @@ using System.Text;
 
 namespace Gp.Service.Auth
 {
-    public class UserServices : IUserServices
+    public class UserServices : ServiceResult<ApplicationUser>, IUserServices
     {
         private readonly IApplicationUserManager _userManager;
         private readonly IApplicationSignManager _signManager;
@@ -27,7 +30,9 @@ namespace Gp.Service.Auth
                IApplicationSignManager signManager, ICurrentUser currentUser,
                IOptions<BearerTokenSettings> bearerTokenSettings,
                IMapper mapper,
-               GpContext context)
+               GpContext context,
+               IErrorApplication _errorApplication
+               ) : base(_errorApplication)
         {
             _bearerTokenSettings = bearerTokenSettings.Value;
             _userManager = userManager;
@@ -37,21 +42,19 @@ namespace Gp.Service.Auth
             _context = context;
         }
 
-        public async Task<ServicesResult> LoginAsync(LoginInput dto)
+        public async Task<ActionResult> LoginAsync(LoginInput dto)
         {
             var result = await _signManager.PasswordSignInAsync(dto.UserName, dto.Password);
 
             if (!result.Succeeded)
-            {
-                return new ServicesResult("Login", "Usuário ou senha invalido.");
-            }
+                return await RetornNo(null, Resources.Resources.MSG_Usuario_Ou_Senha_Invalida);
 
             var user = await _userManager.FindByEmailAsync(dto.UserName);
 
-            return new ServicesResult(await MontarLoginResponseAsync(user));
+            return await RetornOk(await MontarLoginResponseAsync(user), Resources.Resources.MSG_OperacaoRealizadaSucesso);
         }
 
-        public async Task<ServicesResult> RegisterAsync(RegisterInput dto)
+        public async Task<ActionResult> RegisterAsync(RegisterInput dto)
         {
             try
             {
@@ -59,17 +62,14 @@ namespace Gp.Service.Auth
                 var result = await _userManager.CreateAsync(user, dto.Password);
 
                 if (!result.Succeeded)
-                {
-                    return new ServicesResult("Register", result.Errors[0]);
-                }
+                    return await RetornNo(result.Errors[0], Resources.Resources.MSG_OperacaoComErro);
 
-                return new ServicesResult("Usuário registrado com sucesso.");
+                return await RetornOk(Resources.Resources.MSG_OperacaoRealizadaSucesso);
             }
             catch (Exception ex)
             {
-                return new ServicesResult("exception",ex.Message);
+                return await RetornNo(ex.Message, Resources.Resources.MSG_OperacaoComErro, statusCode: 500);
             }
-           
         }
 
         private async Task<LoginOutput> MontarLoginResponseAsync(ApplicationUser user)

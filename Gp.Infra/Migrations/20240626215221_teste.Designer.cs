@@ -4,6 +4,7 @@ using Gp.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gp.Infra.Migrations
 {
     [DbContext(typeof(GpContext))]
-    partial class GpContextModelSnapshot : ModelSnapshot
+    [Migration("20240626215221_teste")]
+    partial class teste
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -150,7 +152,7 @@ namespace Gp.Infra.Migrations
                         new
                         {
                             Id = 1,
-                            DataCriacao = new DateTime(2024, 6, 28, 9, 52, 46, 889, DateTimeKind.Local).AddTicks(1690),
+                            DataCriacao = new DateTime(2024, 6, 26, 18, 52, 20, 646, DateTimeKind.Local).AddTicks(8926),
                             Descricao = "Gás",
                             OrcamentoId = 2,
                             TipoDespesa = 2,
@@ -160,7 +162,7 @@ namespace Gp.Infra.Migrations
                         new
                         {
                             Id = 2,
-                            DataCriacao = new DateTime(2024, 6, 28, 9, 52, 46, 889, DateTimeKind.Local).AddTicks(1712),
+                            DataCriacao = new DateTime(2024, 6, 26, 18, 52, 20, 646, DateTimeKind.Local).AddTicks(8945),
                             Descricao = "Aluguel",
                             OrcamentoId = 2,
                             TipoDespesa = 4,
@@ -170,7 +172,7 @@ namespace Gp.Infra.Migrations
                         new
                         {
                             Id = 3,
-                            DataCriacao = new DateTime(2024, 6, 28, 9, 52, 46, 889, DateTimeKind.Local).AddTicks(1724),
+                            DataCriacao = new DateTime(2024, 6, 26, 18, 52, 20, 646, DateTimeKind.Local).AddTicks(8956),
                             Descricao = "Combustivel",
                             OrcamentoId = 2,
                             TipoDespesa = 14,
@@ -180,7 +182,7 @@ namespace Gp.Infra.Migrations
                         new
                         {
                             Id = 4,
-                            DataCriacao = new DateTime(2024, 6, 28, 9, 52, 46, 889, DateTimeKind.Local).AddTicks(1736),
+                            DataCriacao = new DateTime(2024, 6, 26, 18, 52, 20, 646, DateTimeKind.Local).AddTicks(8965),
                             Descricao = "Remedios",
                             OrcamentoId = 2,
                             TipoDespesa = 9,
@@ -190,7 +192,7 @@ namespace Gp.Infra.Migrations
                         new
                         {
                             Id = 5,
-                            DataCriacao = new DateTime(2024, 6, 28, 9, 52, 46, 889, DateTimeKind.Local).AddTicks(1744),
+                            DataCriacao = new DateTime(2024, 6, 26, 18, 52, 20, 646, DateTimeKind.Local).AddTicks(8971),
                             Descricao = "Luz",
                             OrcamentoId = 2,
                             TipoDespesa = 1,
@@ -200,7 +202,7 @@ namespace Gp.Infra.Migrations
                         new
                         {
                             Id = 6,
-                            DataCriacao = new DateTime(2024, 6, 28, 9, 52, 46, 889, DateTimeKind.Local).AddTicks(1753),
+                            DataCriacao = new DateTime(2024, 6, 26, 18, 52, 20, 646, DateTimeKind.Local).AddTicks(8979),
                             Descricao = "CartaoCredito",
                             OrcamentoId = 2,
                             TipoDespesa = 15,
@@ -210,7 +212,7 @@ namespace Gp.Infra.Migrations
                         new
                         {
                             Id = 7,
-                            DataCriacao = new DateTime(2024, 6, 28, 9, 52, 46, 889, DateTimeKind.Local).AddTicks(1761),
+                            DataCriacao = new DateTime(2024, 6, 26, 18, 52, 20, 646, DateTimeKind.Local).AddTicks(8987),
                             Descricao = "Alimentacao",
                             OrcamentoId = 2,
                             TipoDespesa = 13,
@@ -220,7 +222,7 @@ namespace Gp.Infra.Migrations
                         new
                         {
                             Id = 8,
-                            DataCriacao = new DateTime(2024, 6, 28, 9, 52, 46, 889, DateTimeKind.Local).AddTicks(1771),
+                            DataCriacao = new DateTime(2024, 6, 26, 18, 52, 20, 646, DateTimeKind.Local).AddTicks(8993),
                             Descricao = "Condominio",
                             OrcamentoId = 2,
                             TipoDespesa = 5,
@@ -331,7 +333,7 @@ namespace Gp.Infra.Migrations
                         {
                             Id = 1,
                             Ano = 2024,
-                            DataCriacao = new DateTime(2024, 6, 28, 9, 52, 46, 889, DateTimeKind.Local).AddTicks(5389),
+                            DataCriacao = new DateTime(2024, 6, 26, 18, 52, 20, 647, DateTimeKind.Local).AddTicks(1754),
                             Descricao = "Viagem Cuiabá Férias",
                             MesDoAno = 7,
                             ValorTotalDespesas = 0f,
@@ -341,7 +343,7 @@ namespace Gp.Infra.Migrations
                         {
                             Id = 2,
                             Ano = 2024,
-                            DataCriacao = new DateTime(2024, 6, 28, 9, 52, 46, 889, DateTimeKind.Local).AddTicks(5394),
+                            DataCriacao = new DateTime(2024, 6, 26, 18, 52, 20, 647, DateTimeKind.Local).AddTicks(1759),
                             Descricao = "Despesa Mensal",
                             MesDoAno = 5,
                             ValorTotalDespesas = 0f,
@@ -388,7 +390,7 @@ namespace Gp.Infra.Migrations
                         new
                         {
                             Id = 1,
-                            DataCriacao = new DateTime(2024, 6, 28, 9, 52, 46, 889, DateTimeKind.Local).AddTicks(3828),
+                            DataCriacao = new DateTime(2024, 6, 26, 18, 52, 20, 647, DateTimeKind.Local).AddTicks(751),
                             Descricao = "SalarioJean",
                             OrcamentoId = 2,
                             TIpoReceita = 1,
@@ -398,7 +400,7 @@ namespace Gp.Infra.Migrations
                         new
                         {
                             Id = 2,
-                            DataCriacao = new DateTime(2024, 6, 28, 9, 52, 46, 889, DateTimeKind.Local).AddTicks(3840),
+                            DataCriacao = new DateTime(2024, 6, 26, 18, 52, 20, 647, DateTimeKind.Local).AddTicks(764),
                             Descricao = "FlexBenner",
                             OrcamentoId = 2,
                             TIpoReceita = 6,
@@ -408,7 +410,7 @@ namespace Gp.Infra.Migrations
                         new
                         {
                             Id = 3,
-                            DataCriacao = new DateTime(2024, 6, 28, 9, 52, 46, 889, DateTimeKind.Local).AddTicks(3848),
+                            DataCriacao = new DateTime(2024, 6, 26, 18, 52, 20, 647, DateTimeKind.Local).AddTicks(769),
                             Descricao = "Bpc",
                             OrcamentoId = 2,
                             TIpoReceita = 2,

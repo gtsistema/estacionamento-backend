@@ -1,7 +1,6 @@
 ﻿using Gp.Domain.Input;
 using Gp.Domain.Interface.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace Gp.Api.Controllers
 {
@@ -17,43 +16,34 @@ namespace Gp.Api.Controllers
             this._services = _services;
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetAll([FromQuery] DespesaFilterInput filter)
-        //{
-        //    var resultado = await _services.GetAllAsync(filter);
+        [HttpGet]
+        public async Task<ActionResult> GetAll([FromQuery] DespesaFilterInput filter)
+        {
+            return await _services.GetAllAsync(filter);
+        }
 
-        //    return resultado.Data != null ? Ok(resultado) : NoContent();
-        //}
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetById(int id)
+        {
+            return await _services.GetAsync(id);
+        }
 
-        //[HttpGet("{id}")]
-        //public async Task<IActionResult> GetById(int id)
-        //{
-        //    var resultado = await _services.GetAsync(id);
+        [HttpPost]
+        public async Task<ActionResult> Create([FromBody] DespesaPostInput product)
+        {
+            return await _services.PostAsync(product);
+        }
 
-        //    return resultado.Data != null ? Ok(resultado) : NoContent();
-        //}
+        [HttpPut]
+        public async Task<ActionResult> Update([FromBody]DespesaPutInput input)
+        {
+            return await _services.PutAsync(input);
+        }
 
-        //[HttpPost]
-        //public ActionResult<DespesaGetInput> Create(DespesaGetInput product)
-        //{
-        //    product.Id = _products.Count + 1;
-        //    _products.Add(product);
-        //    return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
-        //}
-
-        //[HttpPut("{id}")]
-        //public IActionResult Update(int id, DespesaGetInput product)
-        //{
-        //    var existingProduct = _products.Find(p => p.Id == id);
-
-        //    return result.Error.Any() ? BadRequest(result) : Ok(result);
-        //}
-
-        //[HttpDelete("{id}")]
-        //public IActionResult Delete(int id)
-        //{
-        //    return result.Error.Any() ? BadRequest(result) : Ok(result);
-
-        //}
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            return await _services.DeleteAsync(id);
+        }
     }
 }

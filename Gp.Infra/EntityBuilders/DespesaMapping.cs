@@ -31,7 +31,7 @@ namespace Gp.Infra.EntityBuilders
                     TipoDespesa = TipoDespesa.Gás,
                     Descricao = TipoDespesa.Gás.GetDescription(),
                     DataCriacao = DateTime.Now,
-                    ValorPrevisto = 43.50f,
+                    ValorPrevisto = 43.50m,
                 },
 
                 new Despesa
@@ -41,7 +41,7 @@ namespace Gp.Infra.EntityBuilders
                     TipoDespesa = TipoDespesa.Aluguel,
                     Descricao = TipoDespesa.Aluguel.GetDescription(),
                     DataCriacao = DateTime.Now,
-                    ValorPrevisto = 1250.00f,
+                    ValorPrevisto = 1250.00m,
                 },
 
                  new Despesa
@@ -51,7 +51,7 @@ namespace Gp.Infra.EntityBuilders
                     TipoDespesa = TipoDespesa.Combustivel,
                     Descricao = TipoDespesa.Combustivel.GetDescription(),
                     DataCriacao = DateTime.Now,
-                    ValorPrevisto = 500.00f,
+                    ValorPrevisto = 500.00m,
                 },
 
                 new Despesa
@@ -61,7 +61,7 @@ namespace Gp.Infra.EntityBuilders
                     TipoDespesa = TipoDespesa.Remedios,
                     Descricao = TipoDespesa.Remedios.GetDescription(),
                     DataCriacao = DateTime.Now,
-                    ValorPrevisto = 150.00f,
+                    ValorPrevisto = 150.00m,
                 },
 
                 new Despesa
@@ -71,7 +71,7 @@ namespace Gp.Infra.EntityBuilders
                     TipoDespesa = TipoDespesa.Luz,
                     Descricao = TipoDespesa.Luz.GetDescription(),
                     DataCriacao = DateTime.Now,
-                    ValorPrevisto = 260.00f,
+                    ValorPrevisto = 260.00m,
                 },
 
                 new Despesa
@@ -81,7 +81,7 @@ namespace Gp.Infra.EntityBuilders
                     TipoDespesa = TipoDespesa.CartaoCredito,
                     Descricao = TipoDespesa.CartaoCredito.GetDescription(),
                     DataCriacao = DateTime.Now,
-                    ValorPrevisto = 1300.00f,
+                    ValorPrevisto = 1300.00m,
                 },
 
                 new Despesa
@@ -91,7 +91,7 @@ namespace Gp.Infra.EntityBuilders
                     TipoDespesa = TipoDespesa.Alimentacao,
                     Descricao = TipoDespesa.Alimentacao.GetDescription(),
                     DataCriacao = DateTime.Now,
-                    ValorPrevisto = 1000.00f,
+                    ValorPrevisto = 1000.00m,
                 },
 
                 new Despesa
@@ -101,7 +101,7 @@ namespace Gp.Infra.EntityBuilders
                     TipoDespesa = TipoDespesa.Condominio,
                     Descricao = TipoDespesa.Condominio.GetDescription(),
                     DataCriacao = DateTime.Now,
-                    ValorPrevisto = 450.00f,
+                    ValorPrevisto = 450.00m,
                 },
 
             });

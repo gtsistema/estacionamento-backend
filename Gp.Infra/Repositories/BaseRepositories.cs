@@ -36,7 +36,7 @@ namespace Gp.Infra.Repository
 
         public async Task<bool> ExistAsync(int id)
         {
-            return await _context.Set<T>().AnyAsync(p => p.Id.Equals(id));
+            return await _context.Set<T>().AsNoTracking().AnyAsync(p => p.Id.Equals(id));
         }
 
         public async Task<T> InsertAsync(T item)
@@ -64,7 +64,7 @@ namespace Gp.Infra.Repository
         {
             try
             {
-                return await _context.Set<T>().FirstOrDefaultAsync(p => p.Id.Equals(id));
+                return await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(p => p.Id.Equals(id));
             }
             catch (DbUpdateException ex)
             {
@@ -76,7 +76,7 @@ namespace Gp.Infra.Repository
         {
             try
             {
-                return Task.FromResult(_context.Set<T>().AsQueryable());
+                return Task.FromResult(_context.Set<T>().AsNoTracking().AsQueryable());
             }
             catch (DbUpdateException ex)
             {

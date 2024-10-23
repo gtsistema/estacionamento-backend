@@ -1,13 +1,9 @@
 ﻿using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Gp.Domain.Output
+namespace Gp.Service.Extensions
 {
     public static class ResponseResult
     {
