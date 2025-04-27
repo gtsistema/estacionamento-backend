@@ -10,7 +10,7 @@ namespace Gp.Domain.Dtos
         public string Descricao => TipoDespesa.GetDescription();
         public decimal ValorPrevisto { get; set; }
         public decimal ValorTotal { get; set; }
-        public decimal SaldoRestante => ValorPrevisto - ValorTotal;
-        public decimal PorcentagemGasta => ValorTotal / ValorPrevisto * 100;
+        public decimal SaldoRestante { get; set; }
+        public decimal PorcentagemPaga { get; set; }
     }
 }

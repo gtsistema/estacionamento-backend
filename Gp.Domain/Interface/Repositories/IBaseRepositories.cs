@@ -11,5 +11,8 @@ namespace Gp.Domain.Interface.Repositories
         Task<IQueryable<T>> SelectAllAsync();
         Task<bool> ExistAsync(long id);
         long LastCodeTable();
+        Task<T> InsertNoSaveChangesAsync(T item);
+        Task SaveChangesAsync();
+        Task<long?> GetIdByDescricaoAsync(string descricao);
     }
 }

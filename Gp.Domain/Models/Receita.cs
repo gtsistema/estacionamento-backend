@@ -5,7 +5,6 @@ namespace Gp.Domain.Models
     public class Receita : Base
     {
         public TipoReceita TIpoReceita { get; set; }
-        public string Descricao { get; set; }
         public decimal ValorPrevisto { get; set; }
         public decimal ValorTotal { get; set; }
         public decimal SaldoRestante => ValorPrevisto - ValorTotal;

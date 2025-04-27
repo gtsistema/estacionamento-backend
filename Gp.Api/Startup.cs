@@ -22,42 +22,44 @@ namespace Gp.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            ResolveMiniProfile(services);
-
-            services.AddHealthChecks();
-            services.AddCors()
-                    .AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
-                    .ResolveData(Configuration)
-                    .ResolveInjectDependencies(Configuration)
-                    .AddIdentityConfiguration(Configuration);
-
-            services.AddSession(options =>
+            try
             {
-                options.IdleTimeout = TimeSpan.FromMinutes(30);
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
-            });
+                ResolveMiniProfile(services);
 
-            services.AddControllersWithViews();
+                services.AddHealthChecks();
+                services.AddCors()
+                        .AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
+                        .ResolveData(Configuration)
+                        .ResolveInjectDependencies(Configuration)
+                        .AddIdentityConfiguration(Configuration);
 
-            services.AddControllers().AddNewtonsoftJson(options =>
-                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Gerenciamento Pessoal", Version = "v1" });
-
-                // Adicionando configuração para autenticação JWT
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                services.AddSession(options =>
                 {
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer",
-                    BearerFormat = "JWT",
-                    In = ParameterLocation.Header,
-                    Description = "Insira o token JWT desta forma: Bearer {seu token}"
+                    options.IdleTimeout = TimeSpan.FromMinutes(30);
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.IsEssential = true;
                 });
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+
+                services.AddControllersWithViews();
+
+                services.AddControllers().AddNewtonsoftJson(options =>
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+                services.AddSwaggerGen(c =>
+                {
+                    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Gerenciamento Pessoal", Version = "v1" });
+
+                    // Adicionando configuração para autenticação JWT
+                    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                    {
+                        Name = "Authorization",
+                        Type = SecuritySchemeType.ApiKey,
+                        Scheme = "Bearer",
+                        BearerFormat = "JWT",
+                        In = ParameterLocation.Header,
+                        Description = "Insira o token JWT desta forma: Bearer {seu token}"
+                    });
+                    c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
                         new OpenApiSecurityScheme
@@ -71,7 +73,13 @@ namespace Gp.Api
                         Array.Empty<string>()
                     }
                 });
-            });
+                });
+            }
+            catch (Exception ex) 
+            {
+                var teste = ex.Message;
+            }
+          
         }
         private void ResolveMiniProfile(IServiceCollection services)
         {

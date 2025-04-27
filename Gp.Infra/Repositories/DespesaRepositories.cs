@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Gp.Domain.Dtos;
 using Gp.Domain.Extensions;
-using Gp.Domain.Input;
+using Gp.Domain.Input.Despesa;
 using Gp.Domain.Interface.Repositories;
 using Gp.Domain.Models;
 using Gp.Domain.Shared;
@@ -32,6 +32,15 @@ namespace Gp.Infra.Repositories
                                && (!input.DataInicial.HasValue && !input.DataFinal.HasValue || x.DataCriacao.Date <= input.DataInicial && x.DataCriacao.Date >= input.DataFinal)
                                ).OrderByDescending(o => o.Id).ThenByDescending(t => t.DataCriacao)
                                .GetPaged(input.NumeroPagina, input.TamanhoPagina);
+        }
+
+        public async Task AtualizarSaldoPagoAsync(Despesa despesa, DespesaLancamento despesaLancamento)
+        {
+            despesa.ValorTotal += despesaLancamento.ValorTotal;
+            despesa.SaldoRestante = despesa.ValorPrevisto - despesa.ValorTotal;
+            despesa.PorcentagemPaga = despesa.ValorTotal / despesa.ValorPrevisto * 100;
+
+            await UpdateAsync(despesa);
         }
     }
 }

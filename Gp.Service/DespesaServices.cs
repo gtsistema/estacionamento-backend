@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Gp.Domain.Dtos;
-using Gp.Domain.Dtos.Curso;
-using Gp.Domain.Input;
+using Gp.Domain.Extensions;
+using Gp.Domain.Input.Despesa;
 using Gp.Domain.Interface.Repositories;
 using Gp.Domain.Interface.Services;
 using Gp.Domain.Models;
@@ -14,13 +14,15 @@ namespace Gp.Service
     public class DespesaServices : ServiceResult<DespesaDto>, IDespesaServices
     {
         private readonly IDespesaRepositories _repo;
+        private readonly IDespesaLancamentoRepositories _despesaLancamentoRepo;
         private readonly IMapper _mapper;
 
         public DespesaServices(IErrorServices _errorServices, 
-                               IDespesaRepositories repo, IMapper mapper) : base(_errorServices)
+                               IDespesaRepositories repo, IMapper mapper, IDespesaLancamentoRepositories despesaLancamentoRepo) : base(_errorServices)
         {
             _repo = repo;
             _mapper = mapper;
+            _despesaLancamentoRepo = despesaLancamentoRepo;
         }
 
         public async Task<ActionResult> GetAsync(long id)
@@ -44,6 +46,8 @@ namespace Gp.Service
             var validations = DespesaPostInput.Validar(input);
 
             if (!validations.IsValid)
+
+
                 return await RetornNo(false, validations.Errors);
 
             var result = _mapper.Map<Despesa>(input);
@@ -77,6 +81,41 @@ namespace Gp.Service
             await _repo.DeleteAsync(id);
 
             return await RetornOk(true);
+        }
+
+        public async Task<ActionResult> ImportarDadosExcelAsync(long id)
+        {
+            var result = await _repo.ExistAsync(id);
+
+            if (!result)
+                return await RetornNo(false, "Produto não localizado na base de dados!");
+
+            var despesa = await _repo.SelectAsync(id);
+
+            await _repo.DeleteAsync(id);
+
+            return await RetornOk(true);
+        }
+
+        public async Task<ActionResult> LancamentoAsync(DespesaLancamentoPostInput input)
+        {
+            input.AtribuirMesReferente();
+
+            var despesa = await _despesaLancamentoRepo.GetIdByDescricaoAsync(input.DescricaoDespesa, input.MesReferente.Value);
+
+            if (despesa == null)
+                return await RetornNo(false,string.Format(@"Despesa: {0} não encontrado no mês: {1} !", input.DescricaoDespesa,  DataExtesions.ObterMesAtualString()));
+
+            input.AtribuirDespesaId(despesa.Id);
+
+            var despesaLancamento = _mapper.Map<DespesaLancamento>(input);
+
+
+            await _despesaLancamentoRepo.InsertAsync(despesaLancamento);
+
+            await _repo.AtualizarSaldoPagoAsync(despesa, despesaLancamento);
+
+            return await RetornOk(_mapper.Map<DespesaDto>(despesa));
         }
     }
 }

@@ -10,11 +10,15 @@ namespace Gp.Infra.EntityBuilders
         {
             builder.HasKey(x => x.Id);
 
+            builder.Property(x => x.Id)
+                .HasColumnName("Id")
+                .UseIdentityColumn(1, 1);
+
             builder.Property(d => d.Descricao)
                .HasMaxLength(255);
 
             builder.HasOne(d => d.Receita)
-              .WithMany(o => o.ReceitaLancamentos) // Uma despesa pertence a um orcamento, um orcamento pode ter várias despesas
+              .WithMany(o => o.ReceitaLancamentos) // Uma receita pertence a um orcamento, um orcamento pode ter várias despesas
               .HasForeignKey(d => d.ReceitaId);
         }
     }

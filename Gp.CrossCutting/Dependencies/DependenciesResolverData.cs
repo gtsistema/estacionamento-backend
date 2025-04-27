@@ -12,6 +12,7 @@ namespace Gp.CrossCutting.Dependencies
             services.AddDbContext<GpContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
             //services.AddScoped<IDapperRepositories, DapperRepositories>();
 
+
             return services;
         }
     }

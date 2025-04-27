@@ -109,6 +109,45 @@ namespace Gp.Infra.Repository
             return item;
         }
 
+
+        public async Task<T> InsertNoSaveChangesAsync(T item)
+        {
+            try
+            {
+                if (item.Id == 0)
+                {
+                    item.DataCriacao = DateTime.Now;
+                    await _context.AddAsync(item);
+                }
+            }
+            catch (DbUpdateException ex)
+            {
+                throw ex;
+            }
+
+            return item;
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<long?> GetIdByDescricaoAsync(string descricao)
+        {
+            return await _context.Set<T>().AsNoTracking()
+                .Where(p => descricao.ToLower().Trim().Contains(p.Descricao.ToLower()))
+                .Select(p => (long?)p.Id)
+                .FirstOrDefaultAsync();
+        }
+
         public long LastCodeTable()
         {
             long? codigo = _context.Set<T>().OrderByDescending(s => s.Id).FirstOrDefault()?.Id;

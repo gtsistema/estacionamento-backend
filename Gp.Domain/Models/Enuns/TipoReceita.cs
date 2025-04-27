@@ -1,31 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using System.ComponentModel;
 
 namespace Gp.Domain.Models.ModelEnum
 {
     public enum TipoReceita
     {
-        [Display(Name = "Salário Jean")]
+        [Description("Salário Jean")]
         SalarioJean = 1,
 
-        [Display(Name = "Bpc Lorenzo")]
+        [Description("Bpc Lorenzo")]
         Bpc = 2,
 
-        [Display(Name = "Salario Carol")]
+        [Description("Salario Carol")]
         SalarioCarol = 3,
 
-        [Display(Name = "Revenda de Produtos")]
+        [Description("Revenda de Produtos")]
         RevendaProduto = 4,
 
-        [Display(Name = "Serviços Extras")]
+        [Description("Serviços Extras")]
         Extra = 5,
 
-        [Display(Name = "Flex Benner")]
+        [Description("Flex Benner")]
         FlexBenner = 6,
     }
 }

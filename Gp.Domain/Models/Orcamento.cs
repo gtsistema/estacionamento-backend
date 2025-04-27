@@ -5,7 +5,6 @@ namespace Gp.Domain.Models
 {
     public class Orcamento : Base
     {
-        public string Descricao { get; set; }
         public MesDoAno? MesDoAno { get; set; }
         public int Ano { get; set; }
         public decimal ValorTotalDespesas { get; set; }

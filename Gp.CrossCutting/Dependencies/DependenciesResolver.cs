@@ -27,20 +27,25 @@ namespace Gp.CrossCutting.Dependencies
             services.AddScoped<ICurrentUser, CurrentUser>();
             services.AddScoped<IErrorServices, ErrorServices>();
 
-
+            //services
             services.AddScoped<IUserServices, UserServices>();
             services.AddScoped<IDespesaServices, DespesaServices>();
             services.AddScoped<IReceitaServices, ReceitaServices>();
             services.AddScoped<IOrcamentoServices, OrcamentoServices>();
+
+
+            // repositories
+            services.AddScoped<IDespesaRepositories, DespesaRepositories>();
+            services.AddScoped<IReceitaRepositories, ReceitaRepositories>();
+            services.AddScoped<IOrcamentoRepositories, OrcamentoRepositories>();
+            services.AddScoped<IDespesaLancamentoRepositories, DespesaLancamentoRepositories>();
+
 
             // cursos
             services.AddScoped<ILivroServices, LivroServices>();
             services.AddScoped<ILivroRepositories, LivroRepositories>();
 
             services.AddScoped(typeof(IBaseRepositories<>), typeof(BaseRepositories<>));
-            services.AddScoped<IDespesaRepositories, DespesaRepositories>();
-            services.AddScoped<IReceitaRepositories, ReceitaRepositories>();
-            services.AddScoped<IOrcamentoRepositories, OrcamentoRepositories>();
 
             
             return services;

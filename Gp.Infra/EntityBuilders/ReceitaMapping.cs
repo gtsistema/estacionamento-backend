@@ -13,6 +13,10 @@ namespace Gp.Infra.EntityBuilders
         {
             builder.HasKey(x => x.Id);
 
+            builder.Property(x => x.Id)
+                .HasColumnName("Id")
+                .UseIdentityColumn(1, 1);
+
             builder.HasOne(d => d.Orcamento)
                .WithMany(o => o.Receitas) // Uma Receita pertence a um orcamento, um orcamento pode ter várias receitas
                .HasForeignKey(d => d.OrcamentoId);

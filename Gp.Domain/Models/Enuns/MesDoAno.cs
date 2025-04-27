@@ -1,32 +1,34 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
 
 namespace Gp.Domain.Models.Enuns
 {
     public enum MesDoAno
     {
-        [Display(Name = "Janeiro")]
+        [Description("Sem Prazo")]
+        SemPrazo = 0,
+        [Description("Janeiro")]
         Janeiro = 1,
-        [Display(Name = "Fevereiro")]
-        Fevereiro,
-        [Display(Name = "Março")]
-        Março,
-        [Display(Name = "Abril")]
-        Abril,
-        [Display(Name = "Maio")]
-        Maio,
-        [Display(Name = "Junho")]
-        Junho,
-        [Display(Name = "Julho")]
-        Julho,
-        [Display(Name = "Agosto")]
-        Agosto,
-        [Display(Name = "Setembro")]
-        Setembro,
-        [Display(Name = "Outubro")]
-        Outubro,
-        [Display(Name = "Novembro")]
-        Novembro,
-        [Display(Name = "Dezembro")]
-        Dezembro
+        [Description("Fevereiro")]
+        Fevereiro = 2,
+        [Description("Março")]
+        Março = 3,
+        [Description("Abril")]
+        Abril = 4,
+        [Description("Maio")]
+        Maio = 5,
+        [Description("Junho")]
+        Junho = 6,
+        [Description("Julho")]
+        Julho = 7,
+        [Description("Agosto")]
+        Agosto = 8,
+        [Description("Setembro")]
+        Setembro = 9,
+        [Description("Outubro")]
+        Outubro = 10,
+        [Description("Novembro")]
+        Novembro = 11,
+        [Description("Dezembro")]
+        Dezembro = 12
     }
 }

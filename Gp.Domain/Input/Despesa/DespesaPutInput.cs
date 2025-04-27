@@ -3,7 +3,7 @@ using FluentValidation.Results;
 using Gp.Domain.Models.Enuns;
 using Gp.Domain.Shared;
 
-namespace Gp.Domain.Input
+namespace Gp.Domain.Input.Despesa
 {
     public class DespesaPutInput
     {
@@ -28,8 +28,8 @@ namespace Gp.Domain.Input
 
             RuleFor(x => x.Descricao)
             .NotEmpty().WithMessage(string.Format(ResourceDomain.MSG_Campo_Obrigatorio, ResourceDomain.Descricao))
-            .MinimumLength(Constantes.Tres).WithMessage((string.Format(ResourceDomain.MSG_Min_Lengh_Campo, ResourceDomain.Descricao, Constantes.Tres)))
-            .MaximumLength(Constantes.Mil).WithMessage((string.Format(ResourceDomain.MSG_Max_Lengh_Campo, ResourceDomain.Descricao, Constantes.Mil)));
+            .MinimumLength(Constantes.Tres).WithMessage(string.Format(ResourceDomain.MSG_Min_Lengh_Campo, ResourceDomain.Descricao, Constantes.Tres))
+            .MaximumLength(Constantes.Mil).WithMessage(string.Format(ResourceDomain.MSG_Max_Lengh_Campo, ResourceDomain.Descricao, Constantes.Mil));
 
             RuleFor(x => x.TipoDespesa).NotEmpty()
             .WithMessage(string.Format(ResourceDomain.MSG_Campo_Obrigatorio, ResourceDomain.TipoDespesa));

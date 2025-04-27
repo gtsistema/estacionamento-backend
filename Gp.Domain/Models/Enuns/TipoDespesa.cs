@@ -1,61 +1,61 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
 
 namespace Gp.Domain.Models.Enuns
 {
     public enum TipoDespesa
     {
-        [Display(Name = "Fatura de Luz")]
+        [Description("Fatura de Luz")]
         Luz = 1,
 
-        [Display(Name = "Fatura de Gás")]
-        Gás = 2,
+        [Description("Parto do Bebê")]
+        Parto = 2,
 
-        [Display(Name = "Fatura de Água")]
+        [Description("Fatura de Água")]
         Agua = 3,
 
-        [Display(Name = "Aluguel")]
+        [Description("Aluguel")]
         Aluguel = 4,
 
-        [Display(Name = "Condominio")]
-        Condominio = 5,
+        [Description("Consorcio")]
+        Consorcio = 5,
 
-        [Display(Name = "Plano de Saúde")]
+        [Description("Plano de Saúde")]
         PlanoSaude = 6,
 
-        [Display(Name = "Manutenção do Carro")]
+        [Description("Manutenção do Carro")]
         ManutencaoCarro = 7,
 
-        [Display(Name = "Manutenção da Casa")]
+        [Description("Manutenção da Casa")]
         ManutencaoCasa = 8,
 
-        [Display(Name = "Remédios")]
+        [Description("Remédios")]
         Remedios = 9,
 
-        [Display(Name = "Gastos em Viagem")]
+        [Description("Gastos em Viagem")]
         Viagem = 10,
 
-        [Display(Name = "Investimentos")]
+        [Description("Investimentos")]
         Investimentos = 11,
 
-        [Display(Name = "Compra de Carro")]
+        [Description("Compra de Carro")]
         ComprarCarro = 12,
 
-        [Display(Name = "Compra de Casa")]
+        [Description("Compra de Casa")]
         ComprarCasa = 12,
 
-        [Display(Name = "Alimentação")]
+        [Description("Alimentação")]
         Alimentacao = 13,
 
-        [Display(Name = "Combustível")]
+        [Description("Combustível")]
         Combustivel = 14,
 
-        [Display(Name = "Cartao de Credito")]
+        [Description("Cartão de Credito")]
         CartaoCredito = 15,
 
-        [Display(Name = "Outros")]
+        [Description("Outros")]
         Outros = 16,
 
-        [Display(Name = "Compras Paraguai")]
-        ComprasParaguai = 17,
+        [Description("Compras Paraguai")]
+        ComprasParaguai = 17
     }
 }

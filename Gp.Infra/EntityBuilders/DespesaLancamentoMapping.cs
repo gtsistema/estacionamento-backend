@@ -10,6 +10,10 @@ namespace Gp.Infra.EntityBuilders
         {
             builder.HasKey(x => x.Id);
 
+            builder.Property(x => x.Id)
+                .HasColumnName("Id")
+                .UseIdentityColumn(1, 1);
+
             builder.Property(d => d.Descricao)
                .HasMaxLength(255);
 

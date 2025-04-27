@@ -1,6 +1,6 @@
 ﻿using Gp.Domain.Models.Enuns;
 
-namespace Gp.Domain.Input
+namespace Gp.Domain.Input.Despesa
 {
     public class DespesaFilterInput
     {

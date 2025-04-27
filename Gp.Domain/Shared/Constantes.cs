@@ -9,5 +9,10 @@
         public const int Oitenta = 80;
         public const int NoventaENove = 99;
         public const int Mil = 1000;
+
+
+        // STRING
+
+        public const string Excel = "Excel";
     }
 }

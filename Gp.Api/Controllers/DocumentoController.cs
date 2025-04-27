@@ -1,11 +1,11 @@
-﻿using Gp.Domain.Input;
+﻿using Gp.Domain.Input.Despesa;
 using Gp.Domain.Interface.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gp.Api.Controllers
 {
     [ApiController]
-    [Route("api/v1/despesa")]
+    [Route("api/v1/documento")]
 
     public class DocumentoController : ControllerBase
     {

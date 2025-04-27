@@ -11,6 +11,11 @@ namespace Gp.Infra.EntityBuilders
         {
             builder.HasKey(x => x.Id);
 
+            builder.Property(x => x.Id)
+                .HasColumnName("Id")
+                .UseIdentityColumn(1, 1);
+
+
             builder.Property(x => x.Descricao)
              .HasMaxLength(200);
 
@@ -35,18 +40,18 @@ namespace Gp.Infra.EntityBuilders
                 new Orcamento
                 {
                     Id = 1,
-                    Ano = 2024,
+                    Ano = 2026,
                     Descricao = "Viagem Cuiabá Férias",
                     DataCriacao = DateTime.Now,
                     ValorTotalDespesas = 0,
                     ValorTotalReceitas = 0,
-                    MesDoAno = MesDoAno.Julho,
+                    MesDoAno = MesDoAno.Janeiro,
                 },
 
                 new Orcamento
                 {
                     Id = 2,
-                    Ano = 2024,
+                    Ano = 2025,
                     Descricao = "Despesa Mensal",
                     DataCriacao = DateTime.Now,
                     ValorTotalDespesas = 0,
@@ -54,6 +59,27 @@ namespace Gp.Infra.EntityBuilders
                     MesDoAno = MesDoAno.Maio,
                 },
 
+                new Orcamento
+                {
+                    Id = 3,
+                    Ano = 2025,
+                    Descricao = "Investimentos",
+                    DataCriacao = DateTime.Now,
+                    ValorTotalDespesas = 0,
+                    ValorTotalReceitas = 0,
+                    MesDoAno = MesDoAno.SemPrazo,
+                },
+
+                 new Orcamento
+                {
+                    Id = 4,
+                    Ano = 2025,
+                    Descricao = "Temporário",
+                    DataCriacao = DateTime.Now,
+                    ValorTotalDespesas = 0,
+                    ValorTotalReceitas = 0,
+                    MesDoAno = MesDoAno.SemPrazo,
+                },
             });
         }
     }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gp.Infra.Migrations
 {
     [DbContext(typeof(GpContext))]
-    [Migration("20240619182647_user2")]
-    partial class user2
+    [Migration("20250427204505_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -115,11 +115,12 @@ namespace Gp.Infra.Migrations
 
             modelBuilder.Entity("Gp.Domain.Models.Despesa", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint")
+                        .HasColumnName("Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<DateTime?>("DataAtualizacao")
                         .HasColumnType("datetime2");
@@ -130,17 +131,26 @@ namespace Gp.Infra.Migrations
                     b.Property<string>("Descricao")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OrcamentoId")
+                    b.Property<int>("MesReferente")
                         .HasColumnType("int");
+
+                    b.Property<long>("OrcamentoId")
+                        .HasColumnType("bigint");
+
+                    b.Property<decimal>("PorcentagemPaga")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("SaldoRestante")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("TipoDespesa")
                         .HasColumnType("int");
 
-                    b.Property<float>("ValorPrevisto")
-                        .HasColumnType("real");
+                    b.Property<decimal>("ValorPrevisto")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<float>("ValorTotal")
-                        .HasColumnType("real");
+                    b.Property<decimal>("ValorTotal")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -151,93 +161,118 @@ namespace Gp.Infra.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            DataCriacao = new DateTime(2024, 6, 19, 15, 26, 46, 569, DateTimeKind.Local).AddTicks(4706),
-                            Descricao = "Gás",
-                            OrcamentoId = 2,
+                            Id = 1L,
+                            DataCriacao = new DateTime(2025, 4, 27, 17, 45, 4, 608, DateTimeKind.Local).AddTicks(5520),
+                            Descricao = "Parto do Bebê",
+                            MesReferente = 0,
+                            OrcamentoId = 4L,
+                            PorcentagemPaga = 0m,
+                            SaldoRestante = 0m,
                             TipoDespesa = 2,
-                            ValorPrevisto = 43.5f,
-                            ValorTotal = 0f
+                            ValorPrevisto = 5000.00m,
+                            ValorTotal = 0m
                         },
                         new
                         {
-                            Id = 2,
-                            DataCriacao = new DateTime(2024, 6, 19, 15, 26, 46, 569, DateTimeKind.Local).AddTicks(4728),
+                            Id = 2L,
+                            DataCriacao = new DateTime(2025, 4, 27, 17, 45, 4, 608, DateTimeKind.Local).AddTicks(5591),
                             Descricao = "Aluguel",
-                            OrcamentoId = 2,
+                            MesReferente = 5,
+                            OrcamentoId = 2L,
+                            PorcentagemPaga = 0m,
+                            SaldoRestante = 0m,
                             TipoDespesa = 4,
-                            ValorPrevisto = 1250f,
-                            ValorTotal = 0f
+                            ValorPrevisto = 1050.00m,
+                            ValorTotal = 0m
                         },
                         new
                         {
-                            Id = 3,
-                            DataCriacao = new DateTime(2024, 6, 19, 15, 26, 46, 569, DateTimeKind.Local).AddTicks(4738),
-                            Descricao = "Combustivel",
-                            OrcamentoId = 2,
+                            Id = 3L,
+                            DataCriacao = new DateTime(2025, 4, 27, 17, 45, 4, 608, DateTimeKind.Local).AddTicks(5610),
+                            Descricao = "Combustível",
+                            MesReferente = 5,
+                            OrcamentoId = 2L,
+                            PorcentagemPaga = 0m,
+                            SaldoRestante = 0m,
                             TipoDespesa = 14,
-                            ValorPrevisto = 500f,
-                            ValorTotal = 0f
+                            ValorPrevisto = 240.00m,
+                            ValorTotal = 0m
                         },
                         new
                         {
-                            Id = 4,
-                            DataCriacao = new DateTime(2024, 6, 19, 15, 26, 46, 569, DateTimeKind.Local).AddTicks(4748),
-                            Descricao = "Remedios",
-                            OrcamentoId = 2,
+                            Id = 4L,
+                            DataCriacao = new DateTime(2025, 4, 27, 17, 45, 4, 608, DateTimeKind.Local).AddTicks(5627),
+                            Descricao = "Remédios",
+                            MesReferente = 5,
+                            OrcamentoId = 2L,
+                            PorcentagemPaga = 0m,
+                            SaldoRestante = 0m,
                             TipoDespesa = 9,
-                            ValorPrevisto = 150f,
-                            ValorTotal = 0f
+                            ValorPrevisto = 250.00m,
+                            ValorTotal = 0m
                         },
                         new
                         {
-                            Id = 5,
-                            DataCriacao = new DateTime(2024, 6, 19, 15, 26, 46, 569, DateTimeKind.Local).AddTicks(4756),
-                            Descricao = "Luz",
-                            OrcamentoId = 2,
+                            Id = 5L,
+                            DataCriacao = new DateTime(2025, 4, 27, 17, 45, 4, 608, DateTimeKind.Local).AddTicks(5641),
+                            Descricao = "Fatura de Luz",
+                            MesReferente = 5,
+                            OrcamentoId = 2L,
+                            PorcentagemPaga = 0m,
+                            SaldoRestante = 0m,
                             TipoDespesa = 1,
-                            ValorPrevisto = 260f,
-                            ValorTotal = 0f
+                            ValorPrevisto = 260.00m,
+                            ValorTotal = 0m
                         },
                         new
                         {
-                            Id = 6,
-                            DataCriacao = new DateTime(2024, 6, 19, 15, 26, 46, 569, DateTimeKind.Local).AddTicks(4766),
-                            Descricao = "CartaoCredito",
-                            OrcamentoId = 2,
+                            Id = 6L,
+                            DataCriacao = new DateTime(2025, 4, 27, 17, 45, 4, 608, DateTimeKind.Local).AddTicks(5657),
+                            Descricao = "Cartão de Credito",
+                            MesReferente = 5,
+                            OrcamentoId = 2L,
+                            PorcentagemPaga = 0m,
+                            SaldoRestante = 0m,
                             TipoDespesa = 15,
-                            ValorPrevisto = 1300f,
-                            ValorTotal = 0f
+                            ValorPrevisto = 4000.00m,
+                            ValorTotal = 0m
                         },
                         new
                         {
-                            Id = 7,
-                            DataCriacao = new DateTime(2024, 6, 19, 15, 26, 46, 569, DateTimeKind.Local).AddTicks(4775),
-                            Descricao = "Alimentacao",
-                            OrcamentoId = 2,
+                            Id = 7L,
+                            DataCriacao = new DateTime(2025, 4, 27, 17, 45, 4, 608, DateTimeKind.Local).AddTicks(5672),
+                            Descricao = "Alimentação",
+                            MesReferente = 5,
+                            OrcamentoId = 2L,
+                            PorcentagemPaga = 0m,
+                            SaldoRestante = 0m,
                             TipoDespesa = 13,
-                            ValorPrevisto = 1000f,
-                            ValorTotal = 0f
+                            ValorPrevisto = 1400.00m,
+                            ValorTotal = 0m
                         },
                         new
                         {
-                            Id = 8,
-                            DataCriacao = new DateTime(2024, 6, 19, 15, 26, 46, 569, DateTimeKind.Local).AddTicks(4782),
-                            Descricao = "Condominio",
-                            OrcamentoId = 2,
+                            Id = 8L,
+                            DataCriacao = new DateTime(2025, 4, 27, 17, 45, 4, 608, DateTimeKind.Local).AddTicks(5686),
+                            Descricao = "Consorcio",
+                            MesReferente = 5,
+                            OrcamentoId = 2L,
+                            PorcentagemPaga = 0m,
+                            SaldoRestante = 0m,
                             TipoDespesa = 5,
-                            ValorPrevisto = 450f,
-                            ValorTotal = 0f
+                            ValorPrevisto = 480.00m,
+                            ValorTotal = 0m
                         });
                 });
 
             modelBuilder.Entity("Gp.Domain.Models.DespesaLancamento", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint")
+                        .HasColumnName("Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<DateTime?>("DataAtualizacao")
                         .HasColumnType("datetime2");
@@ -249,11 +284,11 @@ namespace Gp.Infra.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int>("DespesaId")
-                        .HasColumnType("int");
+                    b.Property<long>("DespesaId")
+                        .HasColumnType("bigint");
 
-                    b.Property<float>("ValorTotal")
-                        .HasColumnType("real");
+                    b.Property<decimal>("ValorTotal")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -262,13 +297,46 @@ namespace Gp.Infra.Migrations
                     b.ToTable("DespesaLancamento");
                 });
 
+            modelBuilder.Entity("Gp.Domain.Models.Livro", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+
+                    b.Property<string>("Autor")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DataAtualizacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataLancamento")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Descricao")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Valor")
+                        .HasPrecision(10, 4)
+                        .HasColumnType("decimal(10,4)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Livro", (string)null);
+                });
+
             modelBuilder.Entity("Gp.Domain.Models.Orcamento", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint")
+                        .HasColumnName("Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<int>("Ano")
                         .HasColumnType("int");
@@ -286,11 +354,11 @@ namespace Gp.Infra.Migrations
                     b.Property<int?>("MesDoAno")
                         .HasColumnType("int");
 
-                    b.Property<float>("ValorTotalDespesas")
-                        .HasColumnType("real");
+                    b.Property<decimal>("ValorTotalDespesas")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<float>("ValorTotalReceitas")
-                        .HasColumnType("real");
+                    b.Property<decimal>("ValorTotalReceitas")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -299,33 +367,54 @@ namespace Gp.Infra.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            Ano = 2024,
-                            DataCriacao = new DateTime(2024, 6, 19, 15, 26, 46, 569, DateTimeKind.Local).AddTicks(8086),
+                            Id = 1L,
+                            Ano = 2026,
+                            DataCriacao = new DateTime(2025, 4, 27, 17, 45, 4, 608, DateTimeKind.Local).AddTicks(9299),
                             Descricao = "Viagem Cuiabá Férias",
-                            MesDoAno = 7,
-                            ValorTotalDespesas = 0f,
-                            ValorTotalReceitas = 0f
+                            MesDoAno = 1,
+                            ValorTotalDespesas = 0m,
+                            ValorTotalReceitas = 0m
                         },
                         new
                         {
-                            Id = 2,
-                            Ano = 2024,
-                            DataCriacao = new DateTime(2024, 6, 19, 15, 26, 46, 569, DateTimeKind.Local).AddTicks(8093),
+                            Id = 2L,
+                            Ano = 2025,
+                            DataCriacao = new DateTime(2025, 4, 27, 17, 45, 4, 608, DateTimeKind.Local).AddTicks(9305),
                             Descricao = "Despesa Mensal",
                             MesDoAno = 5,
-                            ValorTotalDespesas = 0f,
-                            ValorTotalReceitas = 0f
+                            ValorTotalDespesas = 0m,
+                            ValorTotalReceitas = 0m
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            Ano = 2025,
+                            DataCriacao = new DateTime(2025, 4, 27, 17, 45, 4, 608, DateTimeKind.Local).AddTicks(9306),
+                            Descricao = "Investimentos",
+                            MesDoAno = 0,
+                            ValorTotalDespesas = 0m,
+                            ValorTotalReceitas = 0m
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            Ano = 2025,
+                            DataCriacao = new DateTime(2025, 4, 27, 17, 45, 4, 608, DateTimeKind.Local).AddTicks(9307),
+                            Descricao = "Temporário",
+                            MesDoAno = 0,
+                            ValorTotalDespesas = 0m,
+                            ValorTotalReceitas = 0m
                         });
                 });
 
             modelBuilder.Entity("Gp.Domain.Models.Receita", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint")
+                        .HasColumnName("Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<DateTime?>("DataAtualizacao")
                         .HasColumnType("datetime2");
@@ -336,17 +425,17 @@ namespace Gp.Infra.Migrations
                     b.Property<string>("Descricao")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OrcamentoId")
-                        .HasColumnType("int");
+                    b.Property<long>("OrcamentoId")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("TIpoReceita")
                         .HasColumnType("int");
 
-                    b.Property<float>("ValorPrevisto")
-                        .HasColumnType("real");
+                    b.Property<decimal>("ValorPrevisto")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<float>("ValorTotal")
-                        .HasColumnType("real");
+                    b.Property<decimal>("ValorTotal")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -357,43 +446,44 @@ namespace Gp.Infra.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            DataCriacao = new DateTime(2024, 6, 19, 15, 26, 46, 569, DateTimeKind.Local).AddTicks(6849),
-                            Descricao = "SalarioJean",
-                            OrcamentoId = 2,
+                            Id = 1L,
+                            DataCriacao = new DateTime(2025, 4, 27, 17, 45, 4, 608, DateTimeKind.Local).AddTicks(7875),
+                            Descricao = "Salário Jean",
+                            OrcamentoId = 2L,
                             TIpoReceita = 1,
-                            ValorPrevisto = 3240f,
-                            ValorTotal = 0f
+                            ValorPrevisto = 3240.00m,
+                            ValorTotal = 0m
                         },
                         new
                         {
-                            Id = 2,
-                            DataCriacao = new DateTime(2024, 6, 19, 15, 26, 46, 569, DateTimeKind.Local).AddTicks(6864),
-                            Descricao = "FlexBenner",
-                            OrcamentoId = 2,
+                            Id = 2L,
+                            DataCriacao = new DateTime(2025, 4, 27, 17, 45, 4, 608, DateTimeKind.Local).AddTicks(7895),
+                            Descricao = "Flex Benner",
+                            OrcamentoId = 2L,
                             TIpoReceita = 6,
-                            ValorPrevisto = 1250f,
-                            ValorTotal = 0f
+                            ValorPrevisto = 1250.00m,
+                            ValorTotal = 0m
                         },
                         new
                         {
-                            Id = 3,
-                            DataCriacao = new DateTime(2024, 6, 19, 15, 26, 46, 569, DateTimeKind.Local).AddTicks(6873),
-                            Descricao = "Bpc",
-                            OrcamentoId = 2,
+                            Id = 3L,
+                            DataCriacao = new DateTime(2025, 4, 27, 17, 45, 4, 608, DateTimeKind.Local).AddTicks(7910),
+                            Descricao = "Bpc Lorenzo",
+                            OrcamentoId = 2L,
                             TIpoReceita = 2,
-                            ValorPrevisto = 1450f,
-                            ValorTotal = 0f
+                            ValorPrevisto = 1450.00m,
+                            ValorTotal = 0m
                         });
                 });
 
             modelBuilder.Entity("Gp.Domain.Models.ReceitaLancamento", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint")
+                        .HasColumnName("Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<DateTime?>("DataAtualizacao")
                         .HasColumnType("datetime2");
@@ -405,11 +495,11 @@ namespace Gp.Infra.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int>("ReceitaId")
-                        .HasColumnType("int");
+                    b.Property<long>("ReceitaId")
+                        .HasColumnType("bigint");
 
-                    b.Property<float>("ValorTotal")
-                        .HasColumnType("real");
+                    b.Property<decimal>("ValorTotal")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 

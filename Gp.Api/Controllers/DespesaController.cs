@@ -1,4 +1,4 @@
-﻿using Gp.Domain.Input;
+﻿using Gp.Domain.Input.Despesa;
 using Gp.Domain.Interface.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,7 +35,7 @@ namespace Gp.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> Update([FromBody]DespesaPutInput input)
+        public async Task<ActionResult> Update([FromBody] DespesaPutInput input)
         {
             return await _services.PutAsync(input);
         }
@@ -44,6 +44,12 @@ namespace Gp.Api.Controllers
         public async Task<ActionResult> Delete(long id)
         {
             return await _services.DeleteAsync(id);
+        }
+
+        [HttpPost("lancamento")]
+        public async Task<ActionResult> Lancamento([FromBody] DespesaLancamentoPostInput input)
+        {
+            return await _services.LancamentoAsync(input);
         }
     }
 }

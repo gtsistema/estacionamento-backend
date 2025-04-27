@@ -12,6 +12,10 @@ namespace Gp.Infra.EntityBuilders
         {
             builder.HasKey(x => x.Id);
 
+            builder.Property(x => x.Id)
+                .HasColumnName("Id")
+                .UseIdentityColumn(1, 1);
+
             builder.HasOne(d => d.Orcamento)
                .WithMany(o => o.Despesas) // Uma despesa pertence a um orcamento, um orcamento pode ter várias despesas
                .HasForeignKey(d => d.OrcamentoId);
@@ -27,11 +31,12 @@ namespace Gp.Infra.EntityBuilders
                 new Despesa
                 {
                     Id = 1,
-                    OrcamentoId = 2,
-                    TipoDespesa = TipoDespesa.Gás,
-                    Descricao = TipoDespesa.Gás.GetDescription(),
+                    OrcamentoId = 4,
+                    TipoDespesa = TipoDespesa.Parto,
+                    Descricao = TipoDespesa.Parto.GetDescription(),
                     DataCriacao = DateTime.Now,
-                    ValorPrevisto = 43.50m,
+                    ValorPrevisto = 5000.00m,
+
                 },
 
                 new Despesa
@@ -41,7 +46,9 @@ namespace Gp.Infra.EntityBuilders
                     TipoDespesa = TipoDespesa.Aluguel,
                     Descricao = TipoDespesa.Aluguel.GetDescription(),
                     DataCriacao = DateTime.Now,
-                    ValorPrevisto = 1250.00m,
+                    ValorPrevisto = 1050.00m,
+                     MesReferente = MesDoAno.Maio
+
                 },
 
                  new Despesa
@@ -51,7 +58,9 @@ namespace Gp.Infra.EntityBuilders
                     TipoDespesa = TipoDespesa.Combustivel,
                     Descricao = TipoDespesa.Combustivel.GetDescription(),
                     DataCriacao = DateTime.Now,
-                    ValorPrevisto = 500.00m,
+                    ValorPrevisto = 240.00m,
+                    MesReferente = MesDoAno.Maio
+
                 },
 
                 new Despesa
@@ -61,7 +70,9 @@ namespace Gp.Infra.EntityBuilders
                     TipoDespesa = TipoDespesa.Remedios,
                     Descricao = TipoDespesa.Remedios.GetDescription(),
                     DataCriacao = DateTime.Now,
-                    ValorPrevisto = 150.00m,
+                    ValorPrevisto = 250.00m,
+                    MesReferente = MesDoAno.Maio
+
                 },
 
                 new Despesa
@@ -72,6 +83,8 @@ namespace Gp.Infra.EntityBuilders
                     Descricao = TipoDespesa.Luz.GetDescription(),
                     DataCriacao = DateTime.Now,
                     ValorPrevisto = 260.00m,
+                    MesReferente = MesDoAno.Maio
+
                 },
 
                 new Despesa
@@ -81,7 +94,9 @@ namespace Gp.Infra.EntityBuilders
                     TipoDespesa = TipoDespesa.CartaoCredito,
                     Descricao = TipoDespesa.CartaoCredito.GetDescription(),
                     DataCriacao = DateTime.Now,
-                    ValorPrevisto = 1300.00m,
+                    ValorPrevisto = 4000.00m,
+                    MesReferente = MesDoAno.Maio
+
                 },
 
                 new Despesa
@@ -91,19 +106,21 @@ namespace Gp.Infra.EntityBuilders
                     TipoDespesa = TipoDespesa.Alimentacao,
                     Descricao = TipoDespesa.Alimentacao.GetDescription(),
                     DataCriacao = DateTime.Now,
-                    ValorPrevisto = 1000.00m,
+                    ValorPrevisto = 1400.00m,
+                     MesReferente = MesDoAno.Maio
+
                 },
 
                 new Despesa
                 {
                     Id = 8,
                     OrcamentoId = 2,
-                    TipoDespesa = TipoDespesa.Condominio,
-                    Descricao = TipoDespesa.Condominio.GetDescription(),
+                    TipoDespesa = TipoDespesa.Consorcio,
+                    Descricao = TipoDespesa.Consorcio.GetDescription(),
                     DataCriacao = DateTime.Now,
-                    ValorPrevisto = 450.00m,
+                    ValorPrevisto = 480.00m,
+                    MesReferente = MesDoAno.Maio
                 },
-
             });
         }
     }
