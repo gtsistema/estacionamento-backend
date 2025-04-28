@@ -11,6 +11,7 @@ namespace Gp.Domain.Interface.Services
         Task<ActionResult> PostAsync(DespesaPostInput input);
         Task<ActionResult> PutAsync(DespesaPutInput input);
         Task<ActionResult> DeleteAsync(long id);
+        Task<ActionResult> ImportarDadosExcelAsync(long id);
         Task<ActionResult> LancamentoAsync(DespesaLancamentoPostInput input);
     }
 }

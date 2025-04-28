@@ -39,6 +39,7 @@ namespace Gp.CrossCutting.Dependencies
             services.AddScoped<IReceitaRepositories, ReceitaRepositories>();
             services.AddScoped<IOrcamentoRepositories, OrcamentoRepositories>();
             services.AddScoped<IDespesaLancamentoRepositories, DespesaLancamentoRepositories>();
+            services.AddScoped<IReceitaLancamentoRepositories, ReceitaLancamentoRepositories>();
 
 
             // cursos

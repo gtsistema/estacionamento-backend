@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Gp.Domain.Dtos;
+using Gp.Domain.Extensions;
+using Gp.Domain.Input.Receita;
 using Gp.Domain.Interface.Repositories;
 using Gp.Domain.Interface.Services;
 using Gp.Domain.Models;
@@ -13,52 +15,110 @@ namespace Gp.Service
     {
         private readonly IReceitaRepositories _repo;
         private readonly IMapper _mapper;
+        private readonly IReceitaLancamentoRepositories _receitaLancamentoRepo;
 
         public ReceitaServices(IReceitaRepositories repo,
                                IMapper mapper,
-                               IErrorServices _errorApplication
+                               IErrorServices _errorApplication,
+                               IReceitaLancamentoRepositories receitaLancamentoRepo
                                ) : base(_errorApplication)
         {
             _repo = repo;
             _mapper = mapper;
+            _receitaLancamentoRepo = receitaLancamentoRepo;
         }
 
-        public async Task<ActionResult> GetAsync(int id)
+        public async Task<ActionResult> GetAsync(long id)
         {
-            var resultado = await _repo.SelectAsync(id);
+            var result = await _repo.SelectAsync(id);
 
-            return await RetornOk(_mapper.Map<Despesa>(resultado));
+            return await RetornOk(_mapper.Map<ReceitaDto>(result));
         }
 
-        public async Task<ActionResult> GetAllAsync(Receita item)
+        public async Task<ActionResult> GetAllAsync(ReceitaFilterInput filter)
         {
-            var resultado = await _repo.SelectAllAsync();
+            var result = await _repo.GetPageAsync(filter);
 
-            return await RetornOk(_mapper.Map<IEnumerable<Receita>>(resultado));
+            var mapper = _mapper.Map<IEnumerable<ReceitaDto>>(result.Results);
+
+            return await RetornOk(mapper);
         }
 
-        public async Task<ActionResult> PostAsync(Receita item)
+        public async Task<ActionResult> PostAsync(ReceitaPostInput input)
         {
-            return await RetornOk(await _repo.InsertAsync(item));
+            var validations = ReceitaPostInput.Validar(input);
+
+            if (!validations.IsValid)
+
+
+                return await RetornNo(false, validations.Errors);
+
+            var result = _mapper.Map<Receita>(input);
+
+            await _repo.InsertAsync(result);
+
+            return await RetornOk(result);
         }
 
-        public async Task<ActionResult> PutAsync(Receita input)
+        public async Task<ActionResult> PutAsync(ReceitaPutInput input)
         {
-            return await RetornOk(await _repo.UpdateAsync(input));
+            var validations = ReceitaPutInput.Validar(input);
+
+            if (!validations.IsValid)
+                return await RetornNo(false, validations.Errors);
+
+            var result = _mapper.Map<Receita>(input);
+
+            return await RetornOk(await _repo.UpdateAsync(result));
         }
 
-        public async Task<ActionResult> DeleteAsync(int id)
+        public async Task<ActionResult> DeleteAsync(long id)
         {
-            if (await _repo.ExistAsync(id))
-            {
-                return await RetornOk("Produto não localizado na base de dados!");
-            }
+            var result = await _repo.ExistAsync(id);
 
-            var product = await _repo.SelectAsync(id);
+            if (!result)
+                return await RetornNo(false, "Produto não localizado na base de dados!");
+
+            var receita = await _repo.SelectAsync(id);
 
             await _repo.DeleteAsync(id);
 
             return await RetornOk(true);
+        }
+
+        public async Task<ActionResult> ImportarDadosExcelAsync(long id)
+        {
+            var result = await _repo.ExistAsync(id);
+
+            if (!result)
+                return await RetornNo(false, "Produto não localizado na base de dados!");
+
+            var receita = await _repo.SelectAsync(id);
+
+            await _repo.DeleteAsync(id);
+
+            return await RetornOk(true);
+        }
+
+        public async Task<ActionResult> LancamentoAsync(ReceitaLancamentoPostInput input)
+        {
+            input.AtribuirMesReferente();
+
+            var receita = await _receitaLancamentoRepo.GetIdByDescricaoAsync(input.DescricaoReceita, input.MesReferente.Value);
+
+            if (receita == null)
+                return await RetornNo(false, string.Format(@"Receita: {0} não encontrado no mês: {1} !", input.DescricaoReceita, DataExtesions.ObterMesAtualString()));
+
+            input.AtribuirReceitaId(receita.Id);
+
+            var receitaLancamento = _mapper.Map<ReceitaLancamento>(input);
+
+
+            await _receitaLancamentoRepo.InsertAsync(receitaLancamento);
+
+            await _repo.AtualizarSaldoPagoAsync(receita, receitaLancamento);
+
+            return await RetornOk(_mapper.Map<ReceitaDto>(receita));
         }
     }
 }
