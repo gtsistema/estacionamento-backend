@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estac.Api", "Estac.Api\Estac.Api.csproj", "{B2F8EEC0-D080-C581-6B55-08724B026E34}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estac.Service", "Estac.Service\Estac.Service.csproj", "{3AE4AC1E-6931-CDAE-D419-D37F5E94EEE3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estac.Domain", "Estac.Domain\Estac.Domain.csproj", "{83A4D4E5-41DD-544C-8EB3-22A01E11116F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estac.Infra", "Estac.Infra\Estac.Infra.csproj", "{446A528F-FF18-89E6-ED93-7D552462F250}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estac.Jobs", "Estac.Jobs\Estac.Jobs.csproj", "{3DF4BFA1-8C30-ED5F-A82E-B1D09F76D8FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estac.CrossCutting", "Estac.CrossCutting\Estac.CrossCutting.csproj", "{49822985-AE6C-262E-C941-77A83B515D1F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gp.Test", "Estac.Test\Gp.Test.csproj", "{1B3DE46B-45E8-CE01-A455-30A69B42DE1F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B2F8EEC0-D080-C581-6B55-08724B026E34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2F8EEC0-D080-C581-6B55-08724B026E34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2F8EEC0-D080-C581-6B55-08724B026E34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2F8EEC0-D080-C581-6B55-08724B026E34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AE4AC1E-6931-CDAE-D419-D37F5E94EEE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AE4AC1E-6931-CDAE-D419-D37F5E94EEE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AE4AC1E-6931-CDAE-D419-D37F5E94EEE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AE4AC1E-6931-CDAE-D419-D37F5E94EEE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83A4D4E5-41DD-544C-8EB3-22A01E11116F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83A4D4E5-41DD-544C-8EB3-22A01E11116F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83A4D4E5-41DD-544C-8EB3-22A01E11116F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83A4D4E5-41DD-544C-8EB3-22A01E11116F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{446A528F-FF18-89E6-ED93-7D552462F250}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{446A528F-FF18-89E6-ED93-7D552462F250}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{446A528F-FF18-89E6-ED93-7D552462F250}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{446A528F-FF18-89E6-ED93-7D552462F250}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DF4BFA1-8C30-ED5F-A82E-B1D09F76D8FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DF4BFA1-8C30-ED5F-A82E-B1D09F76D8FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DF4BFA1-8C30-ED5F-A82E-B1D09F76D8FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DF4BFA1-8C30-ED5F-A82E-B1D09F76D8FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49822985-AE6C-262E-C941-77A83B515D1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49822985-AE6C-262E-C941-77A83B515D1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49822985-AE6C-262E-C941-77A83B515D1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49822985-AE6C-262E-C941-77A83B515D1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B3DE46B-45E8-CE01-A455-30A69B42DE1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B3DE46B-45E8-CE01-A455-30A69B42DE1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B3DE46B-45E8-CE01-A455-30A69B42DE1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B3DE46B-45E8-CE01-A455-30A69B42DE1F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D8FF8759-D802-4329-BAD0-A1013CEC63AB}
+	EndGlobalSection
+EndGlobal
