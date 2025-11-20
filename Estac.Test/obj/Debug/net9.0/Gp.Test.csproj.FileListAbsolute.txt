@@ -1,0 +1,12 @@
+C:\Repositorio\Pessoal\Estacionamento\Estac.Test\bin\Debug\net9.0\Gp.Test.deps.json
+C:\Repositorio\Pessoal\Estacionamento\Estac.Test\bin\Debug\net9.0\Gp.Test.dll
+C:\Repositorio\Pessoal\Estacionamento\Estac.Test\bin\Debug\net9.0\Gp.Test.pdb
+C:\Repositorio\Pessoal\Estacionamento\Estac.Test\obj\Debug\net9.0\Gp.Test.GeneratedMSBuildEditorConfig.editorconfig
+C:\Repositorio\Pessoal\Estacionamento\Estac.Test\obj\Debug\net9.0\Gp.Test.AssemblyInfoInputs.cache
+C:\Repositorio\Pessoal\Estacionamento\Estac.Test\obj\Debug\net9.0\Gp.Test.AssemblyInfo.cs
+C:\Repositorio\Pessoal\Estacionamento\Estac.Test\obj\Debug\net9.0\Gp.Test.csproj.CoreCompileInputs.cache
+C:\Repositorio\Pessoal\Estacionamento\Estac.Test\obj\Debug\net9.0\Gp.Test.sourcelink.json
+C:\Repositorio\Pessoal\Estacionamento\Estac.Test\obj\Debug\net9.0\Gp.Test.dll
+C:\Repositorio\Pessoal\Estacionamento\Estac.Test\obj\Debug\net9.0\refint\Gp.Test.dll
+C:\Repositorio\Pessoal\Estacionamento\Estac.Test\obj\Debug\net9.0\Gp.Test.pdb
+C:\Repositorio\Pessoal\Estacionamento\Estac.Test\obj\Debug\net9.0\ref\Gp.Test.dll

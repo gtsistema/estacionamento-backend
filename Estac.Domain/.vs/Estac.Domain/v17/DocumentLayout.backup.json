@@ -1,0 +1,156 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{685D2400-1F93-F319-2C33-B5D9989DD054}|Estac.Domain.csproj|c:\\repositorio\\pessoal\\estacionamento\\estac.domain\\estac.domain.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{685D2400-1F93-F319-2C33-B5D9989DD054}|Estac.Domain.csproj|solutionrelative:estac.domain.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{685D2400-1F93-F319-2C33-B5D9989DD054}|Estac.Domain.csproj|c:\\repositorio\\pessoal\\estacionamento\\estac.domain\\auth\\iapplicationusermanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{685D2400-1F93-F319-2C33-B5D9989DD054}|Estac.Domain.csproj|solutionrelative:auth\\iapplicationusermanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{685D2400-1F93-F319-2C33-B5D9989DD054}|Estac.Domain.csproj|c:\\repositorio\\pessoal\\estacionamento\\estac.domain\\auth\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{685D2400-1F93-F319-2C33-B5D9989DD054}|Estac.Domain.csproj|solutionrelative:auth\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{685D2400-1F93-F319-2C33-B5D9989DD054}|Estac.Domain.csproj|c:\\repositorio\\pessoal\\estacionamento\\estac.domain\\auth\\applicationidentityresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{685D2400-1F93-F319-2C33-B5D9989DD054}|Estac.Domain.csproj|solutionrelative:auth\\applicationidentityresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{685D2400-1F93-F319-2C33-B5D9989DD054}|Estac.Domain.csproj|c:\\repositorio\\pessoal\\estacionamento\\estac.domain\\clock\\clock.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{685D2400-1F93-F319-2C33-B5D9989DD054}|Estac.Domain.csproj|solutionrelative:clock\\clock.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Api\\Controllers\\DespesaController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": 15,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:136:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:140:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:139:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:381456185:0:{83107a3e-496a-485e-b455-16ddb978e55e}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{e8b06f52-6d01-11d2-aa7d-00c04f990343}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:138:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:137:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:905907333:0:{83107a3e-496a-485e-b455-16ddb978e55e}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:875103916:0:{83107a3e-496a-485e-b455-16ddb978e55e}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:2086026591:0:{83107a3e-496a-485e-b455-16ddb978e55e}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "IApplicationUserManager.cs",
+              "DocumentMoniker": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Auth\\IApplicationUserManager.cs",
+              "RelativeDocumentMoniker": "Auth\\IApplicationUserManager.cs",
+              "ToolTip": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Auth\\IApplicationUserManager.cs",
+              "RelativeToolTip": "Auth\\IApplicationUserManager.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-16T22:55:07.542Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ApplicationUser.cs",
+              "DocumentMoniker": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Auth\\ApplicationUser.cs",
+              "RelativeDocumentMoniker": "Auth\\ApplicationUser.cs",
+              "ToolTip": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Auth\\ApplicationUser.cs",
+              "RelativeToolTip": "Auth\\ApplicationUser.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-16T22:54:32.163Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ApplicationIdentityResult.cs",
+              "DocumentMoniker": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Auth\\ApplicationIdentityResult.cs",
+              "RelativeDocumentMoniker": "Auth\\ApplicationIdentityResult.cs",
+              "ToolTip": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Auth\\ApplicationIdentityResult.cs",
+              "RelativeToolTip": "Auth\\ApplicationIdentityResult.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAqwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-16T22:52:46.865Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Clock.cs",
+              "DocumentMoniker": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Clock\\Clock.cs",
+              "RelativeDocumentMoniker": "Clock\\Clock.cs",
+              "ToolTip": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Clock\\Clock.cs",
+              "RelativeToolTip": "Clock\\Clock.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-16T22:52:45.265Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "DespesaController.cs",
+              "DocumentMoniker": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Api\\Controllers\\DespesaController.cs",
+              "RelativeDocumentMoniker": "..\\Estac.Api\\Controllers\\DespesaController.cs",
+              "ToolTip": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Api\\Controllers\\DespesaController.cs",
+              "RelativeToolTip": "..\\Estac.Api\\Controllers\\DespesaController.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAACIAAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-16T22:41:21.198Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Estac.Domain.csproj",
+              "DocumentMoniker": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Estac.Domain.csproj",
+              "RelativeDocumentMoniker": "Estac.Domain.csproj",
+              "ToolTip": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Estac.Domain.csproj",
+              "RelativeToolTip": "Estac.Domain.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAA+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-10-16T22:40:58.645Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

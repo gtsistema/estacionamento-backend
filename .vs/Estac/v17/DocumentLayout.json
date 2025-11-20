@@ -1,0 +1,342 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Repositorio\\Pessoal\\Estacionamento\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{B2F8EEC0-D080-C581-6B55-08724B026E34}|Estac.Api\\Estac.Api.csproj|c:\\repositorio\\pessoal\\estacionamento\\estac.api\\controllers\\auth\\usuariocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2F8EEC0-D080-C581-6B55-08724B026E34}|Estac.Api\\Estac.Api.csproj|solutionrelative:estac.api\\controllers\\auth\\usuariocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2F8EEC0-D080-C581-6B55-08724B026E34}|Estac.Api\\Estac.Api.csproj|c:\\repositorio\\pessoal\\estacionamento\\estac.api\\controllers\\despesacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2F8EEC0-D080-C581-6B55-08724B026E34}|Estac.Api\\Estac.Api.csproj|solutionrelative:estac.api\\controllers\\despesacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2F8EEC0-D080-C581-6B55-08724B026E34}|Estac.Api\\Estac.Api.csproj|c:\\repositorio\\pessoal\\estacionamento\\estac.api\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2F8EEC0-D080-C581-6B55-08724B026E34}|Estac.Api\\Estac.Api.csproj|solutionrelative:estac.api\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A4D4E5-41DD-544C-8EB3-22A01E11116F}|Estac.Domain\\Estac.Domain.csproj|c:\\repositorio\\pessoal\\estacionamento\\estac.domain\\extensions\\identityportuguesemessages.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A4D4E5-41DD-544C-8EB3-22A01E11116F}|Estac.Domain\\Estac.Domain.csproj|solutionrelative:estac.domain\\extensions\\identityportuguesemessages.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2F8EEC0-D080-C581-6B55-08724B026E34}|Estac.Api\\Estac.Api.csproj|c:\\repositorio\\pessoal\\estacionamento\\estac.api\\extensions\\identityconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2F8EEC0-D080-C581-6B55-08724B026E34}|Estac.Api\\Estac.Api.csproj|solutionrelative:estac.api\\extensions\\identityconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2F8EEC0-D080-C581-6B55-08724B026E34}|Estac.Api\\Estac.Api.csproj|c:\\repositorio\\pessoal\\estacionamento\\estac.api\\estac.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{B2F8EEC0-D080-C581-6B55-08724B026E34}|Estac.Api\\Estac.Api.csproj|solutionrelative:estac.api\\estac.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A4D4E5-41DD-544C-8EB3-22A01E11116F}|Estac.Domain\\Estac.Domain.csproj|c:\\repositorio\\pessoal\\estacionamento\\estac.domain\\models\\motorista.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A4D4E5-41DD-544C-8EB3-22A01E11116F}|Estac.Domain\\Estac.Domain.csproj|solutionrelative:estac.domain\\models\\motorista.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A4D4E5-41DD-544C-8EB3-22A01E11116F}|Estac.Domain\\Estac.Domain.csproj|c:\\repositorio\\pessoal\\estacionamento\\estac.domain\\models\\livro.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A4D4E5-41DD-544C-8EB3-22A01E11116F}|Estac.Domain\\Estac.Domain.csproj|solutionrelative:estac.domain\\models\\livro.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A4D4E5-41DD-544C-8EB3-22A01E11116F}|Estac.Domain\\Estac.Domain.csproj|c:\\repositorio\\pessoal\\estacionamento\\estac.domain\\models\\vaga.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A4D4E5-41DD-544C-8EB3-22A01E11116F}|Estac.Domain\\Estac.Domain.csproj|solutionrelative:estac.domain\\models\\vaga.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A4D4E5-41DD-544C-8EB3-22A01E11116F}|Estac.Domain\\Estac.Domain.csproj|c:\\repositorio\\pessoal\\estacionamento\\estac.domain\\models\\veiculovaga.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A4D4E5-41DD-544C-8EB3-22A01E11116F}|Estac.Domain\\Estac.Domain.csproj|solutionrelative:estac.domain\\models\\veiculovaga.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A4D4E5-41DD-544C-8EB3-22A01E11116F}|Estac.Domain\\Estac.Domain.csproj|c:\\repositorio\\pessoal\\estacionamento\\estac.domain\\models\\comprovante.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A4D4E5-41DD-544C-8EB3-22A01E11116F}|Estac.Domain\\Estac.Domain.csproj|solutionrelative:estac.domain\\models\\comprovante.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A4D4E5-41DD-544C-8EB3-22A01E11116F}|Estac.Domain\\Estac.Domain.csproj|c:\\repositorio\\pessoal\\estacionamento\\estac.domain\\auth\\bearertokensettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A4D4E5-41DD-544C-8EB3-22A01E11116F}|Estac.Domain\\Estac.Domain.csproj|solutionrelative:estac.domain\\auth\\bearertokensettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2F8EEC0-D080-C581-6B55-08724B026E34}|Estac.Api\\Estac.Api.csproj|c:\\repositorio\\pessoal\\estacionamento\\estac.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2F8EEC0-D080-C581-6B55-08724B026E34}|Estac.Api\\Estac.Api.csproj|solutionrelative:estac.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{49822985-AE6C-262E-C941-77A83B515D1F}|Estac.CrossCutting\\Estac.CrossCutting.csproj|c:\\repositorio\\pessoal\\estacionamento\\estac.crosscutting\\dependencies\\dependenciesresolver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{49822985-AE6C-262E-C941-77A83B515D1F}|Estac.CrossCutting\\Estac.CrossCutting.csproj|solutionrelative:estac.crosscutting\\dependencies\\dependenciesresolver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A4D4E5-41DD-544C-8EB3-22A01E11116F}|Estac.Domain\\Estac.Domain.csproj|c:\\repositorio\\pessoal\\estacionamento\\estac.domain\\models\\veiculo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A4D4E5-41DD-544C-8EB3-22A01E11116F}|Estac.Domain\\Estac.Domain.csproj|solutionrelative:estac.domain\\models\\veiculo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A4D4E5-41DD-544C-8EB3-22A01E11116F}|Estac.Domain\\Estac.Domain.csproj|c:\\repositorio\\pessoal\\estacionamento\\estac.domain\\models\\motoristaveiculo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A4D4E5-41DD-544C-8EB3-22A01E11116F}|Estac.Domain\\Estac.Domain.csproj|solutionrelative:estac.domain\\models\\motoristaveiculo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2F8EEC0-D080-C581-6B55-08724B026E34}|Estac.Api\\Estac.Api.csproj|c:\\repositorio\\pessoal\\estacionamento\\estac.api\\controllers\\receitacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2F8EEC0-D080-C581-6B55-08724B026E34}|Estac.Api\\Estac.Api.csproj|solutionrelative:estac.api\\controllers\\receitacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": 12,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Motorista.cs",
+              "DocumentMoniker": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Models\\Motorista.cs",
+              "RelativeDocumentMoniker": "Estac.Domain\\Models\\Motorista.cs",
+              "ToolTip": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Models\\Motorista.cs",
+              "RelativeToolTip": "Estac.Domain\\Models\\Motorista.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-19T23:31:36.199Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:136:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:140:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:139:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:381456185:0:{83107a3e-496a-485e-b455-16ddb978e55e}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{e8b06f52-6d01-11d2-aa7d-00c04f990343}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:138:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:137:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:905907333:0:{83107a3e-496a-485e-b455-16ddb978e55e}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:875103916:0:{83107a3e-496a-485e-b455-16ddb978e55e}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:2086026591:0:{83107a3e-496a-485e-b455-16ddb978e55e}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0174dea2-fdbe-4ef1-8f99-c0beae78880f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "UsuarioController.cs",
+              "DocumentMoniker": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Api\\Controllers\\Auth\\UsuarioController.cs",
+              "RelativeDocumentMoniker": "Estac.Api\\Controllers\\Auth\\UsuarioController.cs",
+              "ToolTip": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Api\\Controllers\\Auth\\UsuarioController.cs",
+              "RelativeToolTip": "Estac.Api\\Controllers\\Auth\\UsuarioController.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAAABoAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-20T20:38:54.31Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DespesaController.cs",
+              "DocumentMoniker": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Api\\Controllers\\DespesaController.cs",
+              "RelativeDocumentMoniker": "Estac.Api\\Controllers\\DespesaController.cs",
+              "ToolTip": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Api\\Controllers\\DespesaController.cs",
+              "RelativeToolTip": "Estac.Api\\Controllers\\DespesaController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-20T20:38:51.756Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Livro.cs",
+              "DocumentMoniker": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Models\\Livro.cs",
+              "RelativeDocumentMoniker": "Estac.Domain\\Models\\Livro.cs",
+              "ToolTip": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Models\\Livro.cs",
+              "RelativeToolTip": "Estac.Domain\\Models\\Livro.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-20T19:17:23.537Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Vaga.cs",
+              "DocumentMoniker": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Models\\Vaga.cs",
+              "RelativeDocumentMoniker": "Estac.Domain\\Models\\Vaga.cs",
+              "ToolTip": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Models\\Vaga.cs",
+              "RelativeToolTip": "Estac.Domain\\Models\\Vaga.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-19T23:46:17.291Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "IdentityPortugueseMessages.cs",
+              "DocumentMoniker": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Extensions\\IdentityPortugueseMessages.cs",
+              "RelativeDocumentMoniker": "Estac.Domain\\Extensions\\IdentityPortugueseMessages.cs",
+              "ToolTip": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Extensions\\IdentityPortugueseMessages.cs",
+              "RelativeToolTip": "Estac.Domain\\Extensions\\IdentityPortugueseMessages.cs",
+              "ViewState": "AgIAADAAAAAAAAAAAAAUwDYAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-19T23:43:31.422Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "VeiculoVaga.cs",
+              "DocumentMoniker": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Models\\VeiculoVaga.cs",
+              "RelativeDocumentMoniker": "Estac.Domain\\Models\\VeiculoVaga.cs",
+              "ToolTip": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Models\\VeiculoVaga.cs",
+              "RelativeToolTip": "Estac.Domain\\Models\\VeiculoVaga.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-20T00:00:45.376Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Comprovante.cs",
+              "DocumentMoniker": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Models\\Comprovante.cs",
+              "RelativeDocumentMoniker": "Estac.Domain\\Models\\Comprovante.cs",
+              "ToolTip": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Models\\Comprovante.cs",
+              "RelativeToolTip": "Estac.Domain\\Models\\Comprovante.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-20T00:14:58.849Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "DependenciesResolver.cs",
+              "DocumentMoniker": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.CrossCutting\\Dependencies\\DependenciesResolver.cs",
+              "RelativeDocumentMoniker": "Estac.CrossCutting\\Dependencies\\DependenciesResolver.cs",
+              "ToolTip": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.CrossCutting\\Dependencies\\DependenciesResolver.cs",
+              "RelativeToolTip": "Estac.CrossCutting\\Dependencies\\DependenciesResolver.cs",
+              "ViewState": "AgIAABoAAAAAAAAAAAAQwCIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-19T23:43:14.348Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Startup.cs",
+              "DocumentMoniker": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Api\\Startup.cs",
+              "RelativeDocumentMoniker": "Estac.Api\\Startup.cs",
+              "ToolTip": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Api\\Startup.cs",
+              "RelativeToolTip": "Estac.Api\\Startup.cs",
+              "ViewState": "AgIAAE8AAAAAAAAAAAAiwH8AAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-19T23:40:30.255Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Api\\Program.cs",
+              "RelativeDocumentMoniker": "Estac.Api\\Program.cs",
+              "ToolTip": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Api\\Program.cs",
+              "RelativeToolTip": "Estac.Api\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-19T23:40:29.613Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "MotoristaVeiculo.cs",
+              "DocumentMoniker": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Models\\MotoristaVeiculo.cs",
+              "RelativeDocumentMoniker": "Estac.Domain\\Models\\MotoristaVeiculo.cs",
+              "ToolTip": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Models\\MotoristaVeiculo.cs",
+              "RelativeToolTip": "Estac.Domain\\Models\\MotoristaVeiculo.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-19T23:37:41.21Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Veiculo.cs",
+              "DocumentMoniker": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Models\\Veiculo.cs",
+              "RelativeDocumentMoniker": "Estac.Domain\\Models\\Veiculo.cs",
+              "ToolTip": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Models\\Veiculo.cs",
+              "RelativeToolTip": "Estac.Domain\\Models\\Veiculo.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-19T23:33:47.925Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Estac.Api.csproj",
+              "DocumentMoniker": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Api\\Estac.Api.csproj",
+              "RelativeDocumentMoniker": "Estac.Api\\Estac.Api.csproj",
+              "ToolTip": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Api\\Estac.Api.csproj",
+              "RelativeToolTip": "Estac.Api\\Estac.Api.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACYAAABTAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-10-19T23:15:19.379Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "ReceitaController.cs",
+              "DocumentMoniker": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Api\\Controllers\\ReceitaController.cs",
+              "RelativeDocumentMoniker": "Estac.Api\\Controllers\\ReceitaController.cs",
+              "ToolTip": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Api\\Controllers\\ReceitaController.cs",
+              "RelativeToolTip": "Estac.Api\\Controllers\\ReceitaController.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAQwBwAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-19T23:15:01.383Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "IdentityConfig.cs",
+              "DocumentMoniker": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Api\\Extensions\\IdentityConfig.cs",
+              "RelativeDocumentMoniker": "Estac.Api\\Extensions\\IdentityConfig.cs",
+              "ToolTip": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Api\\Extensions\\IdentityConfig.cs",
+              "RelativeToolTip": "Estac.Api\\Extensions\\IdentityConfig.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAAADAAAAA/AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-19T23:14:56.676Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "BearerTokenSettings.cs",
+              "DocumentMoniker": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Auth\\BearerTokenSettings.cs",
+              "RelativeDocumentMoniker": "Estac.Domain\\Auth\\BearerTokenSettings.cs",
+              "ToolTip": "C:\\Repositorio\\Pessoal\\Estacionamento\\Estac.Domain\\Auth\\BearerTokenSettings.cs",
+              "RelativeToolTip": "Estac.Domain\\Auth\\BearerTokenSettings.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-19T23:45:10.441Z"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{6324226f-61b6-4f28-92ee-18d4b5fe1e48}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+C:\Repositorio\Pessoal\Estacionamento\Estac.Domain\bin\Debug\net9.0\Estac.Domain.deps.json
+C:\Repositorio\Pessoal\Estacionamento\Estac.Domain\bin\Debug\net9.0\Estac.Domain.dll
+C:\Repositorio\Pessoal\Estacionamento\Estac.Domain\bin\Debug\net9.0\Estac.Domain.pdb
+C:\Repositorio\Pessoal\Estacionamento\Estac.Domain\obj\Debug\net9.0\Estac.Domain.csproj.AssemblyReference.cache
+C:\Repositorio\Pessoal\Estacionamento\Estac.Domain\obj\Debug\net9.0\Estac.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Repositorio\Pessoal\Estacionamento\Estac.Domain\obj\Debug\net9.0\Estac.Domain.AssemblyInfoInputs.cache
+C:\Repositorio\Pessoal\Estacionamento\Estac.Domain\obj\Debug\net9.0\Estac.Domain.AssemblyInfo.cs
+C:\Repositorio\Pessoal\Estacionamento\Estac.Domain\obj\Debug\net9.0\Estac.Domain.csproj.CoreCompileInputs.cache
+C:\Repositorio\Pessoal\Estacionamento\Estac.Domain\obj\Debug\net9.0\Estac.Domain.sourcelink.json
+C:\Repositorio\Pessoal\Estacionamento\Estac.Domain\obj\Debug\net9.0\Estac.Domain.dll
+C:\Repositorio\Pessoal\Estacionamento\Estac.Domain\obj\Debug\net9.0\refint\Estac.Domain.dll
+C:\Repositorio\Pessoal\Estacionamento\Estac.Domain\obj\Debug\net9.0\Estac.Domain.pdb
+C:\Repositorio\Pessoal\Estacionamento\Estac.Domain\obj\Debug\net9.0\ref\Estac.Domain.dll
