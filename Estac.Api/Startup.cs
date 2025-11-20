@@ -102,7 +102,7 @@ namespace Estac.Api
                 app.UseSwaggerUI(c =>
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Meu API V1");
-                    c.RoutePrefix = "swagger"; // para acessar diretamente em '/'
+                    c.RoutePrefix = "swagger";
                 });
             }
 
@@ -110,8 +110,8 @@ namespace Estac.Api
 
             app.UseSession();
 
-            app.UseCors(options =>
-                      options.AllowAnyOrigin()
+            app.UseCors(options => options
+                       .AllowAnyOrigin()
                        .AllowAnyMethod().AllowAnyHeader()
              );
 
