@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Estac.Infra")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fb0659d064a3860fd7e884e63715e83926d2db0b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+18209162cc297ceb7b4fa7670395af94264b6d7a")]
 [assembly: System.Reflection.AssemblyProductAttribute("Estac.Infra")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Estac.Infra")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

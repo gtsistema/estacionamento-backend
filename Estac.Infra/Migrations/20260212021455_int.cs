@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Estac.Infra.Migrations
 {
-    public partial class init : Migration
+    /// <inheritdoc />
+    public partial class @int : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -17,7 +19,7 @@ namespace Estac.Infra.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Autor = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DataLancamento = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Valor = table.Column<decimal>(type: "decimal(10,4)", precision: 10, scale: 4, nullable: false),
+                    Valor = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Descricao = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DataAtualizacao = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -40,7 +42,7 @@ namespace Estac.Infra.Migrations
                     ValorTotalPagoReceitas = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     DataLimite = table.Column<DateTime>(type: "datetime2", nullable: false),
                     NaoPossuiDataLimite = table.Column<bool>(type: "bit", nullable: false),
-                    Descricao = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Descricao = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DataAtualizacao = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -231,7 +233,7 @@ namespace Estac.Infra.Migrations
                     Cartao = table.Column<int>(type: "int", nullable: true),
                     Valor = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     DespesaId = table.Column<long>(type: "bigint", nullable: false),
-                    Descricao = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Descricao = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DataAtualizacao = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -277,7 +279,7 @@ namespace Estac.Infra.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ValorTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     ReceitaId = table.Column<long>(type: "bigint", nullable: false),
-                    Descricao = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Descricao = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DataAtualizacao = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -293,17 +295,6 @@ namespace Estac.Infra.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Orcamento",
-                columns: new[] { "Id", "Ano", "DataAtualizacao", "DataCriacao", "DataLimite", "Descricao", "NaoPossuiDataLimite", "ValorPrevistoDespesa", "ValorPrevistoReceita", "ValorTotalPagoDespesas", "ValorTotalPagoReceitas" },
-                values: new object[,]
-                {
-                    { 1L, 2025, null, new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(5723), new DateTime(2025, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified), "Despesas Mensais - 2025", false, null, null, 0m, 0m },
-                    { 2L, 2025, null, new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(5731), new DateTime(2025, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified), "Volta para Cuiabá", false, null, null, 0m, 0m },
-                    { 3L, 0, null, new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(5732), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Compra da Moto", true, null, null, 0m, 0m },
-                    { 4L, 0, null, new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(5733), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Fundo de Reserva", true, null, null, 0m, 0m }
-                });
-
-            migrationBuilder.InsertData(
                 table: "User",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "EmpresaId", "FullName", "ImagemUrl", "IsDeleted", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TemporaryPassword", "TwoFactorEnabled", "UserName" },
                 values: new object[] { new Guid("9552c4b8-e60e-42a6-8f97-96b8f8edd555"), 0, "1a503903-b30e-4c13-9e8a-2ec6038c475c", "jeancpcorrea@gmail.com", true, null, null, null, false, false, null, "JEANCPCORREA@GMAIL.COM", "jeancpcorrea@gmail.com", "@Admin123456", "65981324241", true, "LDPU32DFTNBNBJ5JQ2R7VXEHNCGE6UER", false, false, "Admin" });
@@ -312,30 +303,6 @@ namespace Estac.Infra.Migrations
                 table: "UserRole",
                 columns: new[] { "RoleId", "UserId" },
                 values: new object[] { new Guid("078a8c6e-a76d-46e8-ba75-3e9476c0a35c"), new Guid("9552c4b8-e60e-42a6-8f97-96b8f8edd555") });
-
-            migrationBuilder.InsertData(
-                table: "Despesa",
-                columns: new[] { "Id", "DataAtualizacao", "DataCriacao", "Descricao", "MesReferente", "OrcamentoId", "PorcentagemPaga", "SaldoRestante", "TipoDespesa", "ValorPago", "ValorTotal" },
-                values: new object[,]
-                {
-                    { 1L, null, new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(1514), "Cartão de Credito", 0, 1L, 0m, 0m, 1, 0m, 0m },
-                    { 2L, null, new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(1546), "Aluguel", 5, 1L, 0m, 0m, 4, 0m, 1050.00m },
-                    { 3L, null, new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(1567), "Combustível", 5, 1L, 0m, 0m, 14, 0m, 0m },
-                    { 4L, null, new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(1585), "Remédios", 5, 1L, 0m, 0m, 9, 0m, 0m },
-                    { 5L, null, new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(1601), "Fatura de Luz", 5, 1L, 0m, 0m, 15, 0m, 0m },
-                    { 7L, null, new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(1622), "Alimentação", 5, 1L, 0m, 0m, 13, 0m, 0m },
-                    { 8L, null, new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(1637), "Consorcio", 5, 1L, 0m, 0m, 5, 0m, 0m }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Receita",
-                columns: new[] { "Id", "DataAtualizacao", "DataCriacao", "Descricao", "MesReferente", "OrcamentoId", "PorcentagemRecebido", "SaldoRestante", "TipoReceita", "ValorRecebido", "ValorTotal" },
-                values: new object[,]
-                {
-                    { 1L, null, new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(4101), "Salário Jean", 0, 2L, 0m, 0m, 1, 0m, 0m },
-                    { 2L, null, new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(4122), "Flex Benner", 0, 2L, 0m, 0m, 6, 0m, 0m },
-                    { 3L, null, new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(4139), "Bpc Lorenzo", 0, 2L, 0m, 0m, 2, 0m, 0m }
-                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Despesa_OrcamentoId",
@@ -363,6 +330,7 @@ namespace Estac.Infra.Migrations
                 column: "ReceitaId");
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

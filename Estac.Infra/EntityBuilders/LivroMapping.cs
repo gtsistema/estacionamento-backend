@@ -8,10 +8,10 @@ namespace Estac.Infra.EntityBuilders
     {
         public void Configure(EntityTypeBuilder<Livro> builder)
         {
-            builder.ToTable("Livro");
-            builder.HasKey(x => x.Id);
-            builder.Property(x => x.Valor)
-            .HasPrecision(10, 4);
+            //builder.ToTable("Livro");
+            //builder.HasKey(x => x.Id);
+            //builder.Property(x => x.Valor)
+            //.HasPrecision(10, 4);
         }
     }
 }

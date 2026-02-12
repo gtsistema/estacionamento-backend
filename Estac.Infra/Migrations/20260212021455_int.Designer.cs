@@ -12,17 +12,18 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Estac.Infra.Migrations
 {
     [DbContext(typeof(GpContext))]
-    [Migration("20250429192112_init")]
-    partial class init
+    [Migration("20260212021455_int")]
+    partial class @int
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.31")
+                .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Estac.Domain.Auth.ApplicationUser", b =>
                 {
@@ -117,10 +118,9 @@ namespace Estac.Infra.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasColumnName("Id");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime?>("DataAtualizacao")
                         .HasColumnType("datetime2");
@@ -157,109 +157,15 @@ namespace Estac.Infra.Migrations
                     b.HasIndex("OrcamentoId");
 
                     b.ToTable("Despesa");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            DataCriacao = new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(1514),
-                            Descricao = "Cartão de Credito",
-                            MesReferente = 0,
-                            OrcamentoId = 1L,
-                            PorcentagemPaga = 0m,
-                            SaldoRestante = 0m,
-                            TipoDespesa = 1,
-                            ValorPago = 0m,
-                            ValorTotal = 0m
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            DataCriacao = new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(1546),
-                            Descricao = "Aluguel",
-                            MesReferente = 5,
-                            OrcamentoId = 1L,
-                            PorcentagemPaga = 0m,
-                            SaldoRestante = 0m,
-                            TipoDespesa = 4,
-                            ValorPago = 0m,
-                            ValorTotal = 1050.00m
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            DataCriacao = new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(1567),
-                            Descricao = "Combustível",
-                            MesReferente = 5,
-                            OrcamentoId = 1L,
-                            PorcentagemPaga = 0m,
-                            SaldoRestante = 0m,
-                            TipoDespesa = 14,
-                            ValorPago = 0m,
-                            ValorTotal = 0m
-                        },
-                        new
-                        {
-                            Id = 4L,
-                            DataCriacao = new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(1585),
-                            Descricao = "Remédios",
-                            MesReferente = 5,
-                            OrcamentoId = 1L,
-                            PorcentagemPaga = 0m,
-                            SaldoRestante = 0m,
-                            TipoDespesa = 9,
-                            ValorPago = 0m,
-                            ValorTotal = 0m
-                        },
-                        new
-                        {
-                            Id = 5L,
-                            DataCriacao = new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(1601),
-                            Descricao = "Fatura de Luz",
-                            MesReferente = 5,
-                            OrcamentoId = 1L,
-                            PorcentagemPaga = 0m,
-                            SaldoRestante = 0m,
-                            TipoDespesa = 15,
-                            ValorPago = 0m,
-                            ValorTotal = 0m
-                        },
-                        new
-                        {
-                            Id = 7L,
-                            DataCriacao = new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(1622),
-                            Descricao = "Alimentação",
-                            MesReferente = 5,
-                            OrcamentoId = 1L,
-                            PorcentagemPaga = 0m,
-                            SaldoRestante = 0m,
-                            TipoDespesa = 13,
-                            ValorPago = 0m,
-                            ValorTotal = 0m
-                        },
-                        new
-                        {
-                            Id = 8L,
-                            DataCriacao = new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(1637),
-                            Descricao = "Consorcio",
-                            MesReferente = 5,
-                            OrcamentoId = 1L,
-                            PorcentagemPaga = 0m,
-                            SaldoRestante = 0m,
-                            TipoDespesa = 5,
-                            ValorPago = 0m,
-                            ValorTotal = 0m
-                        });
                 });
 
             modelBuilder.Entity("Estac.Domain.Models.DespesaLancamento", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasColumnName("Id");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<int?>("Cartao")
                         .HasColumnType("int");
@@ -274,8 +180,7 @@ namespace Estac.Infra.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Descricao")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("DespesaId")
                         .HasColumnType("bigint");
@@ -302,7 +207,7 @@ namespace Estac.Infra.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime?>("DataAtualizacao")
                         .HasColumnType("datetime2");
@@ -332,7 +237,7 @@ namespace Estac.Infra.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Autor")
                         .HasColumnType("nvarchar(max)");
@@ -350,22 +255,20 @@ namespace Estac.Infra.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Valor")
-                        .HasPrecision(10, 4)
-                        .HasColumnType("decimal(10,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Livro", (string)null);
+                    b.ToTable("Livro");
                 });
 
             modelBuilder.Entity("Estac.Domain.Models.Orcamento", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasColumnName("Id");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<int>("Ano")
                         .HasColumnType("int");
@@ -380,8 +283,7 @@ namespace Estac.Infra.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Descricao")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("NaoPossuiDataLimite")
                         .HasColumnType("bit");
@@ -401,62 +303,15 @@ namespace Estac.Infra.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Orcamento");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            Ano = 2025,
-                            DataCriacao = new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(5723),
-                            DataLimite = new DateTime(2025, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Descricao = "Despesas Mensais - 2025",
-                            NaoPossuiDataLimite = false,
-                            ValorTotalPagoDespesas = 0m,
-                            ValorTotalPagoReceitas = 0m
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            Ano = 2025,
-                            DataCriacao = new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(5731),
-                            DataLimite = new DateTime(2025, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Descricao = "Volta para Cuiabá",
-                            NaoPossuiDataLimite = false,
-                            ValorTotalPagoDespesas = 0m,
-                            ValorTotalPagoReceitas = 0m
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            Ano = 0,
-                            DataCriacao = new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(5732),
-                            DataLimite = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Descricao = "Compra da Moto",
-                            NaoPossuiDataLimite = true,
-                            ValorTotalPagoDespesas = 0m,
-                            ValorTotalPagoReceitas = 0m
-                        },
-                        new
-                        {
-                            Id = 4L,
-                            Ano = 0,
-                            DataCriacao = new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(5733),
-                            DataLimite = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Descricao = "Fundo de Reserva",
-                            NaoPossuiDataLimite = true,
-                            ValorTotalPagoDespesas = 0m,
-                            ValorTotalPagoReceitas = 0m
-                        });
                 });
 
             modelBuilder.Entity("Estac.Domain.Models.Receita", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasColumnName("Id");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime?>("DataAtualizacao")
                         .HasColumnType("datetime2");
@@ -493,57 +348,15 @@ namespace Estac.Infra.Migrations
                     b.HasIndex("OrcamentoId");
 
                     b.ToTable("Receita");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            DataCriacao = new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(4101),
-                            Descricao = "Salário Jean",
-                            MesReferente = 0,
-                            OrcamentoId = 2L,
-                            PorcentagemRecebido = 0m,
-                            SaldoRestante = 0m,
-                            TipoReceita = 1,
-                            ValorRecebido = 0m,
-                            ValorTotal = 0m
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            DataCriacao = new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(4122),
-                            Descricao = "Flex Benner",
-                            MesReferente = 0,
-                            OrcamentoId = 2L,
-                            PorcentagemRecebido = 0m,
-                            SaldoRestante = 0m,
-                            TipoReceita = 6,
-                            ValorRecebido = 0m,
-                            ValorTotal = 0m
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            DataCriacao = new DateTime(2025, 4, 29, 16, 21, 10, 347, DateTimeKind.Local).AddTicks(4139),
-                            Descricao = "Bpc Lorenzo",
-                            MesReferente = 0,
-                            OrcamentoId = 2L,
-                            PorcentagemRecebido = 0m,
-                            SaldoRestante = 0m,
-                            TipoReceita = 2,
-                            ValorRecebido = 0m,
-                            ValorTotal = 0m
-                        });
                 });
 
             modelBuilder.Entity("Estac.Domain.Models.ReceitaLancamento", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasColumnName("Id");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime?>("DataAtualizacao")
                         .HasColumnType("datetime2");
@@ -552,8 +365,7 @@ namespace Estac.Infra.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Descricao")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("ReceitaId")
                         .HasColumnType("bigint");
@@ -594,7 +406,7 @@ namespace Estac.Infra.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -616,7 +428,7 @@ namespace Estac.Infra.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
