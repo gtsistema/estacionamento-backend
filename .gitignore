@@ -1,0 +1,58 @@
+﻿# ===== Visual Studio =====
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# ===== Build =====
+bin/
+obj/
+[Bb]uild/
+[Dd]ebug/
+[Rr]elease/
+
+# ===== .NET =====
+*.dll
+*.exe
+*.pdb
+*.cache
+*.deps.json
+*.runtimeconfig.json
+
+# ===== Logs =====
+*.log
+
+# ===== Rider =====
+.idea/
+
+# ===== VS Code =====
+.vscode/
+
+# ===== OS =====
+Thumbs.db
+.DS_Store
+
+# ===== NuGet =====
+*.nupkg
+packages/
+.nuget/
+
+# ===== EF Core =====
+*.db
+*.db-shm
+*.db-wal
+
+# ===== Publish =====
+publish/
+
+# ===== Temp =====
+tmp/
+temp/
+
+# ===== Test =====
+TestResults/
+
+# ===== Coverage =====
+coverage/
+*.opencover.xml
