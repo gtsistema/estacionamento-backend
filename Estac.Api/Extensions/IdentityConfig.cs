@@ -35,6 +35,9 @@ namespace Estac.Api.Extensions
             {
                 var key = Encoding.ASCII.GetBytes(bearerTokenSettings.Secret);
 
+                if (string.IsNullOrEmpty(bearerTokenSettings?.Secret))
+                    throw new Exception("JWT Secret não configurado");
+
                 services.AddAuthentication(x =>
                 {
                     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

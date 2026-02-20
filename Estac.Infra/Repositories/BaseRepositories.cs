@@ -28,9 +28,9 @@ namespace Estac.Infra.Repository
                 return true;
 
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
-                throw ex;
+                throw;                  
             }
         }
 
@@ -52,9 +52,9 @@ namespace Estac.Infra.Repository
                 await _context.SaveChangesAsync();
 
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException )
             {
-                throw ex;
+                throw;
             }
 
             return item;
@@ -66,9 +66,9 @@ namespace Estac.Infra.Repository
             {
                 return await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(p => p.Id.Equals(id));
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException )
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -78,9 +78,9 @@ namespace Estac.Infra.Repository
             {
                 return Task.FromResult(_context.Set<T>().AsNoTracking().AsQueryable());
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -101,9 +101,9 @@ namespace Estac.Infra.Repository
                 await _context.SaveChangesAsync();
 
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
-                throw ex;
+                throw;
             }
 
             return item;
@@ -120,9 +120,9 @@ namespace Estac.Infra.Repository
                     await _context.AddAsync(item);
                 }
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
-                throw ex;
+                throw;
             }
 
             return item;
@@ -134,9 +134,9 @@ namespace Estac.Infra.Repository
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
-                throw ex;
+                throw;
             }
         }
 

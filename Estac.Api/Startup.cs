@@ -75,11 +75,11 @@ namespace Estac.Api
                 });
                 });
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
-                var teste = ex.Message;
+                throw;
             }
-          
+
         }
         private void ResolveMiniProfile(IServiceCollection services)
         {
@@ -116,8 +116,6 @@ namespace Estac.Api
              );
 
             app.UseHttpsRedirection();
-
-            app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
