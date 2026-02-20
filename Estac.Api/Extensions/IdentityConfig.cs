@@ -57,7 +57,7 @@ namespace Estac.Api.Extensions
                     };
                 });
             }
-            catch (FormatException ex)
+            catch (FormatException)
             {
                 throw;
             }

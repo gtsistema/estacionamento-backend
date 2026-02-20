@@ -75,7 +75,7 @@ namespace Estac.Api
                 });
                 });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -106,16 +106,16 @@ namespace Estac.Api
                 });
             }
 
+            app.UseHttpsRedirection();
             app.UseRouting();
 
-            app.UseSession();
-
             app.UseCors(options => options
-                       .AllowAnyOrigin()
-                       .AllowAnyMethod().AllowAnyHeader()
-             );
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+            );
 
-            app.UseHttpsRedirection();
+            app.UseSession();
 
             app.UseAuthentication();
             app.UseAuthorization();
@@ -125,11 +125,11 @@ namespace Estac.Api
                 endpoints.MapControllers();
             });
 
-            var automaticRunDbMigrations = Configuration.GetValue<bool>("AutomaticRunDbMigrations");
-            if (automaticRunDbMigrations)
-            {
-                context.Database.Migrate();
-            }
+            //var automaticRunDbMigrations = Configuration.GetValue<bool>("AutomaticRunDbMigrations");
+            //if (automaticRunDbMigrations)
+            //{
+            //    context.Database.Migrate();
+            //}
 
         }
     }

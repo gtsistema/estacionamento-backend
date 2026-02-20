@@ -52,7 +52,7 @@ using System.Threading.Tasks;
     {
         await host.RunAsync();
 }
-    catch (Exception e)
+    catch (Exception)
     {
 //        Log.Error("{Name} - Falha inesperada durante a execução: " + e.Message, "System");
 //Log.Information("{Name} - Serviço parado, verifique o erro e reinicie o serviço", "System");
