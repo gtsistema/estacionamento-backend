@@ -33,6 +33,8 @@ namespace Estac.Api
                         .ResolveInjectDependencies(Configuration)
                         .AddIdentityConfiguration(Configuration);
 
+                services.AddDistributedMemoryCache();
+
                 services.AddSession(options =>
                 {
                     options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -93,7 +95,11 @@ namespace Estac.Api
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, GpContext context,
            ILoggerFactory loggerFactory, IHttpContextAccessor httpContext)
         {
-            app.UseDeveloperExceptionPage();
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -117,6 +123,11 @@ namespace Estac.Api
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapGet("/", async context =>
+                {
+                    await context.Response.WriteAsync("API ONLINE");
+                });
+
                 endpoints.MapControllers();
             });
         }
