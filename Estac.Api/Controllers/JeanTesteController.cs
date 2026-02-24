@@ -16,6 +16,5 @@ namespace Estac.Api.Controllers
             _logger = logger;
             this._services = _services;
         }
-
     }
 }

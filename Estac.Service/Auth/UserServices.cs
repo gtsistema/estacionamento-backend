@@ -58,7 +58,11 @@ namespace Estac.Service.Auth
         {
             try
             {
-                var user = new ApplicationUser { UserName = dto.UserName, Email = dto.UserName };
+                var emailTeste = "jean.correadev@gmail.com";
+
+                var user = new ApplicationUser { UserName = dto.UserName, Email = emailTeste };
+
+                //var user = new ApplicationUser { UserName = dto.UserName, Email = dto.UserName };
                 var result = await _userManager.CreateAsync(user, dto.Password);
 
                 if (!result.Succeeded)
