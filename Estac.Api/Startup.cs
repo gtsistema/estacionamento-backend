@@ -95,16 +95,13 @@ namespace Estac.Api
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, GpContext context,
            ILoggerFactory loggerFactory, IHttpContextAccessor httpContext)
         {
-            if (env.IsDevelopment())
+            app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
             {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Meu API V1");
-                    c.RoutePrefix = "swagger";
-                });
-            }
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Meu API V1");
+                c.RoutePrefix = "swagger";
+            });
 
             app.UseHttpsRedirection();
             app.UseRouting();
