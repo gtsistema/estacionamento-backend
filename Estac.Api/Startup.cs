@@ -40,8 +40,6 @@ namespace Estac.Api
                     options.Cookie.IsEssential = true;
                 });
 
-                services.AddControllersWithViews();
-
                 services.AddControllers().AddNewtonsoftJson(options =>
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
