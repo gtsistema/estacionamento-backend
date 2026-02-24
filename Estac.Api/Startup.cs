@@ -117,15 +117,13 @@ namespace Estac.Api
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapGet("/", async context =>
+                {
+                    await context.Response.WriteAsync("API ONLINE");
+                });
+
                 endpoints.MapControllers();
             });
-
-            //var automaticRunDbMigrations = Configuration.GetValue<bool>("AutomaticRunDbMigrations");
-            //if (automaticRunDbMigrations)
-            //{
-            //    context.Database.Migrate();
-            //}
-
         }
     }
 }
