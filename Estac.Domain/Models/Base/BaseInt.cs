@@ -1,8 +1,8 @@
-﻿namespace Estac.Domain.Models
+﻿namespace Estac.Domain.Models.Base
 {
-    public class Base
+    public class BaseInt
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         public string Descricao { get; set; }
         public DateTime DataCriacao { get; set; }
         public DateTime? DataAtualizacao { get; set; }

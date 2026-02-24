@@ -1,5 +1,6 @@
 ﻿using Estac.Domain.Auth;
 using Estac.Domain.Models;
+using Estac.Domain.Models.Enuns;
 using Estac.Infra.EntityBuilders;
 using Estac.Infra.EntityBuilders.User;
 using Microsoft.AspNetCore.Identity;
@@ -25,19 +26,57 @@ namespace Estac.Infra.Context
             modelBuilder.Entity<IdentityUserClaim<Guid>>(new UserClaimMapping().Configure);
             modelBuilder.Entity<IdentityUserLogin<Guid>>(new UserLoginMapping().Configure);
 
-            modelBuilder.Entity<Despesa>(new DespesaMapping().Configure);
-            modelBuilder.Entity<DespesaLancamento>(new DespesaLancamentoMapping().Configure);
-            modelBuilder.Entity<Receita>(new ReceitaMapping().Configure);
-            modelBuilder.Entity<ReceitaLancamento>(new ReceitaLancamentoMapping().Configure);
-            modelBuilder.Entity<Orcamento>(new OrcamentoMapping().Configure);
-            modelBuilder.Entity<Livro>(new LivroMapping().Configure);
+
+            modelBuilder.Entity<PessoaTelefone>()
+                .HasOne(t => t.Pessoa)
+                .WithMany(p => p.Telefones)
+                .HasForeignKey(t => t.PessoaId);
+
+            modelBuilder.Entity<PessoaEndereco>()
+                .HasOne(e => e.Pessoa)
+                .WithMany(p => p.Enderecos)
+                .HasForeignKey(e => e.PessoaId);
+
+            modelBuilder.Entity<PessoaPapel>()
+                .HasOne(e => e.Pessoa)
+                .WithMany(p => p.Papeis)
+                .HasForeignKey(e => e.PessoaId);
+
+            modelBuilder.Entity<Motorista>()
+                .HasOne(x => x.Pessoa)
+                .WithMany()
+                .HasForeignKey(x => x.PessoaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Motorista>()
+                .HasOne(x => x.Pessoa)
+                .WithMany()
+                .HasForeignKey(x => x.PessoaId);
+
+            modelBuilder.Entity<MotoristaVeiculo>()
+                .HasOne(x => x.Motorista)
+                .WithMany()
+                .HasForeignKey(x => x.MotoristaId);
+
+            modelBuilder.Entity<MotoristaVeiculo>()
+               .HasOne(x => x.Veiculo)
+               .WithMany()
+               .HasForeignKey(x => x.VeiculoId);
+
         }
 
-        public DbSet<Despesa> Despesa { get; set; }
-        public DbSet<DespesaLancamento> DespesaLancamento { get; set; }
-        public DbSet<Receita> Receita { get; set; }
-        public DbSet<ReceitaLancamento> ReceitaLancamento { get; set; }
-        public DbSet<Orcamento> Orcamento { get; set; }
-        public DbSet<Livro> Livro { get; set; }
+        public DbSet<Motorista> Motorista { get; set; }
+        public DbSet<MotoristaVeiculo> MotoristaVeiculo { get; set; }
+        public DbSet<Pessoa> Pessoa { get; set; }
+        public DbSet<PessoaEndereco> PessoaEndereco { get; set; }
+        public DbSet<PessoaPapel> PessoalPapel { get; set; }
+        public DbSet<PessoaTelefone> PessoaTelefone { get; set; }
+        //public DbSet<Vaga> Vaga { get; set; }
+        //public DbSet<VagaVeiculo> VagaVeiculo { get; set; }
+        //public DbSet<Veiculo> Veiculo { get; set; }
+        //public DbSet<VeiculoDetalhe> VeiculoDetalhe { get; set; }
+        //public DbSet<VeiculoMarca> VeiculoMarca { get; set; }
+        //public DbSet<VeiculoModelo> VeiculoModelo { get; set; }
+        //public DbSet<VeiculoPlaca> VeiculoPlaca { get; set; }
     }
 }

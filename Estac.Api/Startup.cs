@@ -123,13 +123,25 @@ namespace Estac.Api
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
+                endpoints.MapControllerRoute(
+                name: "default",
+                pattern: "api/{controller}/{action}/{id?}"
+                 );
+
+                endpoints.MapGet("/", context =>
                 {
-                    await context.Response.WriteAsync("API ONLINE");
+                    context.Response.Redirect("/swagger/index.html");
+                    return Task.CompletedTask;
                 });
 
                 endpoints.MapControllers();
             });
+
+            var automaticRunDbMigrations = Configuration.GetValue<bool>("AutomaticRunDbMigrations");
+            if (automaticRunDbMigrations)
+            {
+                context.Database.Migrate();
+            }
         }
     }
 }

@@ -13,23 +13,23 @@ using System.Data;
 
 namespace Estac.Infra.Repositories
 {
-    public class DespesaLancamentoRepositories : BaseRepositories<DespesaLancamento>, IDespesaLancamentoRepositories
-    {
-        private DbSet<DespesaLancamento> _dataset;
-        private readonly IMapper _mapper;
+    //public class DespesaLancamentoRepositories : BaseRepositories<DespesaLancamento>, IDespesaLancamentoRepositories
+    //{
+    //    private DbSet<DespesaLancamento> _dataset;
+    //    private readonly IMapper _mapper;
 
-        public DespesaLancamentoRepositories(GpContext context, IMapper mapper) : base(context)
-        {
-            _dataset = context.Set<DespesaLancamento>();
-            _mapper = mapper;
-        }
+    //    public DespesaLancamentoRepositories(GpContext context, IMapper mapper) : base(context)
+    //    {
+    //        _dataset = context.Set<DespesaLancamento>();
+    //        _mapper = mapper;
+    //    }
 
-        public async Task<Despesa> GetIdByDescricaoAsync(string descricao, MesDoAno mesDoAno)
-        {
-            return await _context.Despesa
-                    .Where(p => p.Descricao.Contains(descricao)
-                    && p.MesReferente == mesDoAno)
-                    .FirstOrDefaultAsync();
-        }
-    }
+    //    public async Task<Despesa> GetIdByDescricaoAsync(string descricao, MesDoAno mesDoAno)
+    //    {
+    //        return await _context.Despesa
+    //                .Where(p => p.Descricao.Contains(descricao)
+    //                && p.MesReferente == mesDoAno)
+    //                .FirstOrDefaultAsync();
+    //    }
+    //}
 }

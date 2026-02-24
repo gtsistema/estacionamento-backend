@@ -1,8 +1,8 @@
-﻿using Estac.Domain.Models;
+﻿using Estac.Domain.Models.Base;
 
 namespace Estac.Domain.Interface.Repositories
 {
-    public interface IBaseRepositories<T> where T : Base
+    public interface IBaseRepositories<T> where T : BaseLong
     {
         Task<T> InsertAsync(T item);
         Task<T> UpdateAsync(T item);

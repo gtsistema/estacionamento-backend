@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace Estac.Infra.Repositories
 {
-    public class OrcamentoRepositories : BaseRepositories<Orcamento>, IOrcamentoRepositories
-    {
-        public OrcamentoRepositories(GpContext context) : base(context)
-        {
-        }
-    }
+    //public class OrcamentoRepositories : BaseRepositories<Orcamento>, IOrcamentoRepositories
+    //{
+    //    public OrcamentoRepositories(GpContext context) : base(context)
+    //    {
+    //    }
+    //}
 }

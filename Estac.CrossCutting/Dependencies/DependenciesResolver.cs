@@ -7,12 +7,9 @@ using Estac.Domain.Interface.Services;
 using Estac.Domain.Interface.Services.Auth;
 using Estac.Domain.Interface.Services.Cursos;
 using Estac.Domain.Output;
-using Estac.Infra.Repositories;
-using Estac.Infra.Repositories.Cursos;
 using Estac.Infra.Repository;
 using Estac.Service;
 using Estac.Service.Auth;
-using Estac.Service.Cursos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -29,26 +26,10 @@ namespace Estac.CrossCutting.Dependencies
 
             //services
             services.AddScoped<IUserServices, UserServices>();
-            services.AddScoped<IDespesaServices, DespesaServices>();
-            services.AddScoped<IReceitaServices, ReceitaServices>();
-            services.AddScoped<IOrcamentoServices, OrcamentoServices>();
-
-
+          
             // repositories
-            services.AddScoped<IDespesaRepositories, DespesaRepositories>();
-            services.AddScoped<IReceitaRepositories, ReceitaRepositories>();
-            services.AddScoped<IOrcamentoRepositories, OrcamentoRepositories>();
-            services.AddScoped<IDespesaLancamentoRepositories, DespesaLancamentoRepositories>();
-            services.AddScoped<IDespesaPagamentoRepositories, DespesaPagamentoRepositories>();
-            services.AddScoped<IReceitaLancamentoRepositories, ReceitaLancamentoRepositories>();
-
-
-            // cursos
-            services.AddScoped<ILivroServices, LivroServices>();
-            services.AddScoped<ILivroRepositories, LivroRepositories>();
 
             services.AddScoped(typeof(IBaseRepositories<>), typeof(BaseRepositories<>));
-
             
             return services;
         }

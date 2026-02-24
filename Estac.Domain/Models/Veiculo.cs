@@ -1,16 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Estac.Domain.Models.Base;
 
 namespace Estac.Domain.Models
 {
-    public class Veiculo
+    public class Veiculo : BaseInt
     {
-        public int Id { get; set; }
-        public string Modelo { get; set; }
-        public string Marca { get; set; }
-        [Required]
-        public string PlacaCavalo { get; set; }
-        public string PlacaCarreta1 { get; set; }
-        public string PlacaCarreta2 { get; set; }
-        public string PlacaCarreta3 { get; set; }
+        public string Placa { get; set; }
+        public int? Ano { get; set; }
+        public bool Ativo { get; set; }
+        public string Cor { get; set; }
+        public int? VeiculoMarcaId { get; set; }
+        public int? VeiculoModeloId { get; set; }
+        public int? VeiculoDetalheId { get; set; }
+        public VeiculoDetalhe VeiculoDetalhe { get; set; }
+        public VeiculoMarca VeiculoMarca { get; set; }
+        public VeiculoModelo VeiculoModelo { get; set; }
     }
 }

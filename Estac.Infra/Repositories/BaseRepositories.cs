@@ -1,12 +1,12 @@
 ﻿using Estac.Domain.Interface.Repositories;
-using Estac.Domain.Models;
+using Estac.Domain.Models.Base;
 using Estac.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace Estac.Infra.Repository
 {
-    public class BaseRepositories<T> : IBaseRepositories<T> where T : Base
+    public class BaseRepositories<T> : IBaseRepositories<T> where T : BaseLong
     {
         protected readonly GpContext _context;
         public BaseRepositories(GpContext context)

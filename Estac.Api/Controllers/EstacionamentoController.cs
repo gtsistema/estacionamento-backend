@@ -1,18 +1,15 @@
 ﻿using Estac.Domain.Input.Despesa;
 using Estac.Domain.Interface.Services;
-using Estac.Domain.Models.Enuns;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Estac.Api.Controllers
 {
-    [ApiController]
-    [Route("api/v1/despesa")]
-
-    public class DespesaController : ControllerBase
+    [Authorize]
+    public class EstacionamentoController
     {
         public readonly IDespesaServices _services;
-
-        public DespesaController(IDespesaServices _services)
+        public EstacionamentoController(IDespesaServices _services)
         {
             this._services = _services;
         }
@@ -45,24 +42,6 @@ namespace Estac.Api.Controllers
         public async Task<ActionResult> Delete(long id)
         {
             return await _services.DeleteAsync(id);
-        }
-
-        [HttpPost("lancamento")]
-        public async Task<ActionResult> Lancamento([FromBody] DespesaLancamentoPostInput input)
-        {
-            return await _services.LancamentoAsync(input);
-        }
-
-        [HttpPost("pagamento")]
-        public async Task<ActionResult> Pagamento([FromBody] DespesaPagamentoPostInput input)
-        {
-            return await _services.PagamentoAsync(input);
-        }
-
-        [HttpPost("atualizarSaldoDevedorPago")]
-        public async Task<ActionResult> AtualizarSaldoDevedor([FromBody] AtualizaSaldoDoMesPostInput input)
-        {
-            return await _services.AtualizarSaldoDevadorDoMesAsync(input);
         }
     }
 }

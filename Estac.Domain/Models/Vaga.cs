@@ -1,7 +1,10 @@
-﻿namespace Estac.Domain.Models
+﻿using Estac.Domain.Models.Base;
+
+namespace Estac.Domain.Models
 {
-    public class Vaga
+    public class Vaga : BaseInt
     {
-        public int Id { get; set; } 
+        public bool Ativo { get; set; }
+        public string Observacao { get; set; }
     }
 }

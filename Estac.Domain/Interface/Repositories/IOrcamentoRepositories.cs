@@ -2,7 +2,7 @@
 
 namespace Estac.Domain.Interface.Repositories
 {
-    public interface IOrcamentoRepositories : IBaseRepositories<Orcamento>
-    {
-    }
+    //public interface IOrcamentoRepositories : IBaseRepositories<Orcamento>
+    //{
+    //}
 }

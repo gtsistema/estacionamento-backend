@@ -5,8 +5,8 @@ using Estac.Domain.Shared;
 
 namespace Estac.Domain.Interface.Repositories
 {
-    public interface IReceitaRepositories : IBaseRepositories<Receita>
-    {
-        Task<PagedResult<Receita>> GetPageAsync(ReceitaFilterInput input);
-    }
+    //public interface IReceitaRepositories : IBaseRepositories<Receita>
+    //{
+    //    Task<PagedResult<Receita>> GetPageAsync(ReceitaFilterInput input);
+    //}
 }

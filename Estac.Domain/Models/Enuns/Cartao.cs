@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Estac.Domain.Models.ModelEnum
+namespace Estac.Domain.Models.Enuns
 {
     public enum Cartao
     {

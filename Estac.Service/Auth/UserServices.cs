@@ -58,7 +58,9 @@ namespace Estac.Service.Auth
         {
             try
             {
-                var emailTeste = "jean.correadev@gmail.com";
+                //var emailTeste = "jean.correadev@gmail.com";
+                var emailTeste = dto.UserName;
+
 
                 var user = new ApplicationUser { UserName = dto.UserName, Email = emailTeste };
 
