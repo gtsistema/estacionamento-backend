@@ -25,15 +25,11 @@ namespace Estac.Infra.EntityBuilders
                 .HasColumnType("int")
                 .IsRequired();
 
-            builder.HasOne(p => p.Pessoa)
+            builder.HasKey(x => new { x.PessoaId, x.TipoPapel });
+
+            builder.HasOne(x => x.Pessoa)
                 .WithMany(p => p.Papeis)
-                .HasForeignKey(p => p.PessoaId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasIndex(p => p.PessoaId);
-
-            builder.HasIndex(p => new { p.PessoaId, p.TipoPapel })
-                .IsUnique();
+                .HasForeignKey(x => x.PessoaId);
         }
     }
 }

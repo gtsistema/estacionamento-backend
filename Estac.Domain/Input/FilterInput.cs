@@ -4,7 +4,7 @@ namespace Estac.Domain.Input
 {
     public class FilterInput
     {
-        public string Search { get; set; }
+        public string Descricao { get; set; }
         public DateTime? DataInicial { get; set; }
         public DateTime? DataFinal { get; set; }
         public int NumeroPagina { get; set; } = 1;

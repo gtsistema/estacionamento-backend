@@ -47,7 +47,7 @@ namespace Estac.Api
 
                 services.AddSwaggerGen(c =>
                 {
-                    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Estacionamento API", Version = "v1" });
+                    c.SwaggerDoc("v1", new OpenApiInfo { Title = "GTS API", Version = "v1" });
 
                     // Adicionando configuração para autenticação JWT
                     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme

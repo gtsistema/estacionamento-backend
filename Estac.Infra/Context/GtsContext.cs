@@ -33,12 +33,14 @@ namespace Estac.Infra.Context
             modelBuilder.Entity<VeiculoDetalhe>(new VeiculoDetalheMapping().Configure);
             modelBuilder.Entity<VeiculoPlaca>(new VeiculoPlacaMapping().Configure);
 
+            //PESSOA
             modelBuilder.Entity<Pessoa>(new PessoaMapping().Configure);
             modelBuilder.Entity<PessoaEndereco>(new PessoaEnderecoMapping().Configure);
             modelBuilder.Entity<PessoaPapel>(new PessoaPapelMapping().Configure);
             modelBuilder.Entity<PessoaTelefone>(new PessoaTelefoneMapping().Configure);
             modelBuilder.Entity<Motorista>(new MotoristaMapping().Configure);
 
+            //MOTORISTA
             modelBuilder.Entity<MotoristaVeiculo>(new MotoristaVeiculoMapping().Configure);
             modelBuilder.Entity<Vaga>(new VagaMapping().Configure);
             modelBuilder.Entity<VagaVeiculo>(new VagaVeiculoMapping().Configure);

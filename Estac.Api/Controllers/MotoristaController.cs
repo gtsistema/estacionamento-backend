@@ -1,24 +1,22 @@
-﻿using Estac.Domain.Input.Veiculo;
+﻿using Estac.Domain.Input.Motorista;
 using Estac.Domain.Interface.Services;
-using Estac.Domain.Output.Veiculo;
-using Estac.Service;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Estac.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class VeiculoController : ControllerBase
+    public class MotoristaController : ControllerBase
     {
-        public readonly IVeiculoService _services;
+        public readonly IMotoristaService _services;
 
-        public VeiculoController(IVeiculoService _services)
+        public MotoristaController(IMotoristaService _services)
         {
-             this._services = _services;
+            this._services = _services;
         }
 
         [HttpGet]
-        public async Task<ActionResult> Buscar([FromQuery] VeiculoFilterInput filter)
+        public async Task<ActionResult> Buscar([FromQuery] MotoristaFilterInput filter)
         {
             return await _services.Buscar(filter);
         }
@@ -30,13 +28,13 @@ namespace Estac.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Gravar([FromBody] VeiculoPostInput input)
+        public async Task<ActionResult> Gravar([FromBody] MotoristaPostInput input)
         {
             return await _services.Gravar(input);
         }
 
         [HttpPut]
-        public async Task<ActionResult> Alterar([FromBody] VeiculoPutInput input)
+        public async Task<ActionResult> Alterar([FromBody] MotoristaPutInput input)
         {
             return await _services.Alterar(input);
         }
