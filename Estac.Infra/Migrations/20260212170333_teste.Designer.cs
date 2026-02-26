@@ -11,9 +11,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Estac.Infra.Migrations
 {
-    [DbContext(typeof(GpContext))]
+    [DbContext(typeof(GtsContext))]
     [Migration("20260212170333_teste")]
-    partial class teste
+    partial class Teste
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

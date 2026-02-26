@@ -2,9 +2,10 @@
 
 namespace Estac.Domain.Models
 {
-    public class VeiculoDetalhe : BaseInt
+    public class VeiculoDetalhe : BaseIntDataNull
     {
         public int VeiculoId { get; set; }
+        public string Uf { get; set; }
         public string NomeProprietario { get; set; }
         public string CpfCnpjProprietario { get; set; }
         public decimal? KmAtual { get; set; }

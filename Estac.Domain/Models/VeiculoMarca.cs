@@ -2,9 +2,8 @@
 
 namespace Estac.Domain.Models
 {
-    public class VeiculoMarca : BaseInt
+    public class VeiculoMarca : BaseIntDataNull
     {
-        public int VeiculoModeloId { get; set; }
-        public VeiculoModelo VeiculoModelo { get; set; }
+      
     }
 }

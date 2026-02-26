@@ -85,14 +85,12 @@ namespace Estac.Api
         {
             services.AddAutoMapper(cfg =>
             {
-                cfg.AddProfile<DespesaProfile>();
-                cfg.AddProfile<ReceitaProfile>();
-                cfg.AddProfile<OrcamentoProfile>();
                 cfg.AddProfile<UsuarioProfile>();
+                cfg.AddProfile<VeiculoProfile>();
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, GpContext context,
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, GtsContext context,
            ILoggerFactory loggerFactory, IHttpContextAccessor httpContext)
         {
             if (env.IsDevelopment())
@@ -123,18 +121,13 @@ namespace Estac.Api
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                name: "default",
-                pattern: "api/{controller}/{action}/{id?}"
-                 );
+                endpoints.MapControllers();
 
                 endpoints.MapGet("/", context =>
                 {
                     context.Response.Redirect("/swagger/index.html");
                     return Task.CompletedTask;
                 });
-
-                endpoints.MapControllers();
             });
 
             var automaticRunDbMigrations = Configuration.GetValue<bool>("AutomaticRunDbMigrations");

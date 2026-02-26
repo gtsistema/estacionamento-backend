@@ -2,14 +2,14 @@
 
 namespace Estac.Domain.Interface.Repositories
 {
-    public interface IBaseRepositories<T> where T : BaseLong
+    public interface IBaseRepositories<T> where T : BaseInt
     {
-        Task<T> InsertAsync(T item);
-        Task<T> UpdateAsync(T item);
-        Task<bool> DeleteAsync(long id);
-        Task<T> SelectAsync(long id);
+        Task<T> Gravar(T item);
+        Task<T> Alterar(T item);
+        Task<bool> Excluir(long id);
+        Task<T> Selecionar(long id);
         Task<IQueryable<T>> SelectAllAsync();
-        Task<bool> ExistAsync(long id);
+        Task<bool> Existe(long id);
         long LastCodeTable();
         Task<T> InsertNoSaveChangesAsync(T item);
         Task SaveChangesAsync();

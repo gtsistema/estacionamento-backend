@@ -4,9 +4,8 @@ using Estac.Domain.Models.Enuns;
 
 namespace Estac.Domain.Models
 {
-    public class PessoaEndereco
+    public class PessoaEndereco : BaseInt
     {
-        public int Id { get; set; }
         public int PessoaId { get; set; }
         public bool Principal { get; set; }
         public TipoEndereco TipoEndereco { get; set; }

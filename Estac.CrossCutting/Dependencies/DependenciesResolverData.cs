@@ -9,7 +9,7 @@ namespace Estac.CrossCutting.Dependencies
     {
         public static IServiceCollection ResolveData(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<GpContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<GtsContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
             //services.AddScoped<IDapperRepositories, DapperRepositories>();
 
 

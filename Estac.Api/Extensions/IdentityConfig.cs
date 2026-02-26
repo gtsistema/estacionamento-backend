@@ -14,7 +14,7 @@ namespace Estac.Api.Extensions
         public static IServiceCollection AddIdentityConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
-                .AddEntityFrameworkStores<GpContext>()
+                .AddEntityFrameworkStores<GtsContext>()
                 .AddErrorDescriber<IdentityPortugueseMessages>()
                 .AddDefaultTokenProviders();
 

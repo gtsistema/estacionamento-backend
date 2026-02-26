@@ -19,13 +19,4 @@
     <ProjectReference Include="..\Estac.Service\Estac.Service.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Estac.Domain">
-      <HintPath>..\Estac.Domain\bin\Debug\net6.0\Estac.Domain.dll</HintPath>
-    </Reference>
-    <Reference Include="Gp.Service">
-      <HintPath>..\Estac.Service\bin\Debug\net6.0\Gp.Service.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

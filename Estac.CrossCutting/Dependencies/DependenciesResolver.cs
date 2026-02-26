@@ -2,11 +2,10 @@
 using Estac.Domain.Clock;
 using Estac.Domain.Extensions.Notifier;
 using Estac.Domain.Interface.Repositories;
-using Estac.Domain.Interface.Repositories.Cursos;
 using Estac.Domain.Interface.Services;
 using Estac.Domain.Interface.Services.Auth;
-using Estac.Domain.Interface.Services.Cursos;
 using Estac.Domain.Output;
+using Estac.Infra.Repositories;
 using Estac.Infra.Repository;
 using Estac.Service;
 using Estac.Service.Auth;
@@ -26,11 +25,14 @@ namespace Estac.CrossCutting.Dependencies
 
             //services
             services.AddScoped<IUserServices, UserServices>();
-          
+            services.AddScoped<IVeiculoService, VeiculoService>();
+
             // repositories
 
             services.AddScoped(typeof(IBaseRepositories<>), typeof(BaseRepositories<>));
-            
+            services.AddScoped<IVeiculoRepositories, VeiculoRepositories>();
+
+
             return services;
         }
     }

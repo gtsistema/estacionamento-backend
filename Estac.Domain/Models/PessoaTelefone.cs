@@ -1,11 +1,11 @@
 ﻿
+using Estac.Domain.Models.Base;
 using Estac.Domain.Models.Enuns;
 
 namespace Estac.Domain.Models
 {
-    public class PessoaTelefone
+    public class PessoaTelefone : BaseIntDataNull
     {
-        public int Id { get; set; }
         public int PessoaId { get; set; }
         public bool Principal { get; set; }
         public TipoTelefone TipoTelefone { get; set; }

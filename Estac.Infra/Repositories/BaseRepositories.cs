@@ -6,14 +6,14 @@ using System.Data;
 
 namespace Estac.Infra.Repository
 {
-    public class BaseRepositories<T> : IBaseRepositories<T> where T : BaseLong
+    public class BaseRepositories<T> : IBaseRepositories<T> where T : BaseInt
     {
-        protected readonly GpContext _context;
-        public BaseRepositories(GpContext context)
+        protected readonly GtsContext _context;
+        public BaseRepositories(GtsContext context)
         {
             _context = context;
         }
-        public async Task<bool> DeleteAsync(long id)
+        public async Task<bool> Excluir(long id)
         {
             try
             {
@@ -34,12 +34,12 @@ namespace Estac.Infra.Repository
             }
         }
 
-        public async Task<bool> ExistAsync(long id)
+        public async Task<bool> Existe(long id)
         {
             return await _context.Set<T>().AsNoTracking().AnyAsync(p => p.Id.Equals(id));
         }
 
-        public async Task<T> InsertAsync(T item)
+        public async Task<T> Gravar(T item)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace Estac.Infra.Repository
                 await _context.SaveChangesAsync();
 
             }
-            catch (DbUpdateException )
+            catch (DbUpdateException)
             {
                 throw;
             }
@@ -60,7 +60,7 @@ namespace Estac.Infra.Repository
             return item;
         }
 
-        public async Task<T> SelectAsync(long id)
+        public async Task<T> Selecionar(long id)
         {
             try
             {
@@ -84,7 +84,7 @@ namespace Estac.Infra.Repository
             }
         }
 
-        public async Task<T> UpdateAsync(T item)
+        public async Task<T> Alterar(T item)
         {
             try
             {

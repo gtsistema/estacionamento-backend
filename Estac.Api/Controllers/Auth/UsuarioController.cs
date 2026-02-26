@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Estac.Api.Controllers.Auth
 {
     [ApiController]
-    [Route("api/v1/auth/usuario")]
+    [Route("api/auth/[controller]/[action]")]
     public class UsuarioController : ControllerBase
     {
         public readonly IUserServices _services;
@@ -17,14 +17,14 @@ namespace Estac.Api.Controllers.Auth
         }
 
         [AllowAnonymous]
-        [HttpPost("login")]
+        [HttpPost]
         public async Task<ActionResult> Login(LoginInput login)
         {
             return await _services.LoginAsync(login);
         }
 
         [AllowAnonymous]
-        [HttpPost("register")]
+        [HttpPost]
         public async Task<ActionResult> Register(RegisterInput login)
         {
             return await _services.RegisterAsync(login);

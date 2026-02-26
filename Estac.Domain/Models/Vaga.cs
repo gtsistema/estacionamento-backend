@@ -6,5 +6,6 @@ namespace Estac.Domain.Models
     {
         public bool Ativo { get; set; }
         public string Observacao { get; set; }
+        public ICollection<VagaVeiculo> VagaVeiculos { get; set; }
     }
 }

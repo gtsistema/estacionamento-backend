@@ -6,7 +6,6 @@ using Estac.Domain.Output;
 using Estac.Domain.Output.Auth;
 using Estac.Infra.Context;
 using Estac.Service.Extensions;
-using Estac.Service.Resources;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -22,7 +21,7 @@ namespace Estac.Service.Auth
         private readonly IApplicationSignManager _signManager;
         private readonly ICurrentUser _currentUser;
         private readonly IMapper _mapper;
-        private readonly GpContext _context;
+        private readonly GtsContext _context;
         private readonly BearerTokenSettings _bearerTokenSettings;
         private readonly UserManager<ApplicationUser> _identityUserManager;
 
@@ -30,8 +29,9 @@ namespace Estac.Service.Auth
                IApplicationSignManager signManager, ICurrentUser currentUser,
                IOptions<BearerTokenSettings> bearerTokenSettings,
                IMapper mapper,
-               GpContext context,
-               IErrorServices _errorApplication
+               GtsContext context,
+               IErrorServices _errorApplication,
+               UserManager<ApplicationUser> _identityUserManager
                ) : base(_errorApplication)
         {
             _bearerTokenSettings = bearerTokenSettings.Value;
@@ -40,6 +40,7 @@ namespace Estac.Service.Auth
             _currentUser = currentUser;
             _mapper = mapper;
             _context = context;
+            this._identityUserManager = _identityUserManager;
         }
 
         public async Task<ActionResult> LoginAsync(LoginInput dto)

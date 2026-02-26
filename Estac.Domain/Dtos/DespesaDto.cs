@@ -1,10 +1,10 @@
-﻿using Estac.Domain.Dtos.Base;
-using Estac.Domain.Extensions;
+﻿using Estac.Domain.Extensions;
 using Estac.Domain.Models.Enuns;
+using Estac.Domain.Output.Base;
 
 namespace Estac.Domain.Dtos
 {
-    public class DespesaDto : BaseDto
+    public class DespesaDto : BaseOutput
     {
         public TipoDespesa TipoDespesa { get; set; }
         public string Descricao => TipoDespesa.GetDescription();
