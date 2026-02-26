@@ -38,12 +38,16 @@ namespace Estac.Infra.Context
             modelBuilder.Entity<PessoaEndereco>(new PessoaEnderecoMapping().Configure);
             modelBuilder.Entity<PessoaPapel>(new PessoaPapelMapping().Configure);
             modelBuilder.Entity<PessoaTelefone>(new PessoaTelefoneMapping().Configure);
-            modelBuilder.Entity<Motorista>(new MotoristaMapping().Configure);
 
             //MOTORISTA
+            modelBuilder.Entity<Motorista>(new MotoristaMapping().Configure);
             modelBuilder.Entity<MotoristaVeiculo>(new MotoristaVeiculoMapping().Configure);
             modelBuilder.Entity<Vaga>(new VagaMapping().Configure);
             modelBuilder.Entity<VagaVeiculo>(new VagaVeiculoMapping().Configure);
+
+            // ESTACIONAMENTO
+            modelBuilder.Entity<Estacionamento>(new EstacionamentoMapping().Configure);
+
         }
 
         public DbSet<MotoristaVeiculo> MotoristaVeiculo { get; set; }
@@ -63,6 +67,9 @@ namespace Estac.Infra.Context
         public DbSet<PessoaPapel> PessoalPapel { get; set; }
         public DbSet<PessoaTelefone> PessoaTelefone { get; set; }
         public DbSet<Motorista> Motorista { get; set; }
+
+        // ESTACIONAMENTO
+        public DbSet<Estacionamento> Estacionamento { get; set; }
 
     }
 }

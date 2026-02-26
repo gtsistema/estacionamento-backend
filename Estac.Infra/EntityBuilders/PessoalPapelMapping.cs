@@ -25,8 +25,6 @@ namespace Estac.Infra.EntityBuilders
                 .HasColumnType("int")
                 .IsRequired();
 
-            builder.HasKey(x => new { x.PessoaId, x.TipoPapel });
-
             builder.HasOne(x => x.Pessoa)
                 .WithMany(p => p.Papeis)
                 .HasForeignKey(x => x.PessoaId);

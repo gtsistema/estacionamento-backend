@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Estac.Domain.Extensions;
-using Estac.Domain.Input.Motorista;
+using Estac.Domain.Input.Estacionamento;
 using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Models;
-using Estac.Domain.Output.Motorista;
+using Estac.Domain.Output.Estacionamento;
 using Estac.Domain.Shared;
 using Estac.Infra.Context;
 using Estac.Infra.Repository;
@@ -14,32 +14,30 @@ using System.Data;
 
 namespace Estac.Infra.Repositories
 {
-    public class MotoristaRepositories : BaseRepositoriesNone<Motorista>, IMotoristaRepositories
+    public class EstacionamentoRepositories : BaseRepositoriesNone<Estacionamento>, IEstacionamentoRepositories
     {
-        private DbSet<Motorista> _dataset;
+        private DbSet<Estacionamento> _dataset;
         private readonly IMapper _mapper;
 
-        public MotoristaRepositories(GtsContext context, IMapper _mapper) : base(context)
+        public EstacionamentoRepositories(GtsContext context, IMapper _mapper) : base(context)
         {
             this._mapper = _mapper;
-            _dataset = context.Set<Motorista>();
+            _dataset = context.Set<Estacionamento>();
         }
 
-        public async Task<PagedResult<MotoristaSearchOutput>> Paginar(MotoristaFilterInput input)
+        public async Task<PagedResult<EstacionamentoSearchOutput>> Paginar(EstacionamentoFilterInput input)
         {
             var result = await _dataset
                         .AsNoTracking()
-                        .Where(x => string.IsNullOrEmpty(input.Descricao) || x.Descricao.ToLower().Contains(input.Descricao.ToLower()) &&
-                                    string.IsNullOrEmpty(input.Nome) || x.Pessoa.Descricao.ToLower().Contains(input.Nome.ToLower())
+                        .Where(x => string.IsNullOrEmpty(input.Descricao) || x.Descricao.ToLower().Contains(input.Descricao.ToLower())
                                && (!input.DataInicial.HasValue && !input.DataFinal.HasValue || x.Pessoa.DataCriacao.Date <= input.DataInicial && x.Pessoa.DataCriacao.Date >= input.DataFinal))
                         .OrderBy(o => o.Descricao).ThenBy(t => t.Pessoa.DataCriacao)
-                        .Select(x => new MotoristaSearchOutput 
+                        .Select(x => new EstacionamentoSearchOutput 
                         {
                             Id = x.Id,  
                             Descricao = x.Descricao,
                             PessoaId = x.PessoaId,
-                            Nome = x.Pessoa.Descricao,
-                            CNH = x.CNH
+                            CNPJ = x.Pessoa.Documento
                         })
                         .GetPaged(input.NumeroPagina, input.TamanhoPagina);
 

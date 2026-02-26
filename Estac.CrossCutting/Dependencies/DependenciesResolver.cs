@@ -27,12 +27,16 @@ namespace Estac.CrossCutting.Dependencies
             services.AddScoped<IUserServices, UserServices>();
             services.AddScoped<IVeiculoService, VeiculoService>();
             services.AddScoped<IMotoristaService, MotoristaService>();
+            services.AddScoped<IVeiculoModeloService, VeiculoModeloService>();
+            services.AddScoped<IEstacionamentoService, EstacionamentoService>();
+
             // repositories
 
             services.AddScoped(typeof(IBaseRepositories<>), typeof(BaseRepositories<>));
             services.AddScoped<IVeiculoRepositories, VeiculoRepositories>();
             services.AddScoped<IMotoristaRepositories, MotoristaRepositories>();
-
+            services.AddScoped<IVeiculoModeloRepositories, VeiculoModeloRepositories>();
+            services.AddScoped<IEstacionamentoRepositories, EstacionamentoRepositories>();
 
             return services;
         }

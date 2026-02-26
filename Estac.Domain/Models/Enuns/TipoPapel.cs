@@ -2,10 +2,10 @@
 {
     public enum TipoPapel
     {
-        Motorista = 1,
-        Fornecedor = 2,
-        Cliente = 3,
-        Funcionario = 4,
-        Transportadora = 5
+        Estacionamento = 0,
+        Tranportadora = 1,
+        Funcionario = 2,
+        Motorista = 3,
+        Administrador = 4
     }
 }

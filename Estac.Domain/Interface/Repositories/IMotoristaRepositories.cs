@@ -7,7 +7,7 @@ using Estac.Domain.Shared;
 
 namespace Estac.Domain.Interface.Repositories
 {
-    public interface IMotoristaRepositories : IBaseRepositories<Motorista>
+    public interface IMotoristaRepositories : IBaseRepositoriesNone<Motorista>
     {
         Task<PagedResult<MotoristaSearchOutput>> Paginar(MotoristaFilterInput input);
     }

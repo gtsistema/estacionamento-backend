@@ -2,11 +2,9 @@
 
 namespace Estac.Domain.Models
 {
-    public class Motorista : BaseIntDataNull
+    public class Estacionamento : BaseIntDataNull
     {
         public int PessoaId { get; set; }
-        public string CNH { get; set; }
-        public DateTime? ValidadeCNH { get; set; }
         public Pessoa Pessoa { get; set; }
     }
 }

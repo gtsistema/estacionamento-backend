@@ -10,6 +10,7 @@ namespace Estac.Domain.Models
         public string NomeFantasia { get; set; }
         public string Documento { get; set; } // CPF ou CNPJ
         public string Email { get; set; }
+        public string InscricaoEstadual { get; set; }
         public bool Ativo { get; set; }
         public ICollection<PessoaPapel> Papeis { get; set; }
         public ICollection<PessoaTelefone> Telefones { get; set; }
