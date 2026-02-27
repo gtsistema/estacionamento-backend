@@ -16,6 +16,6 @@ namespace Estac.Domain.Input.Estacionamento
         public TipoCobranca TipoCobranca { get; set; }
         public byte? CobrancaPorcentagem { get; set; }
         public byte? CobrancaValor { get; set; }
-        public PessoaInput PessoaJuridica { get; set; }
+        public PessoaInput Pessoa { get; set; }
     }
 }
