@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using Estac.Domain.Extensions;
+using Estac.Domain.Input.Transportadora;
+using Estac.Domain.Interface.Repositories;
+using Estac.Domain.Models;
+using Estac.Domain.Output.Transportadora;
 using Estac.Domain.Shared;
 using Estac.Infra.Context;
 using Estac.Infra.Repository;
 using Microsoft.EntityFrameworkCore;
-using System.Configuration;
 using System.Data;
 
 namespace Estac.Infra.Repositories
@@ -25,16 +28,18 @@ namespace Estac.Infra.Repositories
             var result = await _dataset
                         .AsNoTracking()
                         .Where(x => string.IsNullOrEmpty(input.Descricao) || x.Descricao.ToLower().Contains(input.Descricao.ToLower()) &&
-                                    string.IsNullOrEmpty(input.Nome) || x.Pessoa.Descricao.ToLower().Contains(input.Nome.ToLower())
-                               && (!input.DataInicial.HasValue && !input.DataFinal.HasValue || x.Pessoa.DataCriacao.Date <= input.DataInicial && x.Pessoa.DataCriacao.Date >= input.DataFinal))
+                                    string.IsNullOrEmpty(input.RazaoSocial) || x.Pessoa.NomeRazaoSocial.ToLower().Contains(input.RazaoSocial.ToLower()) &&
+                                    string.IsNullOrEmpty(input.Fantasia) || x.Pessoa.NomeRazaoSocial.ToLower().Contains(input.Fantasia.ToLower()) &&
+                                    string.IsNullOrEmpty(input.Cnpj) || x.Pessoa.Documento.ToLower().Contains(input.Cnpj.ToLower()) &&
+                                    (!input.DataInicial.HasValue && !input.DataFinal.HasValue || x.Pessoa.DataCriacao.Date <= input.DataInicial && x.Pessoa.DataCriacao.Date >= input.DataFinal))
                         .OrderBy(o => o.Descricao).ThenBy(t => t.Pessoa.DataCriacao)
                         .Select(x => new TransportadoraSearchOutput 
                         {
                             Id = x.Id,  
                             Descricao = x.Descricao,
                             PessoaId = x.PessoaId,
-                            Nome = x.Pessoa.Descricao,
-                            CNH = x.CNH
+                            Fantasia = x.Pessoa.NomeFantasia,
+                            RazaoSocial = x.Pessoa.NomeRazaoSocial
                         })
                         .GetPaged(input.NumeroPagina, input.TamanhoPagina);
 

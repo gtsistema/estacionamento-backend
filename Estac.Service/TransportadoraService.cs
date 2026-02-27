@@ -50,6 +50,7 @@ namespace Estac.Service
                 //    return await RetornNo(false, validations.Errors);
 
                 var result = _mapper.Map<Transportadora>(input);
+                ValoresPadrao(result);
 
                 await _repositories.Gravar(result);
 
@@ -73,8 +74,7 @@ namespace Estac.Service
 
                 var result = _mapper.Map<Transportadora>(input);
                 await _repositories.Alterar(result);
-
-                result.Pessoa.AdicionarPapel(TipoPapel.Transportadora);
+                ValoresPadrao(result);
 
                 return await RetornOk(await _repositories.Alterar(result));
             }
@@ -98,6 +98,10 @@ namespace Estac.Service
             return await RetornOk(true);
         }
 
-       
+        private static void ValoresPadrao(Transportadora result)
+        {
+            result.Pessoa.AdicionarTipoPessoa(TipoPessoa.Juridica);
+            result.Pessoa.AdicionarPapel(TipoPapel.Estacionamento);
+        }
     }
 }

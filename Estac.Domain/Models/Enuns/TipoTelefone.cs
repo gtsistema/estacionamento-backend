@@ -1,6 +1,6 @@
 ﻿namespace Estac.Domain.Models.Enuns
 {
-    public enum TipoTelefone
+    public enum TipoTelefone : byte
     {
         Celular = 1,
         Residencial = 2,

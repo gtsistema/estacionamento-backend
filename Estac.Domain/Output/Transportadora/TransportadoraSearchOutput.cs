@@ -4,8 +4,8 @@
     {
         public int Id { get; set; }
         public string Descricao { get; set; }
-        public string Nome { get; set; }
-        public string CNH { get; set; }
+        public string RazaoSocial { get; set; }
+        public string Fantasia { get; set; }
         public int PessoaId { get; set; }
     }
 }

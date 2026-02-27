@@ -50,7 +50,7 @@ namespace Estac.Service
                 //    return await RetornNo(false, validations.Errors);
 
                 var result = _mapper.Map<Estacionamento>(input);
-                result.Pessoa.AdicionarPapel(TipoPapel.Estacionamento);
+                ValoresPadrao(result);
 
                 await _repositories.Gravar(result);
 
@@ -73,9 +73,9 @@ namespace Estac.Service
                 //    return await RetornNo(false, validations.Errors);
 
                 var result = _mapper.Map<Estacionamento>(input);
-                await _repositories.Alterar(result);
+                ValoresPadrao(result);
 
-                result.Pessoa.AdicionarPapel(TipoPapel.Estacionamento);
+                await _repositories.Alterar(result);
 
                 return await RetornOk(await _repositories.Alterar(result));
             }
@@ -92,13 +92,17 @@ namespace Estac.Service
             if (!result)
                 return await RetornNo(false, "Produto não localizado na base de dados!");
 
-            var despesa = await _repositories.Selecionar(id);
+            var estacionamento = await _repositories.Selecionar(id);
 
             await _repositories.Excluir(id);
 
             return await RetornOk(true);
         }
 
-       
+        private static void ValoresPadrao(Estacionamento result)
+        {
+            result.Pessoa.AdicionarTipoPessoa(TipoPessoa.Juridica);
+            result.Pessoa.AdicionarPapel(TipoPapel.Estacionamento);
+        }
     }
 }

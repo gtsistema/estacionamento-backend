@@ -51,8 +51,9 @@ namespace Estac.Service
 
                 var result = _mapper.Map<Motorista>(input);
 
+                ValoresPadrao(result);
+
                 await _repositories.Gravar(result);
-                result.Pessoa.AdicionarPapel(TipoPapel.Motorista);
 
                 return await RetornOk(result);
             }
@@ -61,6 +62,12 @@ namespace Estac.Service
                 return await RetornNo(false, ex.Message);
             }
           
+        }
+
+        private static void ValoresPadrao(Motorista result)
+        {
+            result.Pessoa.AdicionarTipoPessoa(TipoPessoa.Fisica);
+            result.Pessoa.AdicionarPapel(TipoPapel.Estacionamento);
         }
 
         public async Task<ActionResult> Alterar(MotoristaPutInput input)
@@ -73,9 +80,9 @@ namespace Estac.Service
                 //    return await RetornNo(false, validations.Errors);
 
                 var result = _mapper.Map<Motorista>(input);
-                await _repositories.Alterar(result);
+                ValoresPadrao(result);
 
-                result.Pessoa.AdicionarPapel(TipoPapel.Motorista);
+                await _repositories.Alterar(result);
 
                 return await RetornOk(await _repositories.Alterar(result));
             }

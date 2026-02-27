@@ -4,6 +4,7 @@ using Estac.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Estac.Infra.Migrations
 {
     [DbContext(typeof(GtsContext))]
-    partial class GpContextModelSnapshot : ModelSnapshot
+    [Migration("20260227125117_NovosCamposUsuario")]
+    partial class NovosCamposUsuario
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,12 +116,6 @@ namespace Estac.Infra.Migrations
                     b.Property<int?>("CapacidadeVeiculo")
                         .HasColumnType("int");
 
-                    b.Property<byte?>("CobrancaPorcentagem")
-                        .HasColumnType("tinyint");
-
-                    b.Property<decimal?>("CobrancaValor")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("Descricao")
                         .HasMaxLength(150)
                         .HasColumnType("varchar(150)")
@@ -133,24 +130,8 @@ namespace Estac.Infra.Migrations
                     b.Property<bool?>("PossuiSeguranca")
                         .HasColumnType("bit");
 
-                    b.Property<string>("ResponsavelCpf")
-                        .HasMaxLength(14)
-                        .HasColumnType("varchar(14)")
-                        .HasColumnName("ResponsavelCpf");
-
-                    b.Property<string>("ResposanvelLegal")
-                        .HasMaxLength(150)
-                        .HasColumnType("varchar(150)")
-                        .HasColumnName("ResposanvelLegal");
-
-                    b.Property<string>("TamanhoTerreno")
-                        .HasMaxLength(15)
-                        .HasColumnType("varchar(15)");
-
-                    b.Property<byte>("TipoCobranca")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint")
-                        .HasDefaultValue((byte)0);
+                    b.Property<bool>("Tamanho")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 

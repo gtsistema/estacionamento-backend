@@ -1,6 +1,6 @@
 ﻿namespace Estac.Domain.Models.Enuns
 {
-    public enum TipoPapel
+    public enum TipoPapel : byte
     {
         Estacionamento = 0,
         Tranportadora = 1,

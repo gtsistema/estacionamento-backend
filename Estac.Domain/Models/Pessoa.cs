@@ -16,6 +16,8 @@ namespace Estac.Domain.Models
         public ICollection<PessoaTelefone> Telefones { get; set; }
         public ICollection<PessoaEndereco> Enderecos { get; set; }
 
+        public void AdicionarTipoPessoa(TipoPessoa tipo) => TipoPessoa = tipo;
+
         public void AdicionarPapel(TipoPapel tipo)
         {
             Papeis ??= new List<PessoaPapel>();

@@ -4,6 +4,7 @@ using Estac.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Estac.Infra.Migrations
 {
     [DbContext(typeof(GtsContext))]
-    partial class GpContextModelSnapshot : ModelSnapshot
+    [Migration("20260227123932_Add-Pessoa-emUsuario")]
+    partial class AddPessoaemUsuario
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,9 +42,6 @@ namespace Estac.Infra.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("EstacionadoId")
-                        .HasColumnType("int");
 
                     b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
@@ -82,9 +82,6 @@ namespace Estac.Infra.Migrations
                     b.Property<bool>("TemporaryPassword")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("TransportadoraId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -92,12 +89,6 @@ namespace Estac.Infra.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EstacionadoId");
-
-                    b.HasIndex("PessoaId");
-
-                    b.HasIndex("TransportadoraId");
 
                     b.ToTable("User", (string)null);
                 });
@@ -113,12 +104,6 @@ namespace Estac.Infra.Migrations
                     b.Property<int?>("CapacidadeVeiculo")
                         .HasColumnType("int");
 
-                    b.Property<byte?>("CobrancaPorcentagem")
-                        .HasColumnType("tinyint");
-
-                    b.Property<decimal?>("CobrancaValor")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("Descricao")
                         .HasMaxLength(150)
                         .HasColumnType("varchar(150)")
@@ -133,24 +118,8 @@ namespace Estac.Infra.Migrations
                     b.Property<bool?>("PossuiSeguranca")
                         .HasColumnType("bit");
 
-                    b.Property<string>("ResponsavelCpf")
-                        .HasMaxLength(14)
-                        .HasColumnType("varchar(14)")
-                        .HasColumnName("ResponsavelCpf");
-
-                    b.Property<string>("ResposanvelLegal")
-                        .HasMaxLength(150)
-                        .HasColumnType("varchar(150)")
-                        .HasColumnName("ResposanvelLegal");
-
-                    b.Property<string>("TamanhoTerreno")
-                        .HasMaxLength(15)
-                        .HasColumnType("varchar(15)");
-
-                    b.Property<byte>("TipoCobranca")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint")
-                        .HasDefaultValue((byte)0);
+                    b.Property<bool>("Tamanho")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -394,27 +363,6 @@ namespace Estac.Infra.Migrations
                     b.HasIndex("PessoaId", "Numero");
 
                     b.ToTable("PessoaTelefone", (string)null);
-                });
-
-            modelBuilder.Entity("Estac.Domain.Models.Transportadora", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Descricao")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PessoaId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PessoaId");
-
-                    b.ToTable("Transportadora");
                 });
 
             modelBuilder.Entity("Estac.Domain.Models.Vaga", b =>
@@ -804,30 +752,6 @@ namespace Estac.Infra.Migrations
                     b.ToTable("UserToken", (string)null);
                 });
 
-            modelBuilder.Entity("Estac.Domain.Auth.ApplicationUser", b =>
-                {
-                    b.HasOne("Estac.Domain.Models.Estacionamento", "Estacionamento")
-                        .WithMany()
-                        .HasForeignKey("EstacionadoId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Estac.Domain.Models.Pessoa", "Pessoa")
-                        .WithMany()
-                        .HasForeignKey("PessoaId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Estac.Domain.Models.Transportadora", "Transportadora")
-                        .WithMany()
-                        .HasForeignKey("TransportadoraId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Estacionamento");
-
-                    b.Navigation("Pessoa");
-
-                    b.Navigation("Transportadora");
-                });
-
             modelBuilder.Entity("Estac.Domain.Models.Estacionamento", b =>
                 {
                     b.HasOne("Estac.Domain.Models.Pessoa", "Pessoa")
@@ -897,17 +821,6 @@ namespace Estac.Infra.Migrations
                 {
                     b.HasOne("Estac.Domain.Models.Pessoa", "Pessoa")
                         .WithMany("Telefones")
-                        .HasForeignKey("PessoaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Pessoa");
-                });
-
-            modelBuilder.Entity("Estac.Domain.Models.Transportadora", b =>
-                {
-                    b.HasOne("Estac.Domain.Models.Pessoa", "Pessoa")
-                        .WithMany()
                         .HasForeignKey("PessoaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
