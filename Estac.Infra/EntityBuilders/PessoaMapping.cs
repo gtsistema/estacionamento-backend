@@ -47,7 +47,7 @@ namespace Estac.Infra.EntityBuilders
                 .WithOne()
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(p => p.Telefones)
+            builder.HasMany(p => p.Contatos)
                 .WithOne()
                 .OnDelete(DeleteBehavior.Cascade);
 

@@ -25,6 +25,16 @@ namespace Estac.Infra.Repositories
             _dataset = context.Set<Estacionamento>();
         }
 
+        public async Task<Estacionamento> SelecionarPorIdCompleto(int id)
+        {
+            return await _dataset
+                        .AsNoTracking()
+                        .Include(x => x.Pessoa.Enderecos)
+                        .Include(x => x.Pessoa.Contatos)
+                        .Include(x => x.Pessoa)
+                        .SingleOrDefaultAsync(x => x.Id == id);
+        }
+
         public async Task<PagedResult<EstacionamentoSearchOutput>> Paginar(EstacionamentoFilterInput input)
         {
             var result = await _dataset

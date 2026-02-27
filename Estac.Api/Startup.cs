@@ -87,6 +87,9 @@ namespace Estac.Api
             {
                 cfg.AddProfile<UsuarioProfile>();
                 cfg.AddProfile<VeiculoProfile>();
+                cfg.AddProfile<MotoristaProfile>();
+                cfg.AddProfile<EstacionamentoProfile>();
+                cfg.AddProfile<PessoaProfile>();
             });
         }
 

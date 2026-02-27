@@ -26,9 +26,19 @@ namespace Estac.Service
 
         public async Task<ActionResult> ObterPorId(int id)
         {
-            var result = await _repositories.Selecionar(id);
+            try
+            {
+                var result = await _repositories.SelecionarPorIdCompleto(id);
 
-            return await RetornOk(_mapper.Map<EstacionamentoOutput>(result));
+                if (result is null)
+                    return await RetornNo(false, "Registro não encontrado.");
+
+                return await RetornOk(_mapper.Map<EstacionamentoOutput>(result));
+            }
+            catch(Exception ex) 
+            {   
+                return await RetornNo(false, ex.Message);
+            }
         }
 
         public async Task<ActionResult> Buscar(EstacionamentoFilterInput filter)

@@ -15,7 +15,7 @@ namespace Estac.Domain.Input.Estacionamento
         public bool? PossuiBanheiro { get; set; }
         public TipoCobranca TipoCobranca { get; set; }
         public byte? CobrancaPorcentagem { get; set; }
-        public byte? CobrancaValor { get; set; }
+        public decimal? CobrancaValor { get; set; }
         public PessoaInput Pessoa { get; set; }
     }
 }

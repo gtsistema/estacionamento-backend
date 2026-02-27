@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Estac.Infra.EntityBuilders
 {
-    public class PessoaTelefoneMapping : IEntityTypeConfiguration<PessoaTelefone>
+    public class PessoaContatoMapping : IEntityTypeConfiguration<PessoaContato>
     {
-        public void Configure(EntityTypeBuilder<PessoaTelefone> builder)
+        public void Configure(EntityTypeBuilder<PessoaContato> builder)
         {
-            builder.ToTable("PessoaTelefone");
+            builder.ToTable("PessoaContato");
 
             builder.HasKey(p => p.Id);
 
@@ -25,7 +25,7 @@ namespace Estac.Infra.EntityBuilders
                 .HasColumnType("bit")
                 .IsRequired();
 
-            builder.Property(p => p.TipoTelefone)
+            builder.Property(p => p.TipoContato)
                 .HasColumnType("int")
                 .IsRequired();
 
@@ -39,7 +39,7 @@ namespace Estac.Infra.EntityBuilders
                 .HasMaxLength(150);
 
             builder.HasOne(p => p.Pessoa)
-                .WithMany(p => p.Telefones)
+                .WithMany(p => p.Contatos)
                 .HasForeignKey(p => p.PessoaId)
                 .OnDelete(DeleteBehavior.Cascade);
 

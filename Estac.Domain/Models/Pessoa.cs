@@ -12,9 +12,9 @@ namespace Estac.Domain.Models
         public string Email { get; set; }
         public string InscricaoEstadual { get; set; }
         public bool Ativo { get; set; }
-        public ICollection<PessoaPapel> Papeis { get; set; }
-        public ICollection<PessoaTelefone> Telefones { get; set; }
-        public ICollection<PessoaEndereco> Enderecos { get; set; }
+        public ICollection<PessoaPapel> Papeis { get; set; } = new List<PessoaPapel>();
+        public ICollection<PessoaContato> Contatos { get; set; } = new List<PessoaContato>();
+        public ICollection<PessoaEndereco> Enderecos { get; set; } = new List<PessoaEndereco>();
 
         public void AdicionarTipoPessoa(TipoPessoa tipo) => TipoPessoa = tipo;
 
