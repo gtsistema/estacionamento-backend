@@ -50,6 +50,7 @@ namespace Estac.Service
                 //    return await RetornNo(false, validations.Errors);
 
                 var result = _mapper.Map<Estacionamento>(input);
+                result.Pessoa.AdicionarPapel(TipoPapel.Estacionamento);
 
                 await _repositories.Gravar(result);
 

@@ -2,8 +2,10 @@
 using Estac.Domain.Auth;
 using Estac.Domain.Input.Auth;
 using Estac.Domain.Interface.Services.Auth;
+using Estac.Domain.Models;
 using Estac.Domain.Output;
 using Estac.Domain.Output.Auth;
+using Estac.Domain.Output.Motorista;
 using Estac.Infra.Context;
 using Estac.Service.Extensions;
 using Microsoft.AspNetCore.Identity;
@@ -59,11 +61,7 @@ namespace Estac.Service.Auth
         {
             try
             {
-                //var emailTeste = "jean.correadev@gmail.com";
-                var emailTeste = dto.UserName;
-
-
-                var user = new ApplicationUser { UserName = dto.UserName, Email = emailTeste };
+                var user = _mapper.Map<ApplicationUser>(dto);
 
                 //var user = new ApplicationUser { UserName = dto.UserName, Email = dto.UserName };
                 var result = await _userManager.CreateAsync(user, dto.Password);
