@@ -1,24 +1,24 @@
 ﻿using AutoMapper;
 using DocumentFormat.OpenXml.Office2010.Excel;
-using Estac.Domain.Input.Motorista;
+using Estac.Domain.Input.Transportadora;
 using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Interface.Services;
 using Estac.Domain.Models;
 using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output;
-using Estac.Domain.Output.Motorista;
+using Estac.Domain.Output.Transportadora;
 using Estac.Service.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Estac.Service
 {
-    public class MotoristaService : ServiceResult<MotoristaOutput>, IMotoristaService
+    public class TransportadoraService : ServiceResult<TransportadoraOutput>, ITransportadoraService
     {
-        private readonly IMotoristaRepositories _repositories;
+        private readonly ITransportadoraRepositories _repositories;
         private readonly IMapper _mapper;
 
-        public MotoristaService(IErrorServices _errorServices,
-                               IMotoristaRepositories repositories, IMapper mapper) : base(_errorServices)
+        public TransportadoraService(IErrorServices _errorServices,
+                               ITransportadoraRepositories repositories, IMapper mapper) : base(_errorServices)
         {
             _repositories = repositories;
             _mapper = mapper;
@@ -28,31 +28,30 @@ namespace Estac.Service
         {
             var result = await _repositories.Selecionar(id);
 
-            return await RetornOk(_mapper.Map<MotoristaOutput>(result));
+            return await RetornOk(_mapper.Map<TransportadoraOutput>(result));
         }
 
-        public async Task<ActionResult> Buscar(MotoristaFilterInput filter)
+        public async Task<ActionResult> Buscar(TransportadoraFilterInput filter)
         {
             var result = await _repositories.Paginar(filter);
 
-            var mapper = _mapper.Map<IEnumerable<MotoristaOutput>>(result.Results);
+            var mapper = _mapper.Map<IEnumerable<TransportadoraOutput>>(result.Results);
 
             return await RetornOk(mapper);
         }
 
-        public async Task<ActionResult> Gravar(MotoristaPostInput input)
+        public async Task<ActionResult> Gravar(TransportadoraPostInput input)
         {
             try
             {
-                //var validations = MotoristaPostInput.Validar(input);
+                //var validations = TransportadoraPostInput.Validar(input);
 
                 //if (!validations.IsValid)
                 //    return await RetornNo(false, validations.Errors);
 
-                var result = _mapper.Map<Motorista>(input);
+                var result = _mapper.Map<Transportadora>(input);
 
                 await _repositories.Gravar(result);
-                result.Pessoa.AdicionarPapel(TipoPapel.Motorista);
 
                 return await RetornOk(result);
             }
@@ -63,19 +62,19 @@ namespace Estac.Service
           
         }
 
-        public async Task<ActionResult> Alterar(MotoristaPutInput input)
+        public async Task<ActionResult> Alterar(TransportadoraPutInput input)
         {
             try
             {
-                //var validations = MotoristaPutInput.Validar(input);
+                //var validations = TransportadoraPutInput.Validar(input);
 
                 //if (!validations.IsValid)
                 //    return await RetornNo(false, validations.Errors);
 
-                var result = _mapper.Map<Motorista>(input);
+                var result = _mapper.Map<Transportadora>(input);
                 await _repositories.Alterar(result);
 
-                result.Pessoa.AdicionarPapel(TipoPapel.Motorista);
+                result.Pessoa.AdicionarPapel(TipoPapel.Transportadora);
 
                 return await RetornOk(await _repositories.Alterar(result));
             }
