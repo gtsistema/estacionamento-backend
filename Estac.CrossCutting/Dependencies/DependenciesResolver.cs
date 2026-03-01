@@ -25,11 +25,16 @@ namespace Estac.CrossCutting.Dependencies
 
             //services
             services.AddScoped<IUserServices, UserServices>();
+            services.AddScoped<IPerfilServices, PerfilServices>();
             services.AddScoped<IVeiculoService, VeiculoService>();
             services.AddScoped<IMotoristaService, MotoristaService>();
             services.AddScoped<IVeiculoModeloService, VeiculoModeloService>();
             services.AddScoped<IEstacionamentoService, EstacionamentoService>();
             services.AddScoped<ITransportadoraService, TransportadoraService>();
+
+            services.AddScoped<IApplicationSignManager, ApplicationSignManager>();
+            services.AddScoped<IApplicationUserManager, ApplicationUserManager>();
+            services.AddScoped<IApplicationRoleManager, ApplicationRoleManager>();
 
             // repositories
             services.AddScoped(typeof(IBaseRepositories<>), typeof(BaseRepositories<>));

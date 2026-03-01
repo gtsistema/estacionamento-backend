@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Estac.Infra.Context
 {
-    public class GtsContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
+    public class GtsContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {
         public GtsContext(DbContextOptions<GtsContext> options) : base(options)
         {
@@ -19,7 +19,7 @@ namespace Estac.Infra.Context
         {
             //User
             modelBuilder.Entity<ApplicationUser>(new UserMapping().Configure);
-            modelBuilder.Entity<IdentityRole<Guid>>(new RoleMapping().Configure);
+            modelBuilder.Entity<ApplicationRole>(new RoleMapping().Configure);
             modelBuilder.Entity<IdentityUserRole<Guid>>(new UserRoleMapping().Configure);
             modelBuilder.Entity<IdentityUserToken<Guid>>(new UserTokenMapping().Configure);
             modelBuilder.Entity<IdentityRoleClaim<Guid>>(new RoleClaimMapping().Configure);

@@ -13,10 +13,12 @@ namespace Estac.Api.Extensions
     {
         public static IServiceCollection AddIdentityConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
+            services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<GtsContext>()
                 .AddErrorDescriber<IdentityPortugueseMessages>()
                 .AddDefaultTokenProviders();
+
+
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -62,6 +64,7 @@ namespace Estac.Api.Extensions
                 throw;
             }
 
+            // register application managers for DI
             services.AddScoped<IApplicationSignManager, ApplicationSignManager>();
             services.AddScoped<IApplicationUserManager, ApplicationUserManager>();
             services.AddScoped<IApplicationRoleManager, ApplicationRoleManager>();

@@ -117,9 +117,12 @@ namespace Estac.Domain.Auth
             var roleExists = await _roleManager.RoleExistsAsync(role);
             if (!roleExists)
             {
-                var roleResult = await _roleManager.CreateAsync(new IdentityRole<Guid>(role));
-                if (roleResult.Any())
-                    return roleResult;
+                var roleNew = new ApplicationRole { Name = role };
+
+                var roleResult = await _roleManager.CreateAsync(roleNew);
+
+                if (roleResult.Succeeded)
+                    return null;
             }
 
             if (await _userManager.IsInRoleAsync(user, role))

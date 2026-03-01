@@ -1,13 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
 namespace Estac.Domain.Auth
 {
     public interface IApplicationRoleManager
     {
-        Task<bool> RoleExistsAsync(string roleName);
-        Task<IEnumerable<string>> CreateAsync(IdentityRole<Guid> role);
+        public Task<bool> RoleExistsAsync(string roleName);
+        Task<IdentityResult> CreateAsync(ApplicationRole role);
+
+        Task<IEnumerable<ApplicationRole>> ListAsync();
+
+        Task<ApplicationRole> FindByIdAsync(Guid id);
+
+        Task<IdentityResult> UpdateAsync(ApplicationRole role);
+        Task<IdentityResult> DeleteAsync(ApplicationRole role);
     }
 }
