@@ -45,7 +45,9 @@ namespace Estac.Service
         {
             var result = await _repositories.Paginar(filter);
 
-            return await RetornOk(_mapper.Map<IEnumerable<EstacionamentoOutput>>(result.Results));
+            var estacionamento = _mapper.Map<IEnumerable<EstacionamentoOutput>>(result.Results);
+
+            return await RetornOk(estacionamento);
         }
 
         public async Task<ActionResult> Gravar(EstacionamentoPostInput input)

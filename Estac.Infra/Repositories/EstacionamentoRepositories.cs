@@ -31,7 +31,6 @@ namespace Estac.Infra.Repositories
                         .AsNoTracking()
                         .Include(x => x.Pessoa.Enderecos)
                         .Include(x => x.Pessoa.Contatos)
-                        .Include(x => x.Pessoa)
                         .SingleOrDefaultAsync(x => x.Id == id);
         }
 
@@ -39,6 +38,8 @@ namespace Estac.Infra.Repositories
         {
             var result = await _dataset
                         .AsNoTracking()
+                        .Include(x => x.Pessoa.Enderecos)
+                        .Include(x => x.Pessoa.Contatos)
                         .Where(x => string.IsNullOrEmpty(input.Descricao) || x.Descricao.ToLower().Contains(input.Descricao.ToLower())
                                && (!input.DataInicial.HasValue && !input.DataFinal.HasValue || x.Pessoa.DataCriacao.Date <= input.DataInicial && x.Pessoa.DataCriacao.Date >= input.DataFinal))
                         .OrderBy(o => o.Descricao).ThenBy(t => t.Pessoa.DataCriacao)
