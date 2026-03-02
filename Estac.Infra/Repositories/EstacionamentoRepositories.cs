@@ -35,20 +35,13 @@ namespace Estac.Infra.Repositories
                         .SingleOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<PagedResult<EstacionamentoSearchOutput>> Paginar(EstacionamentoFilterInput input)
+        public async Task<PagedResult<Estacionamento>> Paginar(EstacionamentoFilterInput input)
         {
             var result = await _dataset
                         .AsNoTracking()
                         .Where(x => string.IsNullOrEmpty(input.Descricao) || x.Descricao.ToLower().Contains(input.Descricao.ToLower())
                                && (!input.DataInicial.HasValue && !input.DataFinal.HasValue || x.Pessoa.DataCriacao.Date <= input.DataInicial && x.Pessoa.DataCriacao.Date >= input.DataFinal))
                         .OrderBy(o => o.Descricao).ThenBy(t => t.Pessoa.DataCriacao)
-                        .Select(x => new EstacionamentoSearchOutput 
-                        {
-                            Id = x.Id,  
-                            Descricao = x.Descricao,
-                            PessoaId = x.PessoaId,
-                            CNPJ = x.Pessoa.Documento
-                        })
                         .GetPaged(input.NumeroPagina, input.TamanhoPagina);
 
             return result;

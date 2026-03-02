@@ -23,9 +23,9 @@ namespace Estac.Api.Controllers.Auth
         }
 
         [HttpGet]
-        public async Task<ActionResult> Listar()
+        public async Task<ActionResult> Buscar()
         {
-           return await _services.Listar();
+           return await _services.Buscar();
         }
 
         [HttpGet("{id}")]

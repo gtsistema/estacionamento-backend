@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
 using Estac.Domain.Auth;
 using Estac.Domain.Input.Auth;
+using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Interface.Services.Auth;
 using Estac.Domain.Models;
+using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output;
 using Estac.Domain.Output.Auth;
 using Estac.Domain.Output.Motorista;
 using Estac.Infra.Context;
+using Estac.Infra.Repositories;
 using Estac.Service.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -26,14 +29,17 @@ namespace Estac.Service.Auth
         private readonly GtsContext _context;
         private readonly BearerTokenSettings _bearerTokenSettings;
         private readonly UserManager<ApplicationUser> _identityUserManager;
+        private readonly IPessoaRepositories _pessoaRepositories;
 
+        
         public UserServices(IApplicationUserManager userManager,
                IApplicationSignManager signManager, ICurrentUser currentUser,
                IOptions<BearerTokenSettings> bearerTokenSettings,
                IMapper mapper,
                GtsContext context,
                IErrorServices _errorApplication,
-               UserManager<ApplicationUser> _identityUserManager
+               UserManager<ApplicationUser> _identityUserManager,
+               IPessoaRepositories _pessoaRepositories
                ) : base(_errorApplication)
         {
             _bearerTokenSettings = bearerTokenSettings.Value;
@@ -43,6 +49,7 @@ namespace Estac.Service.Auth
             _mapper = mapper;
             _context = context;
             this._identityUserManager = _identityUserManager;
+            this._pessoaRepositories =  _pessoaRepositories;
         }
 
         public async Task<ActionResult> LoginAsync(LoginInput dto)
@@ -52,28 +59,41 @@ namespace Estac.Service.Auth
             if (!result.Succeeded)
                 return await RetornNo(null, Resources.Resources.MSG_Usuario_Ou_Senha_Invalida);
 
-            var user = await _userManager.FindByEmailAsync(dto.UserName);
+            var user = await _identityUserManager.FindByNameAsync(dto.UserName);
 
             return await RetornOk(await MontarLoginResponseAsync(user), Resources.Resources.MSG_OperacaoRealizadaSucesso);
         }
 
         public async Task<ActionResult> RegisterAsync(RegisterInput dto)
         {
+            var pessoa = _mapper.Map<Pessoa>(dto.Pessoa);
+
             try
             {
-                var user = _mapper.Map<ApplicationUser>(dto);
+                pessoa.AdicionarPapel(TipoPapel.Funcionario);
 
-                //var user = new ApplicationUser { UserName = dto.UserName, Email = dto.UserName };
+                await _pessoaRepositories.Gravar(pessoa);
+                var user = _mapper.Map<ApplicationUser>(dto);
+                user.PessoaId = pessoa.Id;
+
                 var result = await _userManager.CreateAsync(user, dto.Password);
 
                 if (!result.Succeeded)
-                    return await RetornNo(result.Errors[0], Resources.Resources.MSG_OperacaoComErro);
+                    return await RetornNo(false, result.Errors[0]);
+
+                await _userManager.AddToRoleAsync(user, dto.Perfil.Name);
+
 
                 return await RetornOk(Resources.Resources.MSG_OperacaoRealizadaSucesso);
             }
             catch (Exception ex)
             {
-                return await RetornNo(ex.Message, Resources.Resources.MSG_OperacaoComErro, statusCode: 500);
+                if(pessoa.Id > 0)
+                {
+                    await _pessoaRepositories.Excluir(pessoa.Id);
+                }
+                
+                return await RetornNo(ex, Resources.Resources.MSG_OperacaoComErro);
             }
         }
 

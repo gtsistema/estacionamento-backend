@@ -1,4 +1,5 @@
-﻿using Estac.Domain.Input.Pessoa;
+﻿using Estac.Domain.Auth;
+using Estac.Domain.Input.Pessoa;
 using System.ComponentModel.DataAnnotations;
 
 namespace Estac.Domain.Input.Auth
@@ -13,5 +14,6 @@ namespace Estac.Domain.Input.Auth
         public string Email { get; set; }
         public int EstacionamentoId { get; set; }
         public PessoaUsuarioImput Pessoa { get; set; }
+        public ApplicationRole Perfil { get; set; }
     }
 }

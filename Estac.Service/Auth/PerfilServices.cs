@@ -51,7 +51,7 @@ namespace Estac.Service.Auth
             this._roleManager = _roleManager;
         }
 
-        public async Task<ActionResult> Listar()
+        public async Task<ActionResult> Buscar()
         {
             var roles = await _roleManager.ListAsync();
             return await RetornOk(_mapper.Map<IEnumerable<PerfilOutput>>(roles));

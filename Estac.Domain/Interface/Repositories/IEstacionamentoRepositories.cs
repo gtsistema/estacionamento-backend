@@ -10,6 +10,6 @@ namespace Estac.Domain.Interface.Repositories
     public interface IEstacionamentoRepositories : IBaseRepositoriesNone<Estacionamento>
     {
         Task<Estacionamento> SelecionarPorIdCompleto(int id);
-        Task<PagedResult<EstacionamentoSearchOutput>> Paginar(EstacionamentoFilterInput input);
+        Task<PagedResult<Estacionamento>> Paginar(EstacionamentoFilterInput input);
     }
 }

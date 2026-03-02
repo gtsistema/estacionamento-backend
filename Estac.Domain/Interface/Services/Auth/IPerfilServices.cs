@@ -8,7 +8,7 @@ namespace Estac.Domain.Interface.Services.Auth
 {
     public interface IPerfilServices
     {
-        Task<ActionResult> Listar();
+        Task<ActionResult> Buscar();
 
         Task<ActionResult> ObterPorId(Guid id);
 

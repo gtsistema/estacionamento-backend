@@ -43,6 +43,7 @@ namespace Estac.CrossCutting.Dependencies
             services.AddScoped<IVeiculoModeloRepositories, VeiculoModeloRepositories>();
             services.AddScoped<IEstacionamentoRepositories, EstacionamentoRepositories>();
             services.AddScoped<ITransportadoraRepositories, TransportadoraRepositories>();
+            services.AddScoped<IPessoaRepositories, PessoaRepositories>();
 
             return services;
         }
