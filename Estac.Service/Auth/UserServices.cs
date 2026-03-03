@@ -57,7 +57,7 @@ namespace Estac.Service.Auth
             var result = await _signManager.PasswordSignInAsync(dto.UserName, dto.Password);
 
             if (!result.Succeeded)
-                return await RetornNo(null, Resources.Resources.MSG_Usuario_Ou_Senha_Invalida);
+                return await RetornNo(false, Resources.Resources.MSG_Usuario_Ou_Senha_Invalida);
 
             var user = await _identityUserManager.FindByNameAsync(dto.UserName);
 
@@ -82,7 +82,6 @@ namespace Estac.Service.Auth
                     return await RetornNo(false, result.Errors[0]);
 
                 await _userManager.AddToRoleAsync(user, dto.Perfil.Name);
-
 
                 return await RetornOk(Resources.Resources.MSG_OperacaoRealizadaSucesso);
             }
