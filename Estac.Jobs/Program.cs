@@ -1,4 +1,7 @@
+using Estac.Infra.Context;
 using Estac.Jobs.Financeiro;
+using Estac.Jobs.Portaria;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -10,26 +13,11 @@ using System.Threading.Tasks;
     IHost host = Host.CreateDefaultBuilder(args)
           .ConfigureServices(services =>
           {
-              //services.AddDbContext<IntegracaoFibraContext>(
-              //            options => options.UseSqlServer("name=ConnectionStrings:DefaultConnection"));
+              services.AddDbContext<GtsContext>(
+                         options => options.UseSqlServer("name=ConnectionStrings:DefaultConnection"));
 
-              //services.AddHostedService<TituloFinanceiroWorker>();
-              //services.AddHostedService<MovimentacaoFinanceiroWorker>();
-              //services.AddHostedService<AtendimentoPedidoWorker>();
-              //services.AddHostedService<FaturaPedidoWorker>();
-
-              //services.AddScoped<ITituloFinanceiroRepositories, TituloFinanceiroRepositories>();
-              //services.AddScoped<IMovimentacaoFinanceiroRepositories, MovimentacaoFinanceiroRepositories>();
-              //services.AddScoped<IAtendimentoPedidoRepositories, AtendimentoPedidoRepositories>();
-              //services.AddScoped<IFaturaPedidoRepositories, FaturaPedidoRepositories>();
-
-
-              //var config = new AutoMapper.MapperConfiguration(cfg =>
-              //{
-              //    cfg.AddProfile(new ClienteProtheusMapping());
-              //    cfg.AddProfile(new TituloFinanceiroProtheusMapping());
-              //    cfg.AddProfile(new MovimentacaoFinanceiroMapping());
-              //});
+              services.AddHostedService<LeitorDePlacaWorker>();
+             
 
               //IMapper mapper = config.CreateMapper();
 
