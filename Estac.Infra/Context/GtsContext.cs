@@ -70,6 +70,8 @@ namespace Estac.Infra.Context
 
         // ESTACIONAMENTO
         public DbSet<Estacionamento> Estacionamento { get; set; }
+        public DbSet<EstacionamentoFoto> EstacionamentoFoto { get; set; }
+        public DbSet<ContaBancaria> ContaBancaria { get; set; }
 
     }
 }

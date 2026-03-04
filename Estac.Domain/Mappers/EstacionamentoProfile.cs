@@ -4,6 +4,7 @@ using Estac.Domain.Input.Endereco;
 using Estac.Domain.Input.Pessoa;
 using Estac.Domain.Models;
 using Estac.Domain.Output.Estacionamento;
+using Microsoft.Extensions.Options;
 
 namespace Estac.Domain.Mappers
 {
@@ -13,6 +14,7 @@ namespace Estac.Domain.Mappers
         {
             // Map POST input to domain model
             CreateMap<EstacionamentoPostInput, Estacionamento>()
+                .ForMember(dest => dest.Fotos, opt => opt.Ignore())
                 .ForMember(dest => dest.Pessoa, opt => opt.MapFrom(src => src.Pessoa));
 
             CreateMap<EstacionamentoPutInput, Estacionamento>()

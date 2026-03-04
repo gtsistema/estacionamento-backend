@@ -1,5 +1,7 @@
-﻿using Estac.Domain.Input.Estacionamento;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using Estac.Domain.Input.Estacionamento;
 using Estac.Domain.Interface.Services;
+using Estac.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Estac.Api.Controllers
@@ -28,7 +30,7 @@ namespace Estac.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Gravar([FromBody] EstacionamentoPostInput input)
+        public async Task<ActionResult> Gravar([FromForm] EstacionamentoPostInput input)
         {
             return await _services.Gravar(input);
         }
@@ -43,6 +45,24 @@ namespace Estac.Api.Controllers
         public async Task<ActionResult> Delete(int id)
         {
             return await _services.Excluir(id);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> BuscarFotos(int id)
+        {
+            return await _services.BuscarFotos(id);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UploadFotos([FromForm] EstacionamentoFotosInput input)
+        {
+            return await _services.UploadFotos(input);
+        }
+
+        [HttpDelete("{fotoId}")]
+        public async Task<ActionResult> DeletarFotos(int fotoId)
+        {
+            return await _services.ExcluirFotos(fotoId);
         }
     }
 }

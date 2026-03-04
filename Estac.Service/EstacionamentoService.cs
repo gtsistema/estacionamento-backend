@@ -71,6 +71,42 @@ namespace Estac.Service
           
         }
 
+        public async Task<ActionResult> UploadFotos(EstacionamentoFotosInput input)
+        {
+            try
+            {
+                var fotos = new List<EstacionamentoFoto>();
+
+                for (int i = 0; i < input.Fotos.Count(); i++)
+                {
+                    var arquivo = input.Fotos.ToArray()[i];
+
+                    using var memoryStream = new MemoryStream();
+                    await arquivo.CopyToAsync(memoryStream);
+
+                    fotos.Add(new EstacionamentoFoto
+                    {
+                        EstacionamentoId = input.EstacionamentoId,
+                        Foto = memoryStream.ToArray(),
+                        Descricao = arquivo.FileName,
+                        ContentType = arquivo.ContentType,
+                        DataCriacao = DateTime.UtcNow,
+                        TamanhoBytes = arquivo.Length,
+                        Principal = input.PadraoIndex.HasValue && input.PadraoIndex.Value == i,
+                        Ordem = input.Ordem.HasValue ? input.Ordem.Value + i : (int?)null,
+                    });
+                }
+
+                await _repositories.UploadFotos(input.EstacionamentoId, fotos);
+
+                return await RetornOk(true);
+            }
+            catch(Exception ex)
+            {
+                return await RetornNo(ex, "Ocorreu um erro ao salvar fotos.");
+            }
+        }
+
         public async Task<ActionResult> Alterar(EstacionamentoPutInput input)
         {
             try
@@ -105,6 +141,34 @@ namespace Estac.Service
             await _repositories.Excluir(id);
 
             return await RetornOk(true);
+        }
+
+        public async Task<ActionResult> BuscarFotos(int id)
+        {
+            try
+            {
+               var resultado = await _repositories.ListarFotosPorEstacionamentoAsNoTracking(id);
+
+               return await RetornOk(resultado);
+            }
+            catch (Exception ex)
+            {
+                return await RetornNo(ex, "Ocorreu um erro ao deletar fotos.");
+            }
+        }
+
+        public async Task<ActionResult> ExcluirFotos(int fotoId)
+        {
+            try
+            {
+                await _repositories.ExcluirFotos(fotoId);
+
+                return await RetornOk(true);
+            }
+            catch (Exception ex)
+            {
+                return await RetornNo(ex, "Ocorreu um erro ao deletar fotos.");
+            }
         }
 
         private static void ValoresPadrao(Estacionamento result)

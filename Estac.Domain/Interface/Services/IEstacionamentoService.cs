@@ -11,5 +11,8 @@ namespace Estac.Domain.Interface.Services
         Task<ActionResult> Gravar(EstacionamentoPostInput input);
         Task<ActionResult> Alterar(EstacionamentoPutInput input);
         Task<ActionResult> Excluir(int id);
+        Task<ActionResult> BuscarFotos(int id);
+        Task<ActionResult> UploadFotos(EstacionamentoFotosInput input);
+        Task<ActionResult> ExcluirFotos(int id);
     }
 }

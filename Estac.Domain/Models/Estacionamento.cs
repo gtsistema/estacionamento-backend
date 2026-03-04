@@ -16,5 +16,7 @@ namespace Estac.Domain.Models
         public byte? CobrancaPorcentagem { get; set; }
         public decimal? CobrancaValor { get; set; }
         public Pessoa Pessoa { get; set; }
+        public ICollection<ContaBancaria> ContasBancarias { get; set; }
+        public ICollection<EstacionamentoFoto> Fotos { get; set; }
     }
 }

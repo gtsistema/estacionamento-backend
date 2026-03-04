@@ -4,6 +4,7 @@ using Estac.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Estac.Infra.Migrations
 {
     [DbContext(typeof(GtsContext))]
-    partial class GpContextModelSnapshot : ModelSnapshot
+    [Migration("20260304030858_Fotos-estacionamento1")]
+    partial class Fotosestacionamento1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -244,13 +247,13 @@ namespace Estac.Infra.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("bit");
+
                     b.Property<string>("ContentType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("DataAtualizacao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DataCriacao")
+                    b.Property<DateTime>("DataUpload")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Descricao")
@@ -259,11 +262,11 @@ namespace Estac.Infra.Migrations
                     b.Property<int>("EstacionamentoId")
                         .HasColumnType("int");
 
-                    b.Property<byte[]>("Foto")
+                    b.Property<byte[]>("Imagem")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<int?>("Ordem")
-                        .HasColumnType("int");
+                    b.Property<string>("NomeArquivo")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Principal")
                         .HasColumnType("bit");

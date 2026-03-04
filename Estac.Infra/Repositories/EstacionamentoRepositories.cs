@@ -9,6 +9,7 @@ using Estac.Infra.Context;
 using Estac.Infra.Repository;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Collections;
 using System.Configuration;
 using System.Data;
 
@@ -57,6 +58,54 @@ namespace Estac.Infra.Repositories
                          })
                         .GetPaged(input.NumeroPagina, input.TamanhoPagina);
 
+        }
+
+        public async Task<IEnumerable<EstacionamentoFotoOutput>> ListarFotosPorEstacionamentoAsNoTracking(int estacionamentoId)
+        {
+            return await _context.EstacionamentoFoto
+                .AsNoTracking()
+                .Where(x => x.EstacionamentoId == estacionamentoId)
+                .Select(x => new EstacionamentoFotoOutput
+                {
+                    Id = x.Id,
+                    NomeArquivo = x.Descricao,
+                    EhPrincipal = x.Principal,
+                    ContentType = x.ContentType,
+                    FotoBase64 = Convert.ToBase64String(x.Foto)
+                })
+                .ToListAsync();
+
+        }
+
+        public async Task<IEnumerable<EstacionamentoFoto>> ListarFotosPorEstacionamento(int id)
+        {
+           return await _context.EstacionamentoFoto
+                .Where(x => x.EstacionamentoId == id).ToListAsync();
+        }
+
+        public async Task UploadFotos(List<EstacionamentoFoto> fotos)
+        {
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                await _context.EstacionamentoFoto.AddRangeAsync(fotos);
+
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
+        public async Task ExcluirFotos(int id)
+        {
+              await _context.EstacionamentoFoto
+                 .Where(x => x.Id == id).ExecuteDeleteAsync();
         }
     }
 }
