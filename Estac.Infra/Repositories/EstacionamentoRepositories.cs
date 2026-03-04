@@ -32,6 +32,7 @@ namespace Estac.Infra.Repositories
                         .AsNoTracking()
                         .Include(x => x.Pessoa.Enderecos)
                         .Include(x => x.Pessoa.Contatos)
+                        .Include(x => x.ContasBancarias)
                         .SingleOrDefaultAsync(x => x.Id == id);
         }
 
@@ -41,7 +42,8 @@ namespace Estac.Infra.Repositories
                         .AsNoTracking()
                         .Include(x => x.Pessoa.Enderecos)
                         .Include(x => x.Pessoa.Contatos)
-                        .Where(x => string.IsNullOrEmpty(input.Descricao) || x.Descricao.ToLower().Contains(input.Descricao.ToLower())
+                        .Where(x => string.IsNullOrEmpty(input.Descricao) || x.Descricao.ToLower().Contains(input.Descricao.ToLower()) ||
+                                    string.IsNullOrEmpty(input.Descricao) || x.Pessoa.Documento.ToLower().Contains(input.Descricao.ToLower()) 
                                && (!input.DataInicial.HasValue && !input.DataFinal.HasValue || x.Pessoa.DataCriacao.Date <= input.DataInicial && x.Pessoa.DataCriacao.Date >= input.DataFinal))
                         .OrderBy(o => o.Descricao).ThenBy(t => t.Pessoa.DataCriacao)
                          .Select(x => new EstacionamentoSearchOutput
@@ -54,7 +56,7 @@ namespace Estac.Infra.Repositories
                              NomeFantasia = x.Pessoa.NomeFantasia,
                              NomeRazaoSocial = x.Pessoa.NomeRazaoSocial,
                              Email = x.Pessoa.Email,
-                             Tipo = x.Pessoa.TipoPessoa
+                             Tipo = x.Pessoa.TipoPessoa,
                          })
                         .GetPaged(input.NumeroPagina, input.TamanhoPagina);
 

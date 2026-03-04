@@ -1,4 +1,5 @@
-﻿using Estac.Domain.Input.Pessoa;
+﻿using Estac.Domain.Input.ContaBancaria;
+using Estac.Domain.Input.Pessoa;
 using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output.Base;
 using Estac.Domain.Output.Pessoa;
@@ -18,5 +19,7 @@ namespace Estac.Domain.Output.Estacionamento
         public byte? CobrancaPorcentagem { get; set; }
         public decimal? CobrancaValor { get; set; }
         public PessoaOutput Pessoa { get; set; }
+        public List<ContaBancariaOutput> ContaBancaria { get; set; } = new();
+
     }
 }

@@ -121,7 +121,7 @@ namespace Estac.Service
 
                 await _repositories.Alterar(result);
 
-                return await RetornOk(await _repositories.Alterar(result));
+                return await RetornOk(result);
             }
             catch (Exception ex) 
             {

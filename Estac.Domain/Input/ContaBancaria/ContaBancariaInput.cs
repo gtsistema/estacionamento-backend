@@ -1,8 +1,8 @@
-﻿using Estac.Domain.Models.Base;
+﻿using Estac.Domain.Input.Base;
 
-namespace Estac.Domain.Models
+namespace Estac.Domain.Input.ContaBancaria
 {
-    public class ContaBancaria : BaseInt
+    public class ContaBancariaInput : BaseIntInput
     {
         public int EstacionamentoId { get; set; }
         public string Titular { get; private set; }
@@ -14,7 +14,6 @@ namespace Estac.Domain.Models
         public string ContaDigito { get; private set; }
         public string TipoConta { get; private set; }
         public bool Ativa { get; private set; }
-        public string ChavePix {  get; private set; }
-        public Estacionamento Estacionamento { get; set; }
+        public string ChavePix { get; private set; }
     }
 }

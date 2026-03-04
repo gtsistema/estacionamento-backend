@@ -1,4 +1,5 @@
 ﻿using Estac.Domain.Input.Base;
+using Estac.Domain.Input.ContaBancaria;
 using Estac.Domain.Input.Pessoa;
 using Estac.Domain.Models.Enuns;
 using Microsoft.AspNetCore.Http;
@@ -18,6 +19,6 @@ namespace Estac.Domain.Input.Estacionamento
         public byte? CobrancaPorcentagem { get; set; }
         public decimal? CobrancaValor { get; set; }
         public PessoaInput Pessoa { get; set; }
-
+        public List<ContaBancariaInput> ContaBancaria { get; set; } = new();
     }
 }
