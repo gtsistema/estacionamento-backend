@@ -97,7 +97,7 @@ namespace Estac.Service
                     });
                 }
 
-                await _repositories.UploadFotos(input.EstacionamentoId, fotos);
+                await _repositories.UploadFotos(fotos);
 
                 return await RetornOk(true);
             }
