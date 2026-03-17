@@ -3,7 +3,7 @@ using System;
 
 namespace Estac.Domain.Auth
 {
-    public class ApplicationRole : IdentityRole<Guid>
+    public class ApplicationRole : IdentityRole<int>
     {
     }
 }

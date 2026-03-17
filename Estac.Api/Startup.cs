@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Estac.Api.Controllers.Base;
 using Estac.Api.Extensions;
 using Estac.CrossCutting.Dependencies;
 using Estac.Domain.Mappers;
 using Estac.Domain.Mappers.Auth;
 using Estac.Infra.Context;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -34,6 +36,11 @@ namespace Estac.Api
                         .AddIdentityConfiguration(Configuration);
 
                 services.AddDistributedMemoryCache();
+
+                services.AddAuthorization();
+
+                //services.AddSingleton<IAuthorizationPolicyProvider, ClaimPolicyProvider>();
+                //services.AddScoped<IAuthorizationHandler, PermissionHandler>();
 
                 services.AddSession(options =>
                 {

@@ -9,6 +9,9 @@ using Estac.Infra.Repositories;
 using Estac.Infra.Repository;
 using Estac.Service;
 using Estac.Service.Auth;
+using Estac.Service.Identity;
+using Estac.Service.Identity.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -31,10 +34,6 @@ namespace Estac.CrossCutting.Dependencies
             services.AddScoped<IVeiculoModeloService, VeiculoModeloService>();
             services.AddScoped<IEstacionamentoService, EstacionamentoService>();
             services.AddScoped<ITransportadoraService, TransportadoraService>();
-
-            services.AddScoped<IApplicationSignManager, ApplicationSignManager>();
-            services.AddScoped<IApplicationUserManager, ApplicationUserManager>();
-            services.AddScoped<IApplicationRoleManager, ApplicationRoleManager>();
 
             // repositories
             services.AddScoped(typeof(IBaseRepositories<>), typeof(BaseRepositories<>));

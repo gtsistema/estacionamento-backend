@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Estac.Api.Controllers.Auth
 {
+    [Authorize]
     [ApiController]
     [Route("api/auth/[controller]/[action]")]
     public class UsuarioController : ControllerBase

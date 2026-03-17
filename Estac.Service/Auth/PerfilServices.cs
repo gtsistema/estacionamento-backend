@@ -1,23 +1,21 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using Estac.Domain.Auth;
 using Estac.Domain.Input.Auth;
 using Estac.Domain.Interface.Services.Auth;
 using Estac.Domain.Models;
+using Estac.Domain.Models.Auth;
 using Estac.Domain.Output;
 using Estac.Domain.Output.Auth;
 using Estac.Domain.Output.Motorista;
 using Estac.Infra.Context;
 using Estac.Service.Extensions;
+using Estac.Service.Identity.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
 namespace Estac.Service.Auth
 {
     public class PerfilServices : ServiceResult<PerfilOutput>, IPerfilServices
@@ -57,25 +55,28 @@ namespace Estac.Service.Auth
             return await RetornOk(_mapper.Map<IEnumerable<PerfilOutput>>(roles));
         }
 
-        public async Task<ActionResult> ObterPorId(Guid id)
+        public async Task<ActionResult> ObterPorId(int id)
         {
             var role = await _roleManager.FindByIdAsync(id);
             return await RetornOk(_mapper.Map<PerfilOutput>(role));
         }
 
-        public async Task<ActionResult> Gravar(ApplicationRole input)
+        public async Task<ActionResult> Gravar(PerfilCreateInput input)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(input?.Name))
-                    return await RetornNo(false, "Nome do role é obrigatório.");
+                if (string.IsNullOrWhiteSpace(input?.Nome))
+                    return await RetornNo(false, "Nome do perfil é obrigatório.");
 
-                var exists = await _roleManager.RoleExistsAsync(input.Name);
+                var exists = await _roleManager.RoleExistsAsync(input.Nome);
 
                 if (exists)
-                    return await RetornNo(false, "Role já existe.");
+                    return await RetornNo(false, "Perfil já existe.");
                 
-                var result = await _roleManager.CreateAsync(input);
+                var result = await _roleManager.CreateAsync(new ApplicationRole() {Name = input.Nome});
+
+
+
 
                 if (!result.Succeeded)
                     return await RetornNo(false, result.Errors.Select(e => e.Description).ToString());
@@ -101,7 +102,7 @@ namespace Estac.Service.Auth
             return await RetornOk(result);
         }
 
-        public async Task<ActionResult> Delete(Guid id)
+        public async Task<ActionResult> Delete(int id)
         {
             var role = await _roleManager.FindByIdAsync(id);
 

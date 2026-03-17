@@ -10,12 +10,9 @@ namespace Estac.Infra.EntityBuilders
     {
         public void Configure(EntityTypeBuilder<EstacionamentoFoto> builder)
         {
-            builder.ToTable("EstacionamentoFoto");
+            builder.ToTable("EstacionamentoFoto", "gts");
 
             builder.HasKey(x => x.Id);
-
-            builder.Property(x => x.Id)
-                   .ValueGeneratedNever();
 
             builder.Property(x => x.EstacionamentoId)
                    .IsRequired();
@@ -32,9 +29,6 @@ namespace Estac.Infra.EntityBuilders
                    .HasMaxLength(100)
                    .IsRequired();
 
-            builder.Property(x => x.Principal)
-                   .HasDefaultValue(false);
-
             builder.Property(x => x.DataCriacao)
                    .HasDefaultValueSql("GETDATE()");
 
@@ -44,10 +38,6 @@ namespace Estac.Infra.EntityBuilders
                    .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasIndex(x => x.EstacionamentoId);
-
-            builder.HasIndex(x => new { x.EstacionamentoId, x.Principal })
-                   .HasFilter("[EhPrincipal] = 1")
-                   .IsUnique();
         }
     }
 }

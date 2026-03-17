@@ -13,12 +13,9 @@ namespace Estac.Infra.EntityBuilders
     {
         public void Configure(EntityTypeBuilder<ContaBancaria> builder)
         {
-            builder.ToTable("ContaBancaria");
+            builder.ToTable("ContaBancaria", "gts");
 
             builder.HasKey(x => x.Id);
-
-            builder.Property(x => x.Id)
-                   .ValueGeneratedNever();
 
             builder.Property(x => x.EstacionamentoId)
                    .IsRequired();
@@ -65,16 +62,15 @@ namespace Estac.Infra.EntityBuilders
                    .HasDefaultValueSql("GETDATE()")
                    .IsRequired();
 
-            // 🔗 Relacionamento 1:N
-            builder.HasOne(x => x.Estacionamento)
-                   .WithMany(x => x.ContasBancarias)
-                   .HasForeignKey(x => x.EstacionamentoId)
-                   .OnDelete(DeleteBehavior.Restrict);
+            //// 🔗 Relacionamento 1:N
+            //builder.HasOne(x => x.Estacionamento)
+            //       .WithMany(x => x.ContasBancarias)
+            //       .HasForeignKey(x => x.EstacionamentoId)
 
             // 📌 Índices importantes
             builder.HasIndex(x => x.EstacionamentoId);
 
-            builder.HasIndex(x => new { x.EstacionamentoId, x.Ativa });
+            //builder.HasIndex(x => new { x.EstacionamentoId, x.Ativa });
         }
     }
 }

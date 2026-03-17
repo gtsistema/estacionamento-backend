@@ -10,7 +10,7 @@ namespace Estac.Infra.EntityBuilders.User
         public void Configure(EntityTypeBuilder<ApplicationRole> builder)
         {
             builder.HasKey(r => r.Id);
-            builder.ToTable("Role");
+            builder.ToTable("Role", "dbo");
         }
     }
 }

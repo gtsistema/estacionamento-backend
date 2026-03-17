@@ -2,6 +2,7 @@ using Estac.Domain.Auth;
 using Estac.Domain.Input.Auth;
 using Estac.Domain.Interface.Services.Auth;
 using Estac.Domain.Output.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Estac.Api.Controllers.Auth
 {
+    [Authorize]
     [ApiController]
     [Route("api/auth/[controller]/[action]")]
     public class PerfilController : ControllerBase
@@ -29,13 +31,13 @@ namespace Estac.Api.Controllers.Auth
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult> ObterPorId(Guid id)
+        public async Task<ActionResult> ObterPorId(int id)
         {
             return await _services.ObterPorId(id);
         }
 
         [HttpPost]
-        public async Task<ActionResult> Gravar([FromBody] ApplicationRole input)
+        public async Task<ActionResult> Gravar([FromBody] PerfilCreateInput input)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -58,7 +60,7 @@ namespace Estac.Api.Controllers.Auth
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(Guid id)
+        public async Task<ActionResult> Delete(int id)
         {
             return await _services.Delete(id);
         }

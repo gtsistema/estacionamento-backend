@@ -10,23 +10,7 @@ namespace Estac.Infra.EntityBuilders.User
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
             
-            builder.ToTable("User");
-
-            builder.HasOne(m => m.Pessoa)
-                   .WithMany() // ou .WithMany(p => p.Estacionamentos) se existir coleção
-                   .HasForeignKey(m => m.PessoaId)
-                   .OnDelete(DeleteBehavior.Restrict);
-
-
-            builder.HasOne(m => m.Transportadora)
-                              .WithMany() // ou .WithMany(p => p.Motoristas) se existir coleção
-                              .HasForeignKey(m => m.TransportadoraId)
-                              .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasOne(m => m.Estacionamento)
-                             .WithMany() // ou .WithMany(p => p.Motoristas) se existir coleção
-                             .HasForeignKey(m => m.EstacionadoId)
-                             .OnDelete(DeleteBehavior.Restrict);
+            builder.ToTable("User", "dbo");
 
             // ===================SEED====
             builder.HasData(new List<ApplicationUser>

@@ -1,5 +1,6 @@
 ﻿using Estac.Domain.Auth;
 using Estac.Domain.Models;
+using Estac.Domain.Models.Auth;
 using Estac.Domain.Models.Enuns;
 using Estac.Infra.EntityBuilders;
 using Estac.Infra.EntityBuilders.User;
@@ -9,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Estac.Infra.Context
 {
-    public class GtsContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
+    public class GtsContext : DbContext
     {
         public GtsContext(DbContextOptions<GtsContext> options) : base(options)
         {
@@ -17,15 +18,6 @@ namespace Estac.Infra.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //User
-            modelBuilder.Entity<ApplicationUser>(new UserMapping().Configure);
-            modelBuilder.Entity<ApplicationRole>(new RoleMapping().Configure);
-            modelBuilder.Entity<IdentityUserRole<Guid>>(new UserRoleMapping().Configure);
-            modelBuilder.Entity<IdentityUserToken<Guid>>(new UserTokenMapping().Configure);
-            modelBuilder.Entity<IdentityRoleClaim<Guid>>(new RoleClaimMapping().Configure);
-            modelBuilder.Entity<IdentityUserClaim<Guid>>(new UserClaimMapping().Configure);
-            modelBuilder.Entity<IdentityUserLogin<Guid>>(new UserLoginMapping().Configure);
-
             //VEICULO
             modelBuilder.Entity<VeiculoModelo>(new VeiculoModeloMapping().Configure);
             modelBuilder.Entity<Veiculo>(new VeiculoMapping().Configure);
@@ -45,8 +37,15 @@ namespace Estac.Infra.Context
             modelBuilder.Entity<Vaga>(new VagaMapping().Configure);
             modelBuilder.Entity<VagaVeiculo>(new VagaVeiculoMapping().Configure);
 
+            //TRANSPORTADORA
+            modelBuilder.Entity<Transportadora>(new TransportadoraMapping().Configure);
+
+
             // ESTACIONAMENTO
             modelBuilder.Entity<Estacionamento>(new EstacionamentoMapping().Configure);
+
+            modelBuilder.Entity<EstacionamentoFoto>(new EstacionamentoFotoMapping().Configure);
+            modelBuilder.Entity<ContaBancaria>(new ContaBancariaMapping().Configure);
 
         }
 

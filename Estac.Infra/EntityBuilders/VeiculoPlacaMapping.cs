@@ -8,7 +8,7 @@ namespace Estac.Infra.EntityBuilders
     {
         public void Configure(EntityTypeBuilder<VeiculoPlaca> builder)
         {
-            builder.ToTable("VEICULOPLACA");
+            builder.ToTable("VeiculoPlaca", "gts");
 
             builder.HasKey(v => v.Id);
 

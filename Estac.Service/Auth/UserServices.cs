@@ -11,6 +11,7 @@ using Estac.Domain.Output.Motorista;
 using Estac.Infra.Context;
 using Estac.Infra.Repositories;
 using Estac.Service.Extensions;
+using Estac.Service.Identity.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;

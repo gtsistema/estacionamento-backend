@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Estac.Infra.EntityBuilders.User
 {
-    public class UserClaimMapping : IEntityTypeConfiguration<IdentityUserClaim<Guid>>
+    public class UserClaimMapping : IEntityTypeConfiguration<IdentityUserClaim<int>>
     {
-        public void Configure(EntityTypeBuilder<IdentityUserClaim<Guid>> builder)
+        public void Configure(EntityTypeBuilder<IdentityUserClaim<int>> builder)
         {
             builder.HasKey(r => r.Id);
 
-            builder.ToTable("UserClaim");
+            builder.ToTable("UserClaim", "dbo");
         }
     }
 }

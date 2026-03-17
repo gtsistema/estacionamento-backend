@@ -13,7 +13,7 @@ namespace Estac.Infra.EntityBuilders
     {
         public void Configure(EntityTypeBuilder<VeiculoMarca> builder)
         {
-            builder.ToTable("VEICULOMARCA");
+            builder.ToTable("VeiculoMarca", "gts");
 
             builder.HasKey(v => v.Id);
 

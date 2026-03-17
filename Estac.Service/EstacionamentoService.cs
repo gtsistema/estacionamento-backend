@@ -92,8 +92,6 @@ namespace Estac.Service
                         ContentType = arquivo.ContentType,
                         DataCriacao = DateTime.UtcNow,
                         TamanhoBytes = arquivo.Length,
-                        Principal = input.PadraoIndex.HasValue && input.PadraoIndex.Value == i,
-                        Ordem = input.Ordem.HasValue ? input.Ordem.Value + i : (int?)null,
                     });
                 }
 

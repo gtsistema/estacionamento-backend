@@ -10,12 +10,12 @@ namespace Estac.Domain.Interface.Services.Auth
     {
         Task<ActionResult> Buscar();
 
-        Task<ActionResult> ObterPorId(Guid id);
+        Task<ActionResult> ObterPorId(int id);
 
-        Task<ActionResult> Gravar(ApplicationRole input);
+        Task<ActionResult> Gravar(PerfilCreateInput input);
 
         Task<ActionResult> Alterar(ApplicationRole input);
 
-        Task<ActionResult> Delete(Guid id);
+        Task<ActionResult> Delete(int id);
     }
 }

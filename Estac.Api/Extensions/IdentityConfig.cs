@@ -6,6 +6,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Estac.Infra.Context;
 using Estac.Domain.Extensions;
+using Estac.Service.Identity.Interface;
+using Estac.Service.Identity;
 
 namespace Estac.Api.Extensions
 {
@@ -14,7 +16,7 @@ namespace Estac.Api.Extensions
         public static IServiceCollection AddIdentityConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddIdentity<ApplicationUser, ApplicationRole>()
-                .AddEntityFrameworkStores<GtsContext>()
+                .AddEntityFrameworkStores<IdentityContext>()
                 .AddErrorDescriber<IdentityPortugueseMessages>()
                 .AddDefaultTokenProviders();
 

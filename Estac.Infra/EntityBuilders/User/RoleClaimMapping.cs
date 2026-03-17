@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Estac.Infra.EntityBuilders.User
 {
-    public class RoleClaimMapping : IEntityTypeConfiguration<IdentityRoleClaim<Guid>>
+    public class RoleClaimMapping : IEntityTypeConfiguration<IdentityRoleClaim<int>>
     {
-        public void Configure(EntityTypeBuilder<IdentityRoleClaim<Guid>> builder)
+        public void Configure(EntityTypeBuilder<IdentityRoleClaim<int>> builder)
         {
             builder.HasKey(r => r.Id);
-            builder.ToTable("RoleClaim");
+            builder.ToTable("RoleClaim", "dbo");
         }
     }
 }

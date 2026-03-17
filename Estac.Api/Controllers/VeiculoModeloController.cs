@@ -1,11 +1,13 @@
 ﻿using Estac.Domain.Input.VeiculoModelo;
 using Estac.Domain.Interface.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Estac.Api.Controllers
 {
+    [Authorize]
     [ApiController]
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]/")]
     public class VeiculoModeloController : ControllerBase
     {
         public readonly IVeiculoModeloService _services;
