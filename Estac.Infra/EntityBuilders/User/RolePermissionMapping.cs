@@ -20,6 +20,20 @@ namespace Estac.Infra.EntityBuilders.User
 
             builder.HasIndex(x => new { x.RoleId, x.PermissionId })
                 .IsUnique();
+
+            builder.HasOne(v => v.Role)
+               .WithMany()
+               .HasForeignKey(v => v.RoleId);
+
+            builder.HasOne(v => v.Permission)
+               .WithMany()
+               .HasForeignKey(v => v.PermissionId)
+               .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(v => v.SubModule)
+               .WithMany()
+               .HasForeignKey(v => v.SubModuleId)
+               .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

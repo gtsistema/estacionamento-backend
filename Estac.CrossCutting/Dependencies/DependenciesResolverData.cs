@@ -1,4 +1,6 @@
-﻿using Estac.Infra.Context;
+﻿using Estac.CrossCutting.Helpers;
+using Estac.Domain.Interface.Repositories.Dapper;
+using Estac.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +14,10 @@ namespace Estac.CrossCutting.Dependencies
             services.AddDbContext<GtsContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<IdentityContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-            //services.AddScoped<IDapperRepositories, DapperRepositories>();
+            services.Configure<ConnectionStringsConfig>(
+                configuration.GetSection("ConnectionStrings"));
+
+            services.AddScoped<IDapperRepositories, DapperRepositories>();
             return services;
         }
     }

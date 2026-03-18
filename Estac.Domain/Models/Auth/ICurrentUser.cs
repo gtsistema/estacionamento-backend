@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace Estac.Domain.Auth
+namespace Estac.Domain.Models.Auth
 {
     public interface ICurrentUser
     {

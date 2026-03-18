@@ -1,5 +1,4 @@
-﻿using Estac.Domain.Auth;
-using Estac.Domain.Models;
+﻿using Estac.Domain.Models;
 using Estac.Domain.Models.Auth;
 using Estac.Domain.Models.Enuns;
 using Estac.Infra.EntityBuilders;

@@ -1,11 +1,13 @@
-﻿using Estac.Domain.Auth;
-using Estac.Domain.Clock;
+﻿using Estac.Domain.Clock;
 using Estac.Domain.Extensions.Notifier;
 using Estac.Domain.Interface.Repositories;
+using Estac.Domain.Interface.Repositories.Auth;
 using Estac.Domain.Interface.Services;
 using Estac.Domain.Interface.Services.Auth;
+using Estac.Domain.Models.Auth;
 using Estac.Domain.Output;
 using Estac.Infra.Repositories;
+using Estac.Infra.Repositories.Auth;
 using Estac.Infra.Repository;
 using Estac.Service;
 using Estac.Service.Auth;
@@ -43,6 +45,7 @@ namespace Estac.CrossCutting.Dependencies
             services.AddScoped<IEstacionamentoRepositories, EstacionamentoRepositories>();
             services.AddScoped<ITransportadoraRepositories, TransportadoraRepositories>();
             services.AddScoped<IPessoaRepositories, PessoaRepositories>();
+            services.AddScoped<IPerfilRepositories, PerfilRepositories>();
 
             return services;
         }

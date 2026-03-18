@@ -1,5 +1,5 @@
 using System;
-using Estac.Domain.Auth;
+using Estac.Domain.Models.Auth;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -1,5 +1,5 @@
-﻿using Estac.Domain.Auth;
-using Estac.Domain.Input.Pessoa;
+﻿using Estac.Domain.Input.Pessoa;
+using Estac.Domain.Models.Auth;
 using System.ComponentModel.DataAnnotations;
 
 namespace Estac.Domain.Input.Auth

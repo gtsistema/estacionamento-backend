@@ -1,5 +1,4 @@
-﻿using Estac.Domain.Auth;
-using Estac.Domain.Models;
+﻿using Estac.Domain.Models;
 using Estac.Domain.Models.Auth;
 using Estac.Domain.Models.Enuns;
 using Estac.Infra.EntityBuilders;
@@ -34,7 +33,7 @@ namespace Estac.Infra.Context
             modelBuilder.Entity<Module>(new ModuleMapping().Configure);
             modelBuilder.Entity<Permission>(new PermissionMapping().Configure);
             modelBuilder.Entity<SubModule>(new SubModuleMapping().Configure);
-            modelBuilder.Entity<UserPermission>(new UserPermissionMapping().Configure);
+            modelBuilder.Entity<RolePermission>(new RolePermissionMapping().Configure);
         }
     }
 }

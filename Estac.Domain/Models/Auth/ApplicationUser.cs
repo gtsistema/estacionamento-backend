@@ -1,8 +1,7 @@
-using Estac.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Estac.Domain.Auth
+namespace Estac.Domain.Models.Auth
 {
     public class ApplicationUser : IdentityUser<int>
     {

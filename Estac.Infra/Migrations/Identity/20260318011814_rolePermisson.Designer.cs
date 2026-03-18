@@ -4,6 +4,7 @@ using Estac.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Estac.Infra.Migrations.Identity
 {
     [DbContext(typeof(IdentityContext))]
-    partial class IdentityContextModelSnapshot : ModelSnapshot
+    [Migration("20260318011814_rolePermisson")]
+    partial class rolePermisson
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -199,17 +202,11 @@ namespace Estac.Infra.Migrations.Identity
                     b.Property<int>("PermissionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SubModuleId")
-                        .HasColumnType("int");
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PermissionId");
-
-                    b.HasIndex("SubModuleId");
 
                     b.HasIndex("RoleId", "PermissionId")
                         .IsUnique();
@@ -225,11 +222,6 @@ namespace Estac.Infra.Migrations.Identity
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("Ativo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
                     b.Property<string>("Descricao")
                         .IsRequired()
                         .HasMaxLength(150)
@@ -240,9 +232,6 @@ namespace Estac.Infra.Migrations.Identity
 
                     b.Property<int>("Ordem")
                         .HasColumnType("int");
-
-                    b.Property<string>("Rota")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -361,33 +350,6 @@ namespace Estac.Infra.Migrations.Identity
                         .HasForeignKey("SubModuleId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("SubModule");
-                });
-
-            modelBuilder.Entity("Estac.Domain.Models.Auth.RolePermission", b =>
-                {
-                    b.HasOne("Estac.Domain.Models.Auth.Permission", "Permission")
-                        .WithMany()
-                        .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Estac.Domain.Models.Auth.ApplicationRole", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Estac.Domain.Models.Auth.SubModule", "SubModule")
-                        .WithMany()
-                        .HasForeignKey("SubModuleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Permission");
-
-                    b.Navigation("Role");
 
                     b.Navigation("SubModule");
                 });

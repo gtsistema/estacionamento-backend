@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using Estac.Domain.Extensions.Notifier;
+using Estac.Domain.Models.Auth;
 using Estac.Service.Identity.Interface;
 using Microsoft.AspNetCore.Identity;
 

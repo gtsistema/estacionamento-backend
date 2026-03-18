@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Estac.Domain.Auth;
 using Estac.Domain.Input.Auth;
+using Estac.Domain.Models.Auth;
 using Estac.Domain.Output.Auth;
 using Microsoft.AspNetCore.Identity;
 

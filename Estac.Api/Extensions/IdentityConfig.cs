@@ -8,6 +8,7 @@ using Estac.Infra.Context;
 using Estac.Domain.Extensions;
 using Estac.Service.Identity.Interface;
 using Estac.Service.Identity;
+using Estac.Domain.Models.Auth;
 
 namespace Estac.Api.Extensions
 {

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Estac.Domain.Auth;
+using Estac.Domain.Models.Auth;
 using Microsoft.AspNetCore.Identity;
 
 namespace Estac.Service.Identity.Interface

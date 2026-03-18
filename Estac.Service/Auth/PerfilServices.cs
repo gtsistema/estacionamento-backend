@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Azure.Core;
 using DocumentFormat.OpenXml.Office2010.Excel;
-using Estac.Domain.Auth;
 using Estac.Domain.Input.Auth;
+using Estac.Domain.Interface.Repositories.Auth;
 using Estac.Domain.Interface.Services.Auth;
 using Estac.Domain.Models;
 using Estac.Domain.Models.Auth;
@@ -28,6 +28,7 @@ namespace Estac.Service.Auth
         private readonly BearerTokenSettings _bearerTokenSettings;
         private readonly UserManager<ApplicationUser> _identityUserManager;
         private readonly IApplicationRoleManager _roleManager;
+        private readonly IPerfilRepositories _perfilRepositories;
 
         public PerfilServices(IApplicationUserManager userManager,
                IApplicationSignManager signManager, ICurrentUser currentUser,
@@ -36,8 +37,8 @@ namespace Estac.Service.Auth
                GtsContext context,
                IErrorServices _errorApplication,
                UserManager<ApplicationUser> _identityUserManager,
-               IApplicationRoleManager _roleManager
-               ) : base(_errorApplication)
+               IApplicationRoleManager _roleManager,
+               IPerfilRepositories _perfilRepositories) : base(_errorApplication)
         {
             _bearerTokenSettings = bearerTokenSettings.Value;
             _userManager = userManager;
@@ -47,6 +48,7 @@ namespace Estac.Service.Auth
             _context = context;
             this._identityUserManager = _identityUserManager;
             this._roleManager = _roleManager;
+            this._perfilRepositories = _perfilRepositories;
         }
 
         public async Task<ActionResult> Buscar()
@@ -115,6 +117,13 @@ namespace Estac.Service.Auth
                 return await RetornNo(false, string.Join(", ", result.Errors.Select(e => e.Description)));
 
             return await RetornOk(true);
+        }
+
+        public async Task<ActionResult> BuscarPerfilPermissaoUsuario(int usuarioId)
+        {
+            var resultado = await _perfilRepositories.BuscarPerfilPermissaoUsuario(usuarioId);
+
+            return await RetornOk(resultado);
         }
     }
 }

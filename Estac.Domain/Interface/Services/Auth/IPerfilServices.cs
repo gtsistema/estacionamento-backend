@@ -1,5 +1,5 @@
-﻿using Estac.Domain.Auth;
-using Estac.Domain.Input.Auth;
+﻿using Estac.Domain.Input.Auth;
+using Estac.Domain.Models.Auth;
 using Estac.Domain.Output.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,5 +17,7 @@ namespace Estac.Domain.Interface.Services.Auth
         Task<ActionResult> Alterar(ApplicationRole input);
 
         Task<ActionResult> Delete(int id);
+
+        Task<ActionResult> BuscarPerfilPermissaoUsuario(int usuarioId);
     }
 }

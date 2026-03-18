@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
-using Estac.Domain.Auth;
 using Estac.Domain.Input.Auth;
 using Estac.Domain.Interface.Repositories;
+using Estac.Domain.Interface.Repositories.Auth;
 using Estac.Domain.Interface.Services.Auth;
 using Estac.Domain.Models;
+using Estac.Domain.Models.Auth;
 using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output;
 using Estac.Domain.Output.Auth;
@@ -31,8 +32,8 @@ namespace Estac.Service.Auth
         private readonly BearerTokenSettings _bearerTokenSettings;
         private readonly UserManager<ApplicationUser> _identityUserManager;
         private readonly IPessoaRepositories _pessoaRepositories;
+        private readonly IPerfilRepositories _perfilRepositories;
 
-        
         public UserServices(IApplicationUserManager userManager,
                IApplicationSignManager signManager, ICurrentUser currentUser,
                IOptions<BearerTokenSettings> bearerTokenSettings,
@@ -40,8 +41,8 @@ namespace Estac.Service.Auth
                GtsContext context,
                IErrorServices _errorApplication,
                UserManager<ApplicationUser> _identityUserManager,
-               IPessoaRepositories _pessoaRepositories
-               ) : base(_errorApplication)
+               IPessoaRepositories _pessoaRepositories,
+               IPerfilRepositories _perfilRepositories) : base(_errorApplication)
         {
             _bearerTokenSettings = bearerTokenSettings.Value;
             _userManager = userManager;
@@ -51,18 +52,27 @@ namespace Estac.Service.Auth
             _context = context;
             this._identityUserManager = _identityUserManager;
             this._pessoaRepositories =  _pessoaRepositories;
+            this._perfilRepositories = _perfilRepositories;
         }
 
         public async Task<ActionResult> LoginAsync(LoginInput dto)
         {
-            var result = await _signManager.PasswordSignInAsync(dto.UserName, dto.Password);
+            try
+            {
+                var result = await _signManager.PasswordSignInAsync(dto.UserName, dto.Password);
 
-            if (!result.Succeeded)
-                return await RetornNo(false, Resources.Resources.MSG_Usuario_Ou_Senha_Invalida);
+                if (!result.Succeeded)
+                    return await RetornNo(false, Resources.Resources.MSG_Usuario_Ou_Senha_Invalida);
 
-            var user = await _identityUserManager.FindByNameAsync(dto.UserName);
+                var user = await _identityUserManager.FindByNameAsync(dto.UserName);
 
-            return await RetornOk(await MontarLoginResponseAsync(user), Resources.Resources.MSG_OperacaoRealizadaSucesso);
+                return await RetornOk(await MontarLoginResponseAsync(user), Resources.Resources.MSG_OperacaoRealizadaSucesso);
+            }
+            catch(Exception ex)
+            {
+                return await RetornNo(ex, "erro ao fazer login.");
+            }
+            
         }
 
         public async Task<ActionResult> RegisterAsync(RegisterInput dto)
@@ -97,17 +107,15 @@ namespace Estac.Service.Auth
             }
         }
 
-        private async Task<LoginOutput> MontarLoginResponseAsync(ApplicationUser user)
+        private async Task<UsuarioAcessoOutput> MontarLoginResponseAsync(ApplicationUser user)
         {
-            var response = _mapper.Map<LoginOutput>(user);
+            var response = await _perfilRepositories.BuscarPerfilPermissaoUsuario(user.Id);
 
-            var roles = await _userManager.GetRolesAsync(user);
-            response.Roles = roles;
-            response.Jwt = GenerateJwt(user, roles);
+            response.Jwt = GenerateJwt(user);
             return response;
         }
 
-        private TokenResponse GenerateJwt(ApplicationUser user, IEnumerable<string> roles)
+        private TokenResponse GenerateJwt(ApplicationUser user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_bearerTokenSettings.Secret);

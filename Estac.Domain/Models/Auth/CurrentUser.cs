@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 
-namespace Estac.Domain.Auth
+namespace Estac.Domain.Models.Auth
 {
     public class CurrentUser : ICurrentUser
     {

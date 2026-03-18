@@ -23,6 +23,13 @@ namespace Estac.Infra.EntityBuilders.User
 
             builder.Property(x => x.ModuleId)
                 .IsRequired();
+
+            builder.Property(x => x.Rota)
+                .IsRequired(false);
+
+            builder.Property(p => p.Ativo)
+                .HasColumnType("bit")
+                .HasDefaultValue(true);
         }
     }
 }

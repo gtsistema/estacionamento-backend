@@ -1,12 +1,8 @@
-using Estac.Domain.Auth;
 using Estac.Domain.Input.Auth;
 using Estac.Domain.Interface.Services.Auth;
-using Estac.Domain.Output.Auth;
+using Estac.Domain.Models.Auth;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace Estac.Api.Controllers.Auth
 {
@@ -63,6 +59,12 @@ namespace Estac.Api.Controllers.Auth
         public async Task<ActionResult> Delete(int id)
         {
             return await _services.Delete(id);
+        }
+
+        [HttpGet("usuario/{usuarioId}")]
+        public async Task<ActionResult> Buscar(int usuarioId)
+        {
+            return await _services.BuscarPerfilPermissaoUsuario(usuarioId);
         }
     }
 }

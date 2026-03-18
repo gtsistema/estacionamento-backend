@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Estac.Domain.Models.Auth;
 using Estac.Service.Identity.Interface;
 using Microsoft.AspNetCore.Identity;
 
