@@ -4,6 +4,7 @@ using Estac.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Estac.CrossCutting.Dependencies
 {
@@ -11,20 +12,37 @@ namespace Estac.CrossCutting.Dependencies
     {
         public static IServiceCollection ResolveData(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<GtsContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
-            services.AddDbContext<IdentityContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+            LogConexao(services, connectionString);
+
+            services.AddDbContext<GtsContext>(options =>
+                options.UseSqlServer(connectionString));
+
+            services.AddDbContext<IdentityContext>(options =>
+                options.UseSqlServer(connectionString));
 
             services.Configure<ConnectionStringsConfig>(
                 configuration.GetSection("ConnectionStrings"));
 
-            var conn = configuration.GetSection("DefaultConnection");
-            Console.WriteLine(conn);
-
-            var teste = configuration.GetSection("ConnectionStrings");
-            Console.WriteLine(teste);
-
             services.AddScoped<IDapperRepositories, DapperRepositories>();
+
             return services;
+        }
+
+        private static void LogConexao(IServiceCollection services, string connectionString)
+        {
+            // LOG CORRETO
+            Console.WriteLine($"🔥 ConnectionString: {connectionString}");
+
+            var loggerFactory = LoggerFactory.Create(builder =>
+            {
+                builder.AddConsole();
+            });
+
+            var logger = loggerFactory.CreateLogger("Startup");
+            logger.LogInformation("🔥 Connection: {conn}", connectionString);
+
         }
     }
 }
