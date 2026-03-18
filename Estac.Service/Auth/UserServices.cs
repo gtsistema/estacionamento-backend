@@ -78,6 +78,8 @@ namespace Estac.Service.Auth
         public async Task<ActionResult> RegisterAsync(RegisterInput dto)
         {
             var pessoa = _mapper.Map<Pessoa>(dto.Pessoa);
+            pessoa.Email = dto.Email;
+            pessoa.Ativo = true;
 
             try
             {
@@ -87,6 +89,7 @@ namespace Estac.Service.Auth
                 var user = _mapper.Map<ApplicationUser>(dto);
                 user.PessoaId = pessoa.Id;
                 user.EmailConfirmed = true;
+                user.FullName = pessoa.NomeFantasia;
 
                 var result = await _userManager.CreateAsync(user, dto.Password);
 

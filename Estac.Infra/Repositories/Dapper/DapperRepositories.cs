@@ -50,7 +50,7 @@ public class DapperRepositories : IDapperRepositories
         }
         catch (Exception ex)
         {
-           throw new Exception($"{connection.ConnectionString}");
+           throw;
         }
     }
 

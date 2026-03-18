@@ -7,7 +7,7 @@ namespace Estac.Domain.Models.Auth
     {
         public int? PessoaId { get; set; }
         public int? TransportadoraId { get; set; }
-        public int? EstacionadoId { get; set; }
+        public int? EstacionamentoId { get; set; }
         public string FullName { get; set; }
         public bool TemporaryPassword { get; set; }
         public bool? IsDeleted { get; set; } = false;

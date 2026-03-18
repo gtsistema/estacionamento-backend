@@ -35,7 +35,7 @@ namespace Estac.Infra.Repositories.Auth
         public async Task<UsuarioAcessoOutput> BuscarPerfilPermissaoUsuario(int usuarioId)
         {
             var usuario = await dapperRepositories.QueryFirstOrDefaultAsync<UsuarioOutput>(
-                "SELECT Id, userName, Email FROM dbo.[USER] WHERE Id = @Id",
+                "SELECT Id, userName, FullName as Nome, EstacionamentoId, Email FROM dbo.[USER] WHERE Id = @Id",
                 new { Id = usuarioId });
 
             var role = await dapperRepositories.QueryFirstOrDefaultAsync<RoleOutput>(

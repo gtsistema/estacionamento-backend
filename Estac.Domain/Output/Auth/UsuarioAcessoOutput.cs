@@ -14,6 +14,8 @@ namespace Estac.Domain.Output.Auth
         public int Id { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }
+        public string Nome { get; set; }
+        public int? EstacionamentoId { get; set; }
     }
 
     public class RoleOutput

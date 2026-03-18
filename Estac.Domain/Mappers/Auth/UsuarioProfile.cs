@@ -15,7 +15,7 @@ namespace Estac.Domain.Mappers.Auth
             CreateMap<RegisterInput, ApplicationUser>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
-                .ForMember(dest => dest.EstacionadoId, opt => opt.MapFrom(src => src.EstacionamentoId))
+                .ForMember(dest => dest.EstacionamentoId, opt => opt.MapFrom(src => src.EstacionamentoId))
                 .ForMember(dest => dest.Pessoa, opt => opt.Ignore())
                 .ForMember(dest => dest.Estacionamento, opt => opt.Ignore())
                 .ForMember(dest => dest.Transportadora, opt => opt.Ignore());
