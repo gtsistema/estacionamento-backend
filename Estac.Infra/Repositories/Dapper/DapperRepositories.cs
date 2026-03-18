@@ -72,10 +72,8 @@ public class DapperRepositories : IDapperRepositories
 
     public IDbConnection CreateConnection()
     {
-
-        using var conn = new SqlConnection(_connectionString);
+        var conn = new SqlConnection(_connectionString);
         conn.Open();
-        
         return conn;
     }
 }
