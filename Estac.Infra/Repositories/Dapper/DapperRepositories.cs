@@ -2,7 +2,7 @@
 using Estac.Domain.Interface.Repositories.Dapper;
 using Microsoft.Extensions.Configuration;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 public class DapperRepositories : IDapperRepositories
 {
@@ -63,6 +63,10 @@ public class DapperRepositories : IDapperRepositories
 
     public IDbConnection CreateConnection()
     {
-        return new SqlConnection(_connectionString);
+
+        using var conn = new SqlConnection(_connectionString);
+        conn.Open();
+        
+        return conn;
     }
 }
