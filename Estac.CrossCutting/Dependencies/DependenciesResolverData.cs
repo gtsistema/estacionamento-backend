@@ -17,6 +17,12 @@ namespace Estac.CrossCutting.Dependencies
             services.Configure<ConnectionStringsConfig>(
                 configuration.GetSection("ConnectionStrings"));
 
+            var conn = configuration.GetSection("DefaultConnection");
+            Console.WriteLine(conn);
+
+            var teste = configuration.GetSection("ConnectionStrings");
+            Console.WriteLine(teste);
+
             services.AddScoped<IDapperRepositories, DapperRepositories>();
             return services;
         }
