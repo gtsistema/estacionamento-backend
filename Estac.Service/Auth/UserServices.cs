@@ -86,6 +86,7 @@ namespace Estac.Service.Auth
                 await _pessoaRepositories.Gravar(pessoa);
                 var user = _mapper.Map<ApplicationUser>(dto);
                 user.PessoaId = pessoa.Id;
+                user.EmailConfirmed = true;
 
                 var result = await _userManager.CreateAsync(user, dto.Password);
 
