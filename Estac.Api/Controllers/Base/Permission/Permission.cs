@@ -1,6 +1,6 @@
 ﻿namespace Estac.Api.Controllers.Base.Claim
 {
-    public class Claim
+    public class Permission
     {
         public static class Usuario
         {

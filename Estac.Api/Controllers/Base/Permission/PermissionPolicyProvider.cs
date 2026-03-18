@@ -4,9 +4,9 @@ using Microsoft.Extensions.Options;
 
 namespace Estac.Api.Controllers.Base.Claim
 {
-    public class ClaimPolicyProvider : DefaultAuthorizationPolicyProvider
+    public class PermissionPolicyProvider : DefaultAuthorizationPolicyProvider
     {
-        public ClaimPolicyProvider(
+        public PermissionPolicyProvider(
             IOptions<AuthorizationOptions> options)
             : base(options)
         {
@@ -14,12 +14,12 @@ namespace Estac.Api.Controllers.Base.Claim
 
         public override Task<AuthorizationPolicy> GetPolicyAsync(string policyName)
         {
-            if (policyName.StartsWith("claim:"))
+            if (policyName.StartsWith("permission:"))
             {
-                var claim = policyName.Substring("claim:".Length);
+                var permission = policyName.Substring("permission:".Length);
 
                 var policy = new AuthorizationPolicyBuilder()
-                    .AddRequirements(new ClaimRequirement(claim))
+                    .AddRequirements(new PermissionRequirement(permission))
                     .Build();
 
                 return Task.FromResult<AuthorizationPolicy>(policy);

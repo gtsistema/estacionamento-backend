@@ -19,14 +19,14 @@ namespace Estac.Api.Controllers
             this._services = _services;
         }
 
-        [ClaimAuthorize(Claim.Motorista.Visualizar)]
+        [PermissionAuthorize(Permission.Motorista.Visualizar)]
         [HttpGet]
         public async Task<ActionResult> Buscar([FromQuery] MotoristaFilterInput filter)
         {
             return await _services.Buscar(filter);
         }
 
-        [ClaimAuthorize(Claim.Motorista.Visualizar)]
+        [PermissionAuthorize(Permission.Motorista.Visualizar)]
 
         [HttpGet("{id}")]
         public async Task<ActionResult> ObterPorId(int id)
@@ -34,21 +34,21 @@ namespace Estac.Api.Controllers
             return await _services.ObterPorId(id);
         }
 
-        [ClaimAuthorize(Claim.Motorista.Gravar)]
+        [PermissionAuthorize(Permission.Motorista.Gravar)]
         [HttpPost]
         public async Task<ActionResult> Gravar([FromBody] MotoristaPostInput input)
         {
             return await _services.Gravar(input);
         }
 
-        [ClaimAuthorize(Claim.Motorista.Alterar)]
+        [PermissionAuthorize(Permission.Motorista.Alterar)]
         [HttpPut]
         public async Task<ActionResult> Alterar([FromBody] MotoristaPutInput input)
         {
             return await _services.Alterar(input);
         }
 
-        [ClaimAuthorize(Claim.Motorista.Excluir)]
+        [PermissionAuthorize(Permission.Motorista.Excluir)]
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {

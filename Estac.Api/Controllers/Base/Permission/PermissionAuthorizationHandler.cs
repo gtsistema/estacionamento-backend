@@ -2,16 +2,16 @@
 
 namespace Estac.Api.Controllers.Base.Claim
 {
-    public class ClaimAuthorizationHandler
-    : AuthorizationHandler<ClaimRequirement>
+    public class PermissionAuthorizationHandler
+    : AuthorizationHandler<PermissionRequirement>
     {
         protected override Task HandleRequirementAsync(
             AuthorizationHandlerContext context,
-            ClaimRequirement requirement)
+            PermissionRequirement requirement)
         {
             var hasClaim = context.User.Claims
-                .Any(c => c.Type == "Claim" &&
-                          c.Value == requirement.Claim);
+                .Any(c => c.Type == "Permission" &&
+                          c.Value == requirement.Permission);
 
             if (hasClaim)
                 context.Succeed(requirement);
