@@ -39,9 +39,6 @@ namespace Estac.Api
 
                 services.AddAuthorization();
 
-                //services.AddSingleton<IAuthorizationPolicyProvider, ClaimPolicyProvider>();
-                //services.AddScoped<IAuthorizationHandler, PermissionHandler>();
-
                 services.AddSession(options =>
                 {
                     options.IdleTimeout = TimeSpan.FromMinutes(30);

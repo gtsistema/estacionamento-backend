@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Estac.Api.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/[controller]/")]
     public class VeiculoModeloController : ControllerBase
