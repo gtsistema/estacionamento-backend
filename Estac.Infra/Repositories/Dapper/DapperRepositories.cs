@@ -37,12 +37,21 @@ public class DapperRepositories : IDapperRepositories
     {
         using var connection = CreateConnection();
 
-        return await connection.QueryFirstOrDefaultAsync<T>(
-            new CommandDefinition(
-                sql,
-                param,
-                transaction,
-                cancellationToken: cancellationToken));
+        try
+        {
+
+            return await connection.QueryFirstOrDefaultAsync<T>(
+                new CommandDefinition(
+                    sql,
+                    param,
+                    transaction,
+                    cancellationToken: cancellationToken));
+
+        }
+        catch (Exception ex)
+        {
+           throw new Exception($"{connection.ConnectionString}");
+        }
     }
 
     public async Task<int> ExecuteAsync(

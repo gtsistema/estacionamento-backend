@@ -70,7 +70,7 @@ namespace Estac.Service.Auth
             }
             catch(Exception ex)
             {
-                return await RetornNo(ex, "erro ao fazer login.");
+                return await RetornNo(ex, ex.Message);
             }
             
         }
