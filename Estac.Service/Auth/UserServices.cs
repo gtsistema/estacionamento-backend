@@ -116,8 +116,6 @@ namespace Estac.Service.Auth
         {
             var response = await _perfilRepositories.BuscarPerfilPermissaoUsuario(user.Id);
 
-            response.Menus.Select(x => x.SubMenus.Select(sm => sm.Permissions)).ToList();
-
             response.Jwt = GenerateJwt(user, response);
 
             return response;
@@ -171,12 +169,13 @@ namespace Estac.Service.Auth
             var permissoes = acessoOutput.Menus
                 .SelectMany(m => m.SubMenus)
                 .SelectMany(sm => sm.Permissions)
-                .Select(p => p.Acao)
+                .Select(p => p.Descricao)
                 .Distinct();
 
             foreach (var permissao in permissoes)
             {
-                claims.Add(new Claim("Permission", permissao));
+                if(permissao is not null)
+                    claims.Add(new Claim("Permission", permissao));
             }
 
             return claims;
