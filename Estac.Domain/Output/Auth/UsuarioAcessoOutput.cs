@@ -47,6 +47,6 @@ namespace Estac.Domain.Output.Auth
         public int Id { get; set; }
         public int Ordem { get; set; }
         public int SubMenuId {  get; set; }   
-        public string Descricao { get; set; }
+        public string Acao { get; set; }
     }
 }
