@@ -29,7 +29,7 @@ namespace Estac.Domain.Output.Auth
         public int Id { get; set; }
         public string Descricao { get; set; }
         public string Icone { get; set; }
-
+        public bool Ativo { get; set; } 
         public List<SubMenuOuput> SubMenus { get; set; } = new();
     }
     public class SubMenuOuput
@@ -38,7 +38,7 @@ namespace Estac.Domain.Output.Auth
         public int MenuId { get; set; }
         public string Descricao { get; set; }
         public string Rota { get; set; }
-
+        public bool Ativo { get; set; }
         public List<PermissionOutput> Permissions { get; set; } = new();
     }
 
