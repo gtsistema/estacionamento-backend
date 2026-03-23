@@ -62,12 +62,12 @@ namespace Estac.Infra.Repositories
 
         }
 
-        public async Task<IEnumerable<EstacionamentoFotoOutput>> ListarFotosPorEstacionamentoAsNoTracking(int estacionamentoId)
+        public async Task<IEnumerable<MenuFotoOutput>> ListarFotosPorEstacionamentoAsNoTracking(int estacionamentoId)
         {
             return await _context.EstacionamentoFoto
                 .AsNoTracking()
                 .Where(x => x.EstacionamentoId == estacionamentoId)
-                .Select(x => new EstacionamentoFotoOutput
+                .Select(x => new MenuFotoOutput
                 {
                     Id = x.Id,
                     NomeArquivo = x.Descricao,

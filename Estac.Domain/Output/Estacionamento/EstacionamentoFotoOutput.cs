@@ -1,7 +1,7 @@
 ﻿
 namespace Estac.Domain.Output.Estacionamento
 {
-    public class EstacionamentoFotoOutput
+    public class MenuFotoOutput
     {
         public int Id { get; set; }
         public string NomeArquivo { get; set; }

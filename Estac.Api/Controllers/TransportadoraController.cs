@@ -9,7 +9,7 @@ namespace Estac.Api.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/[controller]/")]
+    [Route("api/[controller]/[action]")]
     public class TransportadoraController : ControllerBase
     {
         public readonly ITransportadoraService _services;

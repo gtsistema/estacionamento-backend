@@ -12,7 +12,7 @@ namespace Estac.Domain.Interface.Repositories
         Task<Estacionamento> SelecionarPorIdCompleto(int id);
         Task<PagedResult<EstacionamentoSearchOutput>> Paginar(EstacionamentoFilterInput input);
         Task<IEnumerable<EstacionamentoFoto>> ListarFotosPorEstacionamento(int id);
-        Task<IEnumerable<EstacionamentoFotoOutput>> ListarFotosPorEstacionamentoAsNoTracking(int id);
+        Task<IEnumerable<MenuFotoOutput>> ListarFotosPorEstacionamentoAsNoTracking(int id);
         Task UploadFotos(List<EstacionamentoFoto> fotos);
         Task ExcluirFotos(int id);
     }

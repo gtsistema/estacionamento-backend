@@ -2,7 +2,6 @@
 using Estac.Domain.Input.ContaBancaria;
 using Estac.Domain.Input.Pessoa;
 using Estac.Domain.Models.Enuns;
-using Microsoft.AspNetCore.Http;
 
 namespace Estac.Domain.Input.Estacionamento
 {

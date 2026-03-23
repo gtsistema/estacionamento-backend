@@ -10,7 +10,7 @@ namespace Estac.Api.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/[controller]/")]
+    [Route("api/[controller]/[action]")]
     public class MotoristaController : ControllerBase
     {
         public readonly IMotoristaService _services;
