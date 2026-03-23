@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace Estac.Service.Auth
@@ -115,11 +116,14 @@ namespace Estac.Service.Auth
         {
             var response = await _perfilRepositories.BuscarPerfilPermissaoUsuario(user.Id);
 
-            response.Jwt = GenerateJwt(user);
+            response.Menus.Select(x => x.SubMenus.Select(sm => sm.Permissions)).ToList();
+
+            response.Jwt = GenerateJwt(user, response);
+
             return response;
         }
 
-        private TokenResponse GenerateJwt(ApplicationUser user)
+        private TokenResponse GenerateJwt(ApplicationUser user, UsuarioAcessoOutput acessoOutput)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_bearerTokenSettings.Secret);
@@ -135,6 +139,7 @@ namespace Estac.Service.Auth
                 Audience = _bearerTokenSettings.ValidOn,
                 Expires = expires,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256),
+                Subject = new ClaimsIdentity(Permissoes(acessoOutput))
             });
 
             var refreshToken = Guid.NewGuid().ToString().Replace("-", string.Empty);
@@ -151,6 +156,30 @@ namespace Estac.Service.Auth
                     TimeInMiliseconds = refreshTimeInMiliseconds
                 }
             };
+        }
+
+        private List<Claim> Permissoes(UsuarioAcessoOutput acessoOutput)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, acessoOutput.Usuario.Id.ToString()),
+                new Claim(ClaimTypes.Name, acessoOutput.Usuario.UserName),
+                new Claim(ClaimTypes.Email, acessoOutput.Usuario.Email ?? ""),
+                new Claim(ClaimTypes.Role, acessoOutput.Role.Descricao),
+            };
+
+            var permissoes = acessoOutput.Menus
+                .SelectMany(m => m.SubMenus)
+                .SelectMany(sm => sm.Permissions)
+                .Select(p => p.Acao)
+                .Distinct();
+
+            foreach (var permissao in permissoes)
+            {
+                claims.Add(new Claim("Permission", permissao));
+            }
+
+            return claims;
         }
     }
 }
