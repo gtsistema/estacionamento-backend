@@ -20,6 +20,10 @@ namespace Estac.Infra.EntityBuilders.User
             builder.Property(x => x.Descricao)
                 .IsRequired()
                 .HasMaxLength(150);
+
+            builder.Property(p => p.Ativo)
+                .HasColumnType("bit")
+                .HasDefaultValue(true);
         }
     }
 }
