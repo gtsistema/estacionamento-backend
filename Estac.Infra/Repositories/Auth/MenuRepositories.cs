@@ -92,19 +92,53 @@ namespace Estac.Infra.Repositories
             }
         }
 
-        //public async Task<MenuOuput> BuscarMenuUsuario(int roleId)
-        //{
-        //    var resultado =  await _context.Set<RolePermission>
-        //              .AsNoTracking()
-        //              .Include(x => x.SubModules)
-        //              .ThenInclude(x => x.Permissions)
-        //              .SingleOrDefaultAsync(x => x. == usuarioId);
+        public async Task<List<MenuAcessOuput>> BuscarMenuUsuario(int roleId)
+        {
+            var menus = await _identityContext.Set<RolePermission>()
+                .Where(x => x.RoleId == roleId)
+                .Select(x => new
+                {
+                    Menu = x.SubModule.Module,
+                    SubMenu = x.SubModule,
+                    Permission = x
+                })
+                .ToListAsync();
 
+            var resultado = menus
+                .OrderBy(x => x.Menu.Ordem)
+                .GroupBy(x => x.Menu)
+                .Select(menuGroup => new MenuAcessOuput
+                {
+                    Id = menuGroup.Key.Id,
+                    Descricao = menuGroup.Key.Descricao,
+                    Ativo = menuGroup.Key.Ativo,
+                    Ordem = menuGroup.Key.Ordem,
+                    SubMenus = menuGroup
+                        .OrderBy(x => x.SubMenu.Ordem)
+                        .GroupBy(x => x.SubMenu)
+                        .Select(subMenuGroup => new SubMenuAcessOuput
+                        {
+                            Id = subMenuGroup.Key.Id,
+                            MenuId = subMenuGroup.Key.ModuleId,
+                            Descricao = subMenuGroup.Key.Descricao,
+                            Rota = subMenuGroup.Key.Rota,
+                            Ativo = subMenuGroup.Key.Ativo,
+                            Ordem = subMenuGroup.Key.Ordem,
+                            //Permissions = subMenuGroup
+                            //    .Select(p => new PermissionOutput
+                            //    {
+                            //        Id = p.Permission.Id,
+                            //        SubMenuId = p.Permission.SubModuleId,
+                            //        Descricao = p.Permission.
+                            //    })
+                            //    .OrderBy(p => p.Ordem)
+                            //    .ToList()
+                        })
+                        .ToList()
+                })
+                .ToList();
 
-        //    _dataset.
-
-
-        //    return resultado;
-        //}
+            return resultado;
+        }
     }
 }

@@ -35,5 +35,10 @@ namespace Estac.Infra.Context
             modelBuilder.Entity<SubModule>(new SubModuleMapping().Configure);
             modelBuilder.Entity<RolePermission>(new RolePermissionMapping().Configure);
         }
+
+        public DbSet<Module> Module { get; set; }
+        public DbSet<Permission> Permission { get; set; }
+        public DbSet<SubModule> SubModule { get; set; }
+        public DbSet<RolePermission> RolePermission { get; set; }
     }
 }

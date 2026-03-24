@@ -127,7 +127,7 @@ namespace Estac.Service
                 .Select((item, index) => new MenuOrdemInput
                 {
                     Id = item.Id,
-                    Ordem = index + 1
+                    Ordem = index 
                 })
                 .ToList();
         }
@@ -146,7 +146,7 @@ namespace Estac.Service
                     .Select((sub, index) => new SubMenuOrdemInput
                     {
                         Id = sub.Id,
-                        Ordem = index + 1
+                        Ordem = index
                     });
 
                 resultado.AddRange(ajustados);

@@ -116,18 +116,18 @@ namespace Estac.Service.Auth
             }
         }
 
-        private async Task<UsuarioAcessoOutput> MontarLoginResponseAsync(ApplicationUser user)
+        private async Task<UsuarioAcessOutput> MontarLoginResponseAsync(ApplicationUser user)
         {
             var permissoes = await _perfilRepositories.BuscarPerfilPorUsuarioToken(user.Id);
 
-            //var menus = await _menuRepositories.BuscarPerfilPorUsuarioToken(user.Id);
+            var menus = await _menuRepositories.BuscarMenuUsuario(permissoes.RoleId);
 
             var jwt = await GenerateJwt(user, permissoes);
 
-            return new UsuarioAcessoOutput
+            return new UsuarioAcessOutput
             {
                 Jwt = jwt,
-                Menus = new List<MenuOuput>()
+                Menus = menus
             };
         }
 

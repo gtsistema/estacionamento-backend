@@ -54,7 +54,7 @@ namespace Estac.Infra.Repositories.Auth
             return userRole;
         }
 
-        public async Task<UsuarioAcessoOutput> BuscarPerfilPermissaoUsuario(int usuarioId)
+        public async Task<UsuarioAcessoPerfilOutput> BuscarPerfilPermissaoUsuario(int usuarioId)
         {
             var usuario = await dapperRepositories.QueryFirstOrDefaultAsync<UsuarioOutput>(
                 "SELECT Id, userName, FullName as Nome, EstacionamentoId, Email FROM dbo.[USER] WHERE Id = @Id",
@@ -83,8 +83,7 @@ namespace Estac.Infra.Repositories.Auth
 
             MontarArvorePerfilPermissoesMenus(menus, subMenus, permissions);
 
-
-            return new UsuarioAcessoOutput
+            return new UsuarioAcessoPerfilOutput
             {
                 Usuario = usuario,
                 Role = role,

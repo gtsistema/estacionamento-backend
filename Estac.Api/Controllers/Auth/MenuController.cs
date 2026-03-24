@@ -67,7 +67,7 @@ namespace Estac.Api.Controllers.Auth
 
         [PermissionAuthorize(PermissionAcess.Menu.Alterar)]
         [HttpPut]
-        public async Task<ActionResult> Ordem(MenuOrganizacaoInput input)
+        public async Task<ActionResult> OrganizarMenus(MenuOrganizacaoInput input)
         {
             return await _services.OrganizarMenus(input);
         }
