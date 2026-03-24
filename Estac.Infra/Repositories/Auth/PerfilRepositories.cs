@@ -83,6 +83,7 @@ namespace Estac.Infra.Repositories.Auth
 
             MontarArvorePerfilPermissoesMenus(menus, subMenus, permissions);
 
+
             return new UsuarioAcessoOutput
             {
                 Usuario = usuario,
