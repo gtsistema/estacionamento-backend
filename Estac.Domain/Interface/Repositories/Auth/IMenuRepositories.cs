@@ -9,5 +9,6 @@ namespace Estac.Domain.Interface.Repositories
     {
         Task<Module> SelecionarPorIdCompleto(int id);
         Task<PagedResult<MenuSearchOutput>> Paginar(MenuFilterInput input);
+        Task AtualizarOrdem(List<MenuOrdemInput> menus, List<SubMenuOrdemInput> subMenus);
     }
 }

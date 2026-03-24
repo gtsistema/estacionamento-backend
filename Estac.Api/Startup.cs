@@ -151,10 +151,7 @@ namespace Estac.Api
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, GtsContext context,
            ILoggerFactory loggerFactory, IHttpContextAccessor httpContext)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            app.UseDeveloperExceptionPage();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>

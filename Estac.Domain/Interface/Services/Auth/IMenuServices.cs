@@ -1,5 +1,6 @@
 ﻿using Estac.Domain.Input.Auth;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Estac.Domain.Interface.Services
 {
@@ -10,5 +11,6 @@ namespace Estac.Domain.Interface.Services
         Task<ActionResult> Gravar(MenuCreateInput input);
         Task<ActionResult> Alterar(MenuCreateInput input);
         Task<ActionResult> Excluir(int id);
+        Task<ActionResult> OrganizarMenus(MenuOrganizacaoInput input);
     }
 }

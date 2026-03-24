@@ -2,6 +2,7 @@ using Estac.Api.Controllers.Base.Claim;
 using Estac.Api.Controllers.Base.Permission;
 using Estac.Domain.Input.Auth;
 using Estac.Domain.Interface.Services;
+using Estac.Domain.Models.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -62,6 +63,13 @@ namespace Estac.Api.Controllers.Auth
         public async Task<ActionResult> Delete(int id)
         {
             return await _services.Excluir(id);
+        }
+
+        [PermissionAuthorize(PermissionAcess.Menu.Alterar)]
+        [HttpPut]
+        public async Task<ActionResult> Ordem(MenuOrganizacaoInput input)
+        {
+            return await _services.OrganizarMenus(input);
         }
     }
 }

@@ -102,5 +102,57 @@ namespace Estac.Service
 
             return await RetornOk(true);
         }
+
+        public async Task<ActionResult> OrganizarMenus(MenuOrganizacaoInput input)
+        {
+            if (input?.Menus == null || !input.Menus.Any())
+                await RetornOk(false, "Não foi encontrado!");
+
+            var menusAjustados = AjustarSequenciaMenus(input.Menus);
+
+            var subMenusAjustados = AjustarSequenciaSubMenus(input.Menus);
+
+            await _repositories.AtualizarOrdem(
+                menusAjustados,
+                subMenusAjustados
+            );
+
+            return await RetornOk(true);
+        }
+
+        private List<MenuOrdemInput> AjustarSequenciaMenus(List<MenuOrdemInput> menus)
+        {
+            return menus
+                .OrderBy(x => x.Ordem)
+                .Select((item, index) => new MenuOrdemInput
+                {
+                    Id = item.Id,
+                    Ordem = index + 1
+                })
+                .ToList();
+        }
+
+        private List<SubMenuOrdemInput> AjustarSequenciaSubMenus(List<MenuOrdemInput> menus)
+        {
+            var resultado = new List<SubMenuOrdemInput>();
+
+            foreach (var menu in menus)
+            {
+                if (menu.SubMenus == null || !menu.SubMenus.Any())
+                    continue;
+
+                var ajustados = menu.SubMenus
+                    .OrderBy(x => x.Ordem)
+                    .Select((sub, index) => new SubMenuOrdemInput
+                    {
+                        Id = sub.Id,
+                        Ordem = index + 1
+                    });
+
+                resultado.AddRange(ajustados);
+            }
+
+            return resultado;
+        }
     }
 }

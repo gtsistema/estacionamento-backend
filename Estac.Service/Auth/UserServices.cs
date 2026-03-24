@@ -35,6 +35,7 @@ namespace Estac.Service.Auth
         private readonly UserManager<ApplicationUser> _identityUserManager;
         private readonly IPessoaRepositories _pessoaRepositories;
         private readonly IPerfilRepositories _perfilRepositories;
+        private readonly IMenuRepositories _menuRepositories;
 
         public UserServices(IApplicationUserManager userManager,
                IApplicationSignManager signManager, ICurrentUser currentUser,
@@ -44,7 +45,8 @@ namespace Estac.Service.Auth
                IErrorServices _errorApplication,
                UserManager<ApplicationUser> _identityUserManager,
                IPessoaRepositories _pessoaRepositories,
-               IPerfilRepositories _perfilRepositories) : base(_errorApplication)
+               IPerfilRepositories _perfilRepositories,
+               IMenuRepositories _menuRepositories) : base(_errorApplication)
         {
             _bearerTokenSettings = bearerTokenSettings.Value;
             _userManager = userManager;
@@ -55,6 +57,7 @@ namespace Estac.Service.Auth
             this._identityUserManager = _identityUserManager;
             this._pessoaRepositories =  _pessoaRepositories;
             this._perfilRepositories = _perfilRepositories;
+            this._menuRepositories = _menuRepositories;
         }
 
         public async Task<ActionResult> LoginAsync(LoginInput dto)
@@ -113,11 +116,19 @@ namespace Estac.Service.Auth
             }
         }
 
-        private async Task<TokenResponse> MontarLoginResponseAsync(ApplicationUser user)
+        private async Task<UsuarioAcessoOutput> MontarLoginResponseAsync(ApplicationUser user)
         {
-            var response = await _perfilRepositories.BuscarPerfilPorUsuarioToken(user.Id);
+            var permissoes = await _perfilRepositories.BuscarPerfilPorUsuarioToken(user.Id);
 
-            return await GenerateJwt(user, response);
+            //var menus = await _menuRepositories.BuscarPerfilPorUsuarioToken(user.Id);
+
+            var jwt = await GenerateJwt(user, permissoes);
+
+            return new UsuarioAcessoOutput
+            {
+                Jwt = jwt,
+                Menus = new List<MenuOuput>()
+            };
         }
 
         private async Task<TokenResponse> GenerateJwt(ApplicationUser user, UsuarioRoleOuput acessoOutput)

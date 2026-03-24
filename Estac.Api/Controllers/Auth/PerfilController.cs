@@ -77,11 +77,6 @@ namespace Estac.Api.Controllers.Auth
         }
 
 
-        [PermissionAuthorize(PermissionAcess.Perfil.Alterar)]
-        [HttpPut]
-        public async Task<ActionResult> Ordem([FromBody] ApplicationRole input)
-        {
-            return await _services.Alterar(input);
-        }
+       
     }
 }

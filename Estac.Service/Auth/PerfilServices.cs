@@ -125,5 +125,18 @@ namespace Estac.Service.Auth
 
             return await RetornOk(resultado);
         }
+
+        public async Task<ActionResult> Ordem(ApplicationRole input)
+        {
+            if (string.IsNullOrWhiteSpace(input?.Name))
+                return await RetornNo(false, "Nome do role é obrigatório.");
+
+            var result = await _roleManager.UpdateAsync(input);
+
+            if (!result.Succeeded)
+                return await RetornNo(false, string.Join(", ", result.Errors.Select(e => e.Description)));
+
+            return await RetornOk(result);
+        }
     }
 }

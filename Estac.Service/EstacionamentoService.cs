@@ -43,9 +43,16 @@ namespace Estac.Service
 
         public async Task<ActionResult> Buscar(EstacionamentoFilterInput filter)
         {
-            var result = await _repositories.Paginar(filter);
+            try
+            {
+                var result = await _repositories.Paginar(filter);
 
-            return await RetornOk(result);
+                return await RetornOk(result);
+            }
+            catch (Exception ex)
+            {
+                return await RetornNo(false, ex.Message);
+            }
         }
 
         public async Task<ActionResult> Gravar(EstacionamentoPostInput input)
