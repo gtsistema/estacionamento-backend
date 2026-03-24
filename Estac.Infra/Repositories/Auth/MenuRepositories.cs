@@ -32,27 +32,48 @@ namespace Estac.Infra.Repositories
         public async Task<Module> SelecionarPorIdCompleto(int id)
         {
             return await _dataset
-                        .AsNoTracking()
-                        .Include(x => x.SubModules).ThenInclude(x => x.Permissions)
-                        .SingleOrDefaultAsync(x => x.Id == id);
+                    .AsNoTracking()
+                    .Where(x => x.Id == id)
+                    .Select(m => new Module
+                    {
+                        Id = m.Id,
+                        Descricao = m.Descricao,
+                        Ordem = m.Ordem,
+
+                        SubModules = m.SubModules
+                            .OrderBy(sm => sm.Ordem)
+                            .Select(sm => new SubModule
+                            {
+                                Id = sm.Id,
+                                Descricao = sm.Descricao,
+                                Ordem = sm.Ordem,
+
+                                Permissions = sm.Permissions
+                                    .OrderBy(p => p.Ordem)
+                                    .ToList()
+                            })
+                            .ToList()
+                    })
+                    .FirstOrDefaultAsync();
         }
 
-        public async Task<PagedResult<MenuSearchOutput>> Paginar(MenuFilterInput input)
+        public async Task<List<Module>> Buscar()
         {
-            return await _dataset
-                        .AsNoTracking()
-                        .Include(x => x.SubModules)
-                        .Include(x => x.SubModules).ThenInclude(x => x.Permissions)
-                        .Where(x => string.IsNullOrEmpty(input.Descricao) || x.Descricao.ToLower().Contains(input.Descricao.ToLower()))
-                        .OrderBy(o => o.Descricao).ThenBy(t => t.SubModules.OrderBy(x => x.Ordem))
-                         .Select(x => new MenuSearchOutput
-                         {
-                             Id = x.Id,
-                             Descricao = x.Descricao,
-                            
-                         })
-                        .GetPaged(input.NumeroPagina, input.TamanhoPagina);
+            var result = await _dataset
+                    .AsNoTracking()
+                    .Include(x => x.SubModules)
+                        .ThenInclude(x => x.Permissions)
+                    .OrderBy(o => o.Ordem)
+                    .ToListAsync();
 
+                foreach (var menu in result)
+                {
+                    menu.SubModules = menu.SubModules
+                        .OrderBy(x => x.Ordem)
+                        .ToList();
+                }
+
+            return result;
         }
 
         public async Task AtualizarOrdem(List<MenuOrdemInput> menus, List<SubMenuOrdemInput> subMenus)

@@ -22,9 +22,9 @@ namespace Estac.Api.Controllers.Auth
 
         [PermissionAuthorize(PermissionAcess.Menu.Visualizar)]
         [HttpGet]
-        public async Task<ActionResult> Buscar(MenuFilterInput filter)
+        public async Task<ActionResult> Buscar()
         {
-           return await _services.Buscar(filter);
+           return await _services.Buscar();
         }
 
         [PermissionAuthorize(PermissionAcess.Menu.Visualizar)]

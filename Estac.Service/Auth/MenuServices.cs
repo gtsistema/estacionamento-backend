@@ -33,15 +33,15 @@ namespace Estac.Service
 
                 return await RetornOk(_mapper.Map<MenuOutput>(result));
             }
-            catch(Exception ex) 
+            catch(Exception ex)
             {   
                 return await RetornNo(false, ex.Message);
             }
         }
 
-        public async Task<ActionResult> Buscar(MenuFilterInput filter)
+        public async Task<ActionResult> Buscar()
         {
-            var result = await _repositories.Paginar(filter);
+            var result = await _repositories.Buscar();
 
             return await RetornOk(result);
         }
@@ -127,7 +127,7 @@ namespace Estac.Service
                 .Select((item, index) => new MenuOrdemInput
                 {
                     Id = item.Id,
-                    Ordem = index 
+                    Ordem = item.Ordem 
                 })
                 .ToList();
         }
@@ -146,7 +146,7 @@ namespace Estac.Service
                     .Select((sub, index) => new SubMenuOrdemInput
                     {
                         Id = sub.Id,
-                        Ordem = index
+                        Ordem = sub.Ordem
                     });
 
                 resultado.AddRange(ajustados);

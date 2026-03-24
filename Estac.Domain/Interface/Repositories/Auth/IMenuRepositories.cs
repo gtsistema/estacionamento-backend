@@ -8,7 +8,7 @@ namespace Estac.Domain.Interface.Repositories
     public interface IMenuRepositories : IBaseRepositoriesNone<Module>
     {
         Task<Module> SelecionarPorIdCompleto(int id);
-        Task<PagedResult<MenuSearchOutput>> Paginar(MenuFilterInput input);
+        Task<List<Module>> Buscar();
         Task AtualizarOrdem(List<MenuOrdemInput> menus, List<SubMenuOrdemInput> subMenus);
         Task<List<MenuAcessOuput>> BuscarMenuUsuario(int roleId);
     }

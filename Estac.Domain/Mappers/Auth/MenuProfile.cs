@@ -20,6 +20,11 @@ namespace Estac.Domain.Mappers
 
             CreateMap<Module, MenuOutput>()
               .ForMember(dest => dest.SubMenus, opt => opt.MapFrom(src => src.SubModules));
+
+            CreateMap<SubModule, SubMenuOutput>()
+             .ForMember(dest => dest.Permissions, opt => opt.MapFrom(src => src.Permissions));
+
+            CreateMap<Permission, PermissionOutput>();
         }
     }
 }
