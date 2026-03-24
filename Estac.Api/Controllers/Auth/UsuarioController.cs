@@ -1,4 +1,6 @@
-﻿using Estac.Domain.Input.Auth;
+﻿using Estac.Api.Controllers.Base.Claim;
+using Estac.Api.Controllers.Base.Permission;
+using Estac.Domain.Input.Auth;
 using Estac.Domain.Interface.Services.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +26,7 @@ namespace Estac.Api.Controllers.Auth
             return await _services.LoginAsync(login);
         }
 
-        [AllowAnonymous]
+        [PermissionAuthorize(PermissionAcess.Usuario.Gravar)]
         [HttpPost]
         public async Task<ActionResult> Register(RegisterInput login)
         {

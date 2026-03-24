@@ -10,11 +10,17 @@ namespace Estac.Api.Controllers.Base.Claim
             PermissionRequirement requirement)
         {
             var hasClaim = context.User.Claims
-                .Any(c => c.Type == "Permission" &&
+                .Any(c => c.Type == "permission" &&
                           c.Value == requirement.Permission);
 
             if (hasClaim)
+            {
                 context.Succeed(requirement);
+            }
+            else
+            {
+                context.Fail();
+            }
 
             return Task.CompletedTask;
         }

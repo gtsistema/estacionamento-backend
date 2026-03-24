@@ -32,6 +32,28 @@ namespace Estac.Infra.Repositories.Auth
             this.dapperRepositories = dapperRepositories;
         }
 
+        public async Task<UsuarioRoleOuput> BuscarPerfilPorUsuarioToken(int usuarioId)
+        {
+            var userRole = await dapperRepositories.QueryFirstOrDefaultAsync<UsuarioRoleOuput>(
+                    $@" SELECT
+                	    u.Id as UserId, UserName, FullName as Nome, EstacionamentoId, Email, r.Id as RoleId, r.Name as Role 
+                    FROM dbo.UserRole ur
+                    INNER JOIN dbo.[USER] u ON ur.UserId = u.Id
+                    INNER JOIN dbo.[ROLE] r ON r.id = ur.RoleId
+                    WHERE ur.UserId = @Id",
+                        new { Id = usuarioId });
+
+            userRole.Permissions = (await dapperRepositories.QueryAsync<PermissionOutput>(
+                    @"SELECT p.Id, p.Ordem, p.Acao as Descricao, rp.SubModuleId as SubMenuId
+                          FROM dbo.Permission p
+                          INNER JOIN dbo.RolePermission rp ON rp.PermissionId = p.Id
+                          WHERE rp.RoleId = @RoleId
+                        ORDER BY P.Ordem",
+                  new { RoleId = userRole.RoleId })).ToList();
+
+            return userRole;
+        }
+
         public async Task<UsuarioAcessoOutput> BuscarPerfilPermissaoUsuario(int usuarioId)
         {
             var usuario = await dapperRepositories.QueryFirstOrDefaultAsync<UsuarioOutput>(

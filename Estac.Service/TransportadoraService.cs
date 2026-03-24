@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Estac.Domain.Input.Transportadora;
 using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Interface.Services;
@@ -26,18 +27,32 @@ namespace Estac.Service
 
         public async Task<ActionResult> ObterPorId(int id)
         {
-            var result = await _repositories.Selecionar(id);
+            try
+            {
+                var result = await _repositories.Selecionar(id);
 
-            return await RetornOk(_mapper.Map<TransportadoraOutput>(result));
+                return await RetornOk(_mapper.Map<TransportadoraOutput>(result));
+            }
+            catch (Exception ex)
+            {
+                return await RetornNo(false, ex.Message);
+            }
         }
 
         public async Task<ActionResult> Buscar(TransportadoraFilterInput filter)
         {
-            var result = await _repositories.Paginar(filter);
+            try
+            {
+                var result = await _repositories.Paginar(filter);
 
-            var mapper = _mapper.Map<IEnumerable<TransportadoraOutput>>(result.Results);
+                var mapper = _mapper.Map<IEnumerable<TransportadoraOutput>>(result.Results);
 
-            return await RetornOk(mapper);
+                return await RetornOk(mapper);
+            }
+            catch (Exception ex)
+            {
+                return await RetornNo(false, ex.Message);
+            }
         }
 
         public async Task<ActionResult> Gravar(TransportadoraPostInput input)

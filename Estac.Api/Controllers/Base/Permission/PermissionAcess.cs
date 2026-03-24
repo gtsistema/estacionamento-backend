@@ -1,6 +1,6 @@
 ﻿namespace Estac.Api.Controllers.Base.Claim
 {
-    public class Permission
+    public class PermissionAcess
     {
         public static class Usuario
         {
@@ -16,6 +16,14 @@
             public const string Gravar = "perfil.gravar";
             public const string Alterar = "perfil.alterar";
             public const string Excluir = "perfil.excluir";
+        }
+
+        public static class Menu
+        {
+            public const string Visualizar = "menu.visualizar";
+            public const string Gravar = "menu.gravar";
+            public const string Alterar = "menu.alterar";
+            public const string Excluir = "menu.excluir";
         }
 
         public static class Estacionamento

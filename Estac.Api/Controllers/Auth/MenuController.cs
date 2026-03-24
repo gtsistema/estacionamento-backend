@@ -1,3 +1,5 @@
+using Estac.Api.Controllers.Base.Claim;
+using Estac.Api.Controllers.Base.Permission;
 using Estac.Domain.Input.Auth;
 using Estac.Domain.Interface.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -17,18 +19,21 @@ namespace Estac.Api.Controllers.Auth
             this._services = _services;
         }
 
+        [PermissionAuthorize(PermissionAcess.Menu.Visualizar)]
         [HttpGet]
         public async Task<ActionResult> Buscar(MenuFilterInput filter)
         {
            return await _services.Buscar(filter);
         }
 
+        [PermissionAuthorize(PermissionAcess.Menu.Visualizar)]
         [HttpGet("{id}")]
         public async Task<ActionResult> ObterPorId(int id)
         {
             return await _services.ObterPorId(id);
         }
 
+        [PermissionAuthorize(PermissionAcess.Menu.Gravar)]
         [HttpPost]
         public async Task<ActionResult> Gravar([FromBody] MenuCreateInput input)
         {
@@ -45,12 +50,14 @@ namespace Estac.Api.Controllers.Auth
             }
         }
 
+        [PermissionAuthorize(PermissionAcess.Menu.Alterar)]
         [HttpPut]
         public async Task<ActionResult> Alterar([FromBody] MenuUpdateInput input)
         {
             return await _services.Alterar(input);
         }
 
+        [PermissionAuthorize(PermissionAcess.Menu.Excluir)]
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {

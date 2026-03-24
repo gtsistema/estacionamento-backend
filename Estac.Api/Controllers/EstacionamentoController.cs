@@ -19,56 +19,56 @@ namespace Estac.Api.Controllers
             this._services = _services;
         }
 
-        [PermissionAuthorize(Permission.Estacionamento.Visualizar)]
+        [PermissionAuthorize(PermissionAcess.Estacionamento.Visualizar)]
         [HttpGet]
         public async Task<ActionResult> Buscar([FromQuery] EstacionamentoFilterInput filter)
         {
             return await _services.Buscar(filter);
         }
 
-        [PermissionAuthorize(Permission.Estacionamento.Visualizar)]
+        [PermissionAuthorize(PermissionAcess.Estacionamento.Visualizar)]
         [HttpGet("{id}")]
         public async Task<ActionResult> ObterPorId(int id)
         {
             return await _services.ObterPorId(id);
         }
 
-        [PermissionAuthorize(Permission.Estacionamento.Gravar)]
+        [PermissionAuthorize(PermissionAcess.Estacionamento.Gravar)]
         [HttpPost]
-        public async Task<ActionResult> Gravar([FromForm] EstacionamentoPostInput input)
+        public async Task<ActionResult> Gravar([FromBody] EstacionamentoPostInput input)
         {
             return await _services.Gravar(input);
         }
 
-        [PermissionAuthorize(Permission.Estacionamento.Alterar)]
+        [PermissionAuthorize(PermissionAcess.Estacionamento.Alterar)]
         [HttpPut]
         public async Task<ActionResult> Alterar([FromBody] EstacionamentoPutInput input)
         {
             return await _services.Alterar(input);
         }
 
-        [PermissionAuthorize(Permission.Estacionamento.Excluir)]
+        [PermissionAuthorize(PermissionAcess.Estacionamento.Excluir)]
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
             return await _services.Excluir(id);
         }
 
-        [PermissionAuthorize(Permission.Estacionamento.Visualizar)]
+        [PermissionAuthorize(PermissionAcess.Estacionamento.Visualizar)]
         [HttpGet("buscar-fotos/{id}")]
         public async Task<ActionResult> BuscarFotos(int id)
         {
             return await _services.BuscarFotos(id);
         }
 
-        [PermissionAuthorize(Permission.Estacionamento.Gravar)]
+        [PermissionAuthorize(PermissionAcess.Estacionamento.Gravar)]
         [HttpPost("upload-fotos")]
         public async Task<ActionResult> UploadFotos([FromForm] EstacionamentoFotosInput input)
         {
             return await _services.UploadFotos(input);
         }
 
-        [PermissionAuthorize(Permission.Estacionamento.Excluir)]
+        [PermissionAuthorize(PermissionAcess.Estacionamento.Excluir)]
         [HttpDelete("deletar-fotos/{fotoId}")]
         public async Task<ActionResult> DeletarFotos(int fotoId)
         {

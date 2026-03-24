@@ -1,6 +1,7 @@
 ﻿using Estac.CrossCutting.Helpers;
 using Estac.Domain.Interface.Repositories.Dapper;
 using Estac.Infra.Context;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +27,8 @@ namespace Estac.CrossCutting.Dependencies
                 configuration.GetSection("ConnectionStrings"));
 
             services.AddScoped<IDapperRepositories, DapperRepositories>();
+
+
 
             return services;
         }

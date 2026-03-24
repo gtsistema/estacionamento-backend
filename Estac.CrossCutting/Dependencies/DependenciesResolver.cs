@@ -36,6 +36,7 @@ namespace Estac.CrossCutting.Dependencies
             services.AddScoped<IVeiculoModeloService, VeiculoModeloService>();
             services.AddScoped<IMenuServices, MenuServices>();
             services.AddScoped<ITransportadoraService, TransportadoraService>();
+            services.AddScoped<IEstacionamentoService, EstacionamentoService>();
 
             // repositories
             services.AddScoped(typeof(IBaseRepositories<>), typeof(BaseRepositories<>));
@@ -46,6 +47,7 @@ namespace Estac.CrossCutting.Dependencies
             services.AddScoped<ITransportadoraRepositories, TransportadoraRepositories>();
             services.AddScoped<IPessoaRepositories, PessoaRepositories>();
             services.AddScoped<IPerfilRepositories, PerfilRepositories>();
+            services.AddScoped<IEstacionamentoRepositories, EstacionamentoRepositories>();
 
             return services;
         }
