@@ -71,5 +71,18 @@ namespace Estac.Api.Controllers.Auth
         {
             return await _services.OrganizarMenus(input);
         }
+
+        [PermissionAuthorize(PermissionAcess.Menu.Excluir)]
+        [HttpDelete("{idSubMenu}")]
+        public async Task<ActionResult> DeleteSubMenu(int idSubMenu)
+        {
+            return await _services.Excluir(idSubMenu);
+        }
+        [PermissionAuthorize(PermissionAcess.Menu.Excluir)]
+        [HttpDelete("{idPermissao}")]
+        public async Task<ActionResult> DeletePermissao(int idPermissao)
+        {
+            return await _services.Excluir(idPermissao);
+        }
     }
 }

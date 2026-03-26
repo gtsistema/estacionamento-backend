@@ -219,13 +219,33 @@ namespace Estac.Infra.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeletarSubMenu(IEnumerable<SubModule> subModule)
+        public async Task DeletarSubMenu(SubModule subModule)
         {
-             _context.SubModule.RemoveRange(subModule);
+             _context.SubModule.Remove(subModule);
              
             await _context.SaveChangesAsync();
         }
 
+        public async Task DeletarPermissao(Permission subModule)
+        {
+            _context.Permission.Remove(subModule);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<SubModule> SelecionarSubModulePorId(int id)
+        {
+            return await _context.SubModule.Include(x => x.Permissions)
+                    .Where(x => x.Id == id)
+                    .FirstOrDefaultAsync();
+        }
+
+        public async Task<Permission> SelecionarPermissaoPorId(int id)
+        {
+            return await _context.Permission
+                    .Where(x => x.Id == id)
+                    .FirstOrDefaultAsync();
+        }
 
     }
 }

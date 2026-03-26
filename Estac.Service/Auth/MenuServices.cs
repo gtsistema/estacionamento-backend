@@ -60,7 +60,7 @@ namespace Estac.Service
                 await _repositories.Gravar(result);
 
                 if (result.Id > 0)
-                    await GravarSubMenuPermissoes(result);
+                    await AtualizarSubMenuPermissao(result);
 
                 return await RetornOk(await _repositories.SelecionarPorIdCompleto(result.Id));
             }
@@ -69,28 +69,6 @@ namespace Estac.Service
                 return await RetornNo(false, ex.Message);
             }
           
-        }
-
-        private async Task GravarSubMenuPermissoes(Module result)
-        {
-            foreach (var subModule in result.SubModules)
-            {
-                if (subModule.Id == 0)
-                {
-                    subModule.ModuleId = result.Id;
-                    await _repositories.GravarSubMenu(subModule);
-                }
-
-                foreach(var permission in subModule.Permissions)
-                {
-                    if (permission.Id == 0)
-                    {
-                        permission.SubModuleId = subModule.Id;
-                        await _repositories.GravarPermissao(permission);
-                    }
-                }
-            
-            }
         }
 
         public async Task<ActionResult> Alterar(MenuCreateInput input)
@@ -106,7 +84,7 @@ namespace Estac.Service
                 await _repositories.Atualizar(result);
 
                 if(result.Id > 0)
-                   await AlterarSubMenuPermissao(result);
+                   await AtualizarSubMenuPermissao(result);
 
                 return await RetornOk(result);
             }
@@ -116,7 +94,7 @@ namespace Estac.Service
             }
         }
 
-        private async Task AlterarSubMenuPermissao(Module result)
+        private async Task AtualizarSubMenuPermissao(Module result)
         {
             foreach (var subModule in result.SubModules)
             {
@@ -210,5 +188,30 @@ namespace Estac.Service
 
             return resultado;
         }
+
+        public async Task<ActionResult> ExcluirSubMenu(int id)
+        {
+            var result = await _repositories.SelecionarSubModulePorId(id);
+
+            if (result is null)
+                return await RetornNo(false, "Menu não localizado na base de dados!");
+
+            await _repositories.DeletarSubMenu(result);
+
+            return await RetornOk(true);
+        }
+
+        public async Task<ActionResult> ExcluirPermissao(int id)
+        {
+            var result = await _repositories.SelecionarPermissaoPorId(id);
+
+            if (result is null)
+                return await RetornNo(false, "Permissão não localizado na base de dados!");
+
+            await _repositories.DeletarPermissao(result);
+
+            return await RetornOk(true);
+        }
+
     }
 }

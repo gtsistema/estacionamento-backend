@@ -16,8 +16,11 @@ namespace Estac.Domain.Interface.Repositories
         Task AtualizarPermissao(Permission permission);
         Task GravarSubMenu(SubModule subModule);
         Task AtualizarSubMenu(SubModule subModule);
-        Task DeletarSubMenu(IEnumerable<SubModule> subModule);
+        Task DeletarSubMenu(SubModule subModule);
         Task Deletar(Module module);
+        Task DeletarPermissao(Permission subModule);
         Task GravarPermissao(Permission permission);
+        Task<Permission> SelecionarPermissaoPorId(int id);
+        Task<SubModule> SelecionarSubModulePorId(int id);
     }
 }
