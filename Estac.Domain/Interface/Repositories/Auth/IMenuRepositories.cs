@@ -13,5 +13,11 @@ namespace Estac.Domain.Interface.Repositories
         Task AtualizarOrdem(List<MenuOrdemInput> menus, List<SubMenuOrdemInput> subMenus);
         Task<List<MenuAcessOuput>> BuscarMenuUsuario(int roleId);
         Task Atualizar(Module menu);
+        Task AtualizarPermissao(Permission permission);
+        Task GravarSubMenu(SubModule subModule);
+        Task AtualizarSubMenu(SubModule subModule);
+        Task DeletarSubMenu(IEnumerable<SubModule> subModule);
+        Task Deletar(Module module);
+        Task GravarPermissao(Permission permission);
     }
 }

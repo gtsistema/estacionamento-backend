@@ -59,13 +59,38 @@ namespace Estac.Service
 
                 await _repositories.Gravar(result);
 
-                return await RetornOk(result);
+                if (result.Id > 0)
+                    await GravarSubMenuPermissoes(result);
+
+                return await RetornOk(await _repositories.SelecionarPorIdCompleto(result.Id));
             }
             catch (Exception ex) 
             {
                 return await RetornNo(false, ex.Message);
             }
           
+        }
+
+        private async Task GravarSubMenuPermissoes(Module result)
+        {
+            foreach (var subModule in result.SubModules)
+            {
+                if (subModule.Id == 0)
+                {
+                    subModule.ModuleId = result.Id;
+                    await _repositories.GravarSubMenu(subModule);
+                }
+
+                foreach(var permission in subModule.Permissions)
+                {
+                    if (permission.Id == 0)
+                    {
+                        permission.SubModuleId = subModule.Id;
+                        await _repositories.GravarPermissao(permission);
+                    }
+                }
+            
+            }
         }
 
         public async Task<ActionResult> Alterar(MenuCreateInput input)
@@ -78,10 +103,10 @@ namespace Estac.Service
                 //    return await RetornNo(false, validations.Errors);
 
                 var result = _mapper.Map<Module>(input);
+                await _repositories.Atualizar(result);
 
-                var module = await _repositories.SelecionarPorId(result.Id);
-
-                await _repositories.Atualizar(module);
+                if(result.Id > 0)
+                   await AlterarSubMenuPermissao(result);
 
                 return await RetornOk(result);
             }
@@ -91,16 +116,45 @@ namespace Estac.Service
             }
         }
 
+        private async Task AlterarSubMenuPermissao(Module result)
+        {
+            foreach (var subModule in result.SubModules)
+            {
+                if (subModule.Id > 0)
+                {
+                    subModule.ModuleId = result.Id;
+                    await _repositories.AtualizarSubMenu(subModule);
+                }
+                else
+                {
+                    subModule.ModuleId = subModule.Id;
+                    await _repositories.GravarSubMenu(subModule);
+                }
+
+                foreach (var permission in subModule.Permissions)
+                {
+                    if (permission.Id > 0)
+                    {
+                        permission.SubModuleId = subModule.Id;
+                        await _repositories.AtualizarPermissao(permission);
+                    }
+                    else
+                    {
+                        permission.SubModuleId = subModule.Id;
+                        await _repositories.GravarPermissao(permission);
+                    }
+                }
+            }
+        }
+
         public async Task<ActionResult> Excluir(int id)
         {
-            var result = await _repositories.Existe(id);
+            var result = await _repositories.SelecionarPorId(id);
 
-            if (!result)
-                return await RetornNo(false, "Produto não localizado na base de dados!");
+            if (result is null)
+                return await RetornNo(false, "Menu não localizado na base de dados!");
 
-            var estacionamento = await _repositories.Selecionar(id);
-
-            await _repositories.Excluir(id);
+            await _repositories.Deletar(result);
 
             return await RetornOk(true);
         }

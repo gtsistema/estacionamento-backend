@@ -17,15 +17,27 @@ namespace Estac.Domain.Mappers
                .ForMember(dest => dest.SubModules, opt => opt.MapFrom(src => src.SubMenus));
 
             CreateMap<MenuUpdateInput, Module>()
+               .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.Nome))
                .ForMember(dest => dest.SubModules, opt => opt.MapFrom(src => src.SubMenus));
 
             CreateMap<Module, MenuOutput>()
+              .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.Descricao))
               .ForMember(dest => dest.SubMenus, opt => opt.MapFrom(src => src.SubModules));
 
+            CreateMap<SubMenuCreateInput, SubModule>()
+              .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.Nome))
+              .ForMember(dest => dest.Permissions, opt => opt.MapFrom(src => src.Permissions));
+
             CreateMap<SubModule, SubMenuOutput>()
+             .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.Descricao))
              .ForMember(dest => dest.Permissions, opt => opt.MapFrom(src => src.Permissions));
 
-            CreateMap<Permission, PermissionOutput>();
+            CreateMap<PermissionInput, Permission>()
+             .ForMember(dest => dest.Acao, opt => opt.MapFrom(src => src.Descricao));
+
+            CreateMap<Permission, PermissionOutput>()
+             .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.Acao));
+
         }
     }
 }

@@ -16,17 +16,21 @@ namespace Estac.Infra.Repositories
 {
     public class MenuRepositories : BaseRepositoriesIdentityNone<Module>, IMenuRepositories
     {
-        private DbSet<Module> _dataset;
+        private readonly DbSet<Module> _dataset;
         private readonly IMapper _mapper;
         private readonly IDapperRepositories _dapperRepositories;
-        private readonly IdentityContext _identityContext;
-        public MenuRepositories(IdentityContext context, IMapper _mapper, IDapperRepositories _dapperRepositories,
-            IdentityContext _identityContext) : base(context)
+        private readonly IdentityContext _context;
+
+        public MenuRepositories(
+            IdentityContext _context,
+            IMapper mapper,
+            IDapperRepositories dapperRepositories
+        ) : base(_context)
         {
-            this._mapper = _mapper;
-            _dataset = _identityContext.Set<Module>();
-            this._dapperRepositories = _dapperRepositories;
-            this._identityContext = _identityContext;
+            this._context = _context;
+            this._mapper = mapper;
+            this._dapperRepositories = dapperRepositories;
+            this._dataset = _context.Set<Module>();
         }
 
         public async Task<Module> SelecionarPorIdCompleto(int id)
@@ -115,7 +119,7 @@ namespace Estac.Infra.Repositories
 
         public async Task<List<MenuAcessOuput>> BuscarMenuUsuario(int roleId)
         {
-            var menus = await _identityContext.Set<RolePermission>()
+            var menus = await _context.Set<RolePermission>()
                 .Where(x => x.RoleId == roleId)
                 .Select(x => new
                 {
@@ -133,6 +137,7 @@ namespace Estac.Infra.Repositories
                     Id = menuGroup.Key.Id,
                     Descricao = menuGroup.Key.Descricao,
                     Ativo = menuGroup.Key.Ativo,
+
                     Ordem = menuGroup.Key.Ordem,
                     SubMenus = menuGroup
                         .OrderBy(x => x.SubMenu.Ordem)
@@ -164,16 +169,61 @@ namespace Estac.Infra.Repositories
 
         public async Task Atualizar(Module menu)
         {
-            _dataset.Update(menu);
-            await _context.SaveChangesAsync();
+            var entity = await _context.Module.FindAsync(menu.Id);
+            _context.Entry(entity).CurrentValues.SetValues(menu);
+
+            var result = await _context.SaveChangesAsync();
+        }
+
+        public async Task AtualizarSubMenu(SubModule subModule)
+        {
+            var entity = await _context.SubModule.FindAsync(subModule.Id);
+            _context.Entry(entity).CurrentValues.SetValues(subModule);
+
+            var result = await _context.SaveChangesAsync();
+        }
+
+        public async Task AtualizarPermissao(Permission permission)
+        {
+            var entity = await _context.Permission.FindAsync(permission.Id);
+            _context.Entry(entity).CurrentValues.SetValues(permission);
+
+            var result = await _context.SaveChangesAsync();
+        }
+
+        public async Task GravarSubMenu(SubModule subModule)
+        {
+            await _context.SubModule.AddAsync(subModule);
+
+            var result = await _context.SaveChangesAsync();
+        }
+
+        public async Task GravarPermissao(Permission permission)
+        {
+            await _context.Permission.AddAsync(permission);
+
+            var result = await _context.SaveChangesAsync();
         }
 
         public async Task<Module> SelecionarPorId(int id)
         {
             return await _dataset
-                    .AsNoTracking()
+                    .Include(x => x.SubModules).ThenInclude(x => x.Permissions)
                     .Where(x => x.Id == id)
                     .FirstOrDefaultAsync();
+        }
+
+        public async Task Deletar(Module module)
+        {
+            _context.Module.Remove(module);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeletarSubMenu(IEnumerable<SubModule> subModule)
+        {
+             _context.SubModule.RemoveRange(subModule);
+             
+            await _context.SaveChangesAsync();
         }
 
 

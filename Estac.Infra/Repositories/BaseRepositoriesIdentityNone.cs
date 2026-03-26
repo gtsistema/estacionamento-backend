@@ -6,7 +6,7 @@ using System.Data.Entity.Infrastructure;
 
 namespace Estac.Infra.Repositories
 {
-    public class BaseRepositoriesIdentityNone<T> : IBaseRepositoriesIdentityNone<T> where T : BaseIntDataNull
+    public class BaseRepositoriesIdentityNone<T> : IBaseRepositoriesNone<T> where T : BaseIntDataNull
     {
         protected readonly IdentityContext _context;
         public BaseRepositoriesIdentityNone(IdentityContext context)
