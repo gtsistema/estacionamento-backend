@@ -76,13 +76,13 @@ namespace Estac.Api.Controllers.Auth
         [HttpDelete("{idSubMenu}")]
         public async Task<ActionResult> DeleteSubMenu(int idSubMenu)
         {
-            return await _services.Excluir(idSubMenu);
+            return await _services.ExcluirSubMenu(idSubMenu);
         }
         [PermissionAuthorize(PermissionAcess.Menu.Excluir)]
         [HttpDelete("{idPermissao}")]
         public async Task<ActionResult> DeletePermissao(int idPermissao)
         {
-            return await _services.Excluir(idPermissao);
+            return await _services.ExcluirPermissao(idPermissao);
         }
     }
 }

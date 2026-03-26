@@ -12,5 +12,7 @@ namespace Estac.Domain.Interface.Services
         Task<ActionResult> Alterar(MenuCreateInput input);
         Task<ActionResult> Excluir(int id);
         Task<ActionResult> OrganizarMenus(MenuOrganizacaoInput input);
+        Task<ActionResult> ExcluirPermissao(int id);
+        Task<ActionResult> ExcluirSubMenu(int id);
     }
 }
