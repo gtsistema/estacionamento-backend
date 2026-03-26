@@ -14,13 +14,13 @@ using System.Text;
 
 namespace Estac.Infra.Repositories
 {
-    public class MenuRepositories : BaseRepositoriesNone<Module>, IMenuRepositories
+    public class MenuRepositories : BaseRepositoriesIdentityNone<Module>, IMenuRepositories
     {
         private DbSet<Module> _dataset;
         private readonly IMapper _mapper;
         private readonly IDapperRepositories _dapperRepositories;
         private readonly IdentityContext _identityContext;
-        public MenuRepositories(GtsContext context, IMapper _mapper, IDapperRepositories _dapperRepositories,
+        public MenuRepositories(IdentityContext context, IMapper _mapper, IDapperRepositories _dapperRepositories,
             IdentityContext _identityContext) : base(context)
         {
             this._mapper = _mapper;
@@ -161,5 +161,21 @@ namespace Estac.Infra.Repositories
 
             return resultado;
         }
+
+        public async Task Atualizar(Module menu)
+        {
+            _dataset.Update(menu);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<Module> SelecionarPorId(int id)
+        {
+            return await _dataset
+                    .AsNoTracking()
+                    .Where(x => x.Id == id)
+                    .FirstOrDefaultAsync();
+        }
+
+
     }
 }

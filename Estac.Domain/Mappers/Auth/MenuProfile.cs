@@ -13,6 +13,7 @@ namespace Estac.Domain.Mappers
         {
             // Map POST input to domain model
             CreateMap<MenuCreateInput, Module>()
+               .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.Nome))
                .ForMember(dest => dest.SubModules, opt => opt.MapFrom(src => src.SubMenus));
 
             CreateMap<MenuUpdateInput, Module>()

@@ -40,6 +40,9 @@ namespace Estac.CrossCutting.Dependencies
 
             // repositories
             services.AddScoped(typeof(IBaseRepositories<>), typeof(BaseRepositories<>));
+            services.AddScoped(typeof(IBaseRepositoriesNone<>), typeof(BaseRepositoriesNone<>));
+            services.AddScoped(typeof(IBaseRepositoriesIdentityNone<>), typeof(BaseRepositoriesIdentityNone<>));
+
             services.AddScoped<IVeiculoRepositories, VeiculoRepositories>();
             services.AddScoped<IMotoristaRepositories, MotoristaRepositories>();
             services.AddScoped<IVeiculoModeloRepositories, VeiculoModeloRepositories>();

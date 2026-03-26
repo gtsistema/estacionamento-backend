@@ -5,11 +5,13 @@ using Estac.Domain.Shared;
 
 namespace Estac.Domain.Interface.Repositories
 {
-    public interface IMenuRepositories : IBaseRepositoriesNone<Module>
+    public interface IMenuRepositories : IBaseRepositoriesIdentityNone<Module>
     {
         Task<Module> SelecionarPorIdCompleto(int id);
+        Task<Module> SelecionarPorId(int id);
         Task<List<Module>> Buscar();
         Task AtualizarOrdem(List<MenuOrdemInput> menus, List<SubMenuOrdemInput> subMenus);
         Task<List<MenuAcessOuput>> BuscarMenuUsuario(int roleId);
+        Task Atualizar(Module menu);
     }
 }

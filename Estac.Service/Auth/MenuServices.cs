@@ -79,7 +79,9 @@ namespace Estac.Service
 
                 var result = _mapper.Map<Module>(input);
 
-                await _repositories.Alterar(result);
+                var module = await _repositories.SelecionarPorId(result.Id);
+
+                await _repositories.Atualizar(module);
 
                 return await RetornOk(result);
             }
