@@ -68,7 +68,7 @@ namespace Estac.Infra.Repositories.Auth
                         new { Id = usuarioId });
 
             var menus = (await dapperRepositories.QueryAsync<MenuOuput>(
-                "SELECT Id, Descricao FROM dbo.Module")).ToList();
+                "SELECT Id, Descricao, Rota FROM dbo.Module")).ToList();
 
             var subMenus = (await dapperRepositories.QueryAsync<SubMenuOuput>(
                 "SELECT Id, Descricao, Rota, ModuleId as MenuId FROM dbo.SubModule")).ToList();

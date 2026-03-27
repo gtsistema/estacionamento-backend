@@ -23,6 +23,7 @@ namespace Estac.Domain.Output.Auth
         public string Icone { get; set; }
         public bool Ativo { get; set; }
         public int Ordem { get; set; }
+        public string Rota { get; set; }
         public List<SubMenuAcessOuput> SubMenus { get; set; } = new();
     }
 
@@ -50,6 +51,7 @@ namespace Estac.Domain.Output.Auth
         public string Icone { get; set; }
         public bool Ativo { get; set; }
         public int Ordem { get; set; }
+        public string Rota { get; set; }
         public List<SubMenuOuput> SubMenus { get; set; } = new();
     }
 

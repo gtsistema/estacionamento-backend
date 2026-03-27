@@ -137,7 +137,7 @@ namespace Estac.Infra.Repositories
                     Id = menuGroup.Key.Id,
                     Descricao = menuGroup.Key.Descricao,
                     Ativo = menuGroup.Key.Ativo,
-
+                    Rota = menuGroup.Key.Rota,
                     Ordem = menuGroup.Key.Ordem,
                     SubMenus = menuGroup
                         .OrderBy(x => x.SubMenu.Ordem)
