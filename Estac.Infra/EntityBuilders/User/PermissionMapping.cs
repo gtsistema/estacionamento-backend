@@ -26,8 +26,7 @@ namespace Estac.Infra.EntityBuilders.User
 
             builder.HasOne(x => x.SubModule)
                 .WithMany(x => x.Permissions)
-                .HasForeignKey(x => x.SubModuleId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(x => x.SubModuleId);
         }
     }
 }
