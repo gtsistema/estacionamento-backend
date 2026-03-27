@@ -10,7 +10,7 @@ namespace Estac.Api.Controllers.Auth
 {
     [Authorize]
     [ApiController]
-    [Route("api/auth/[controller]/[action]")]
+    [Route("api/auth/[controller]")]
     public class PerfilController : ControllerBase
     {
         private readonly IPerfilServices _services;
@@ -62,7 +62,6 @@ namespace Estac.Api.Controllers.Auth
         }
 
         [PermissionAuthorize(PermissionAcess.Perfil.Excluir)]
-
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
@@ -75,8 +74,5 @@ namespace Estac.Api.Controllers.Auth
         {
             return await _services.BuscarPerfilPermissaoUsuario(usuarioId);
         }
-
-
-       
     }
 }
