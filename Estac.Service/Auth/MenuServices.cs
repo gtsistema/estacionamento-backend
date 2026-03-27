@@ -105,7 +105,7 @@ namespace Estac.Service
                 }
                 else
                 {
-                    subModule.ModuleId = subModule.Id;
+                    subModule.ModuleId = result.Id;
                     await _repositories.GravarSubMenu(subModule);
                 }
 
