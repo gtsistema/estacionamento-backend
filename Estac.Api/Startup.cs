@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Estac.Api.Controllers.Base;
 using Estac.Api.Controllers.Base.Claim;
 using Estac.Api.Extensions;
@@ -6,9 +7,11 @@ using Estac.CrossCutting.Dependencies;
 using Estac.Domain.Mappers;
 using Estac.Domain.Mappers.Auth;
 using Estac.Infra.Context;
+using Estac.Service.Seed;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
 namespace Estac.Api
@@ -149,8 +152,8 @@ namespace Estac.Api
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, GtsContext context,
-           ILoggerFactory loggerFactory, IHttpContextAccessor httpContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IdentityContext identitycontext, GtsContext gtsContext,
+           ILoggerFactory loggerFactory, IHttpContextAccessor httpContext, IServiceProvider serviceProvider)
         {
             app.UseDeveloperExceptionPage();
 
@@ -189,7 +192,18 @@ namespace Estac.Api
             var automaticRunDbMigrations = Configuration.GetValue<bool>("AutomaticRunDbMigrations");
             if (automaticRunDbMigrations)
             {
-                context.Database.Migrate();
+                gtsContext.Database.Migrate();
+                identitycontext.Database.Migrate();
+
+                using (var scope = serviceProvider.CreateScope())
+                {
+                    var services = scope.ServiceProvider;
+
+                    MigrationSeed
+                        .MigrationSeedAsync(services)
+                        .GetAwaiter()
+                        .GetResult();
+                }
             }
         }
     }

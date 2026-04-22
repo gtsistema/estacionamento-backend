@@ -64,7 +64,6 @@ namespace Estac.Infra.Repositories
         public async Task<List<Module>> Buscar()
         {
             var result = await _dataset
-                    .AsNoTracking()
                     .Include(x => x.SubModules)
                         .ThenInclude(x => x.Permissions)
                     .OrderBy(o => o.Ordem)
@@ -119,52 +118,75 @@ namespace Estac.Infra.Repositories
 
         public async Task<List<MenuAcessOuput>> BuscarMenuUsuario(int roleId)
         {
-            var menus = await _context.Set<RolePermission>()
+            var dados = await _context.Set<RolePermission>()
+                .Include(x => x.Module)
+                .Include(x => x.SubModule)
+                .Include(x => x.Permission)
                 .Where(x => x.RoleId == roleId)
-                .Select(x => new
-                {
-                    Menu = x.SubModule.Module,
-                    SubMenu = x.SubModule,
-                    Permission = x
-                })
                 .ToListAsync();
 
-            var resultado = menus
-                .OrderBy(x => x.Menu.Ordem)
-                .GroupBy(x => x.Menu)
-                .Select(menuGroup => new MenuAcessOuput
-                {
-                    Id = menuGroup.Key.Id,
-                    Descricao = menuGroup.Key.Descricao,
-                    Ativo = menuGroup.Key.Ativo,
-                    Rota = menuGroup.Key.Rota,
-                    Ordem = menuGroup.Key.Ordem,
-                    SubMenus = menuGroup
-                        .OrderBy(x => x.SubMenu.Ordem)
-                        .GroupBy(x => x.SubMenu)
-                        .Select(subMenuGroup => new SubMenuAcessOuput
-                        {
-                            Id = subMenuGroup.Key.Id,
-                            MenuId = subMenuGroup.Key.ModuleId,
-                            Descricao = subMenuGroup.Key.Descricao,
-                            Rota = subMenuGroup.Key.Rota,
-                            Ativo = subMenuGroup.Key.Ativo,
-                            Ordem = subMenuGroup.Key.Ordem,
-                            //Permissions = subMenuGroup
-                            //    .Select(p => new PermissionOutput
-                            //    {
-                            //        Id = p.Permission.Id,
-                            //        SubMenuId = p.Permission.SubModuleId,
-                            //        Descricao = p.Permission.
-                            //    })
-                            //    .OrderBy(p => p.Ordem)
-                            //    .ToList()
-                        })
-                        .ToList()
-                })
+            var dadosTransformados = dados.Select(x => new
+             {
+                 Menu = x.Module == null ? null : new
+                 {
+                     x.Module.Id,
+                     x.Module.Descricao,
+                     x.Module.Ativo,
+                     x.Module.Rota,
+                     x.Module.Ordem
+                 },
+                 SubMenu = x.SubModule == null ? null : new
+                 {
+                     x.SubModule.Id,
+                     x.SubModule.Descricao,
+                     x.SubModule.Rota,
+                     x.SubModule.Ativo,
+                     x.SubModule.Ordem,
+                     x.SubModule.ModuleId
+                 }
+             })
+                .OrderBy(x => x.Menu?.Ordem)
+                .ThenBy(x => x.SubMenu?.Ordem)
                 .ToList();
 
-            return resultado;
+            var menusDict = new Dictionary<int, MenuAcessOuput>();
+
+            foreach (var item in dadosTransformados)
+            {
+                if (!menusDict.TryGetValue(item.Menu.Id, out var menu))
+                {
+                    menu = new MenuAcessOuput
+                    {
+                        Id = item.Menu.Id,
+                        Descricao = item.Menu.Descricao,
+                        Ativo = item.Menu.Ativo,
+                        Rota = item.Menu.Rota,
+                        Ordem = item.Menu.Ordem,
+                        SubMenus = new List<SubMenuAcessOuput>()
+                    };
+
+                    menusDict.Add(menu.Id, menu);
+                }
+
+                if (item.SubMenu != null)
+                {
+                    // evita duplicidade
+                    if (!menu.SubMenus.Any(s => s.Id == item.SubMenu.Id))
+                    {
+                        menu.SubMenus.Add(new SubMenuAcessOuput
+                        {
+                            Id = item.SubMenu.Id,
+                            MenuId = item.SubMenu.ModuleId,
+                            Descricao = item.SubMenu.Descricao,
+                            Rota = item.SubMenu.Rota,
+                            Ativo = item.SubMenu.Ativo,
+                            Ordem = item.SubMenu.Ordem
+                        });
+                    }
+                }
+            }
+
+            return menusDict.Values.ToList();
         }
 
         public async Task Atualizar(Module menu)

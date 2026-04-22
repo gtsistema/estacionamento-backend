@@ -11,6 +11,15 @@ namespace Estac.Infra.EntityBuilders.User
         {
             builder.HasKey(r => r.Id);
             builder.ToTable("Role", "dbo");
+
+            builder.Property(x => x.Id)
+                .HasColumnName("Id");
+
+
+            builder.HasMany(r => r.RolePermissions)
+               .WithOne(rp => rp.Role)
+               .HasForeignKey(rp => rp.RoleId)
+               .HasPrincipalKey(r => r.Id);
         }
     }
 }

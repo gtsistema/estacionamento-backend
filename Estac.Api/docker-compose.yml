@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  api:
+    container_name: estac_api
+    build:
+      context: .
+      dockerfile: Estac.Api/Dockerfile
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=db;Database=EstacDb;User=sa;Password=@Admin2134;TrustServerCertificate=True;
+    depends_on:
+      - db
+    networks:
+      - estac-network
+
+  db:
+    container_name: estac_sqlserver
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - SA_PASSWORD=@Admin2134
+      - ACCEPT_EULA=Y
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+    networks:
+      - estac-network
+
+networks:
+  estac-network:
+
+volumes:
+  sql_data:

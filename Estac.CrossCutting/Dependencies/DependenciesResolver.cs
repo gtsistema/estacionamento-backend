@@ -27,6 +27,7 @@ namespace Estac.CrossCutting.Dependencies
             services.AddScoped<IClock, Clock>();
             services.AddScoped<ICurrentUser, CurrentUser>();
             services.AddScoped<IErrorServices, ErrorServices>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             //services
             services.AddScoped<IUserServices, UserServices>();

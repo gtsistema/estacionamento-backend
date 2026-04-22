@@ -7,6 +7,7 @@
         public int Ordem { get; set; }  
         public bool Ativo { get; set; }
         public string Rota { get; set; }
+        public int MenuId { get; set; }
         public List<PermissionOutput> Permissions { get; set; }
     }
 }

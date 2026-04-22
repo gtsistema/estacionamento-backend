@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Estac.Infra.Migrations
 {
     [DbContext(typeof(GtsContext))]
-    [Migration("20260316115903_NovoBanco")]
-    partial class NovoBanco
+    [Migration("20260415181308_Inicial")]
+    partial class Inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

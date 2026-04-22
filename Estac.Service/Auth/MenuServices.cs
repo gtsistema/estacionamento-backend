@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using DocumentFormat.OpenXml.Office.CustomUI;
 using Estac.Domain.Input.Auth;
 using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Interface.Services;
+using Estac.Domain.Models;
 using Estac.Domain.Models.Auth;
+using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output;
 using Estac.Domain.Output.Auth;
 using Estac.Service.Extensions;
@@ -98,30 +101,8 @@ namespace Estac.Service
         {
             foreach (var subModule in result.SubModules)
             {
-                if (subModule.Id > 0)
-                {
-                    subModule.ModuleId = result.Id;
-                    await _repositories.AtualizarSubMenu(subModule);
-                }
-                else
-                {
-                    subModule.ModuleId = result.Id;
-                    await _repositories.GravarSubMenu(subModule);
-                }
-
-                foreach (var permission in subModule.Permissions)
-                {
-                    if (permission.Id > 0)
-                    {
-                        permission.SubModuleId = subModule.Id;
-                        await _repositories.AtualizarPermissao(permission);
-                    }
-                    else
-                    {
-                        permission.SubModuleId = subModule.Id;
-                        await _repositories.GravarPermissao(permission);
-                    }
-                }
+                await TratarSubMenu(result, subModule);
+                await TratarPermissao(subModule);
             }
         }
 
@@ -213,5 +194,47 @@ namespace Estac.Service
             return await RetornOk(true);
         }
 
+        private async Task TratarPermissao(SubModule subModule)
+        {
+            foreach (var permission in subModule.Permissions)
+            {
+                TratarAcaoPermissao(subModule, permission);
+
+                if (permission.Id > 0)
+                {
+                    permission.SubModuleId = subModule.Id;
+                    await _repositories.AtualizarPermissao(permission);
+                }
+                else
+                {
+                    permission.SubModuleId = subModule.Id;
+                    await _repositories.GravarPermissao(permission);
+                }
+            }
+        }
+
+        private async Task TratarSubMenu(Module result, SubModule subModule)
+        {
+            subModule.Descricao = subModule.Descricao.ToLower();
+
+            if (subModule.Id > 0)
+            {
+                subModule.ModuleId = result.Id;
+                await _repositories.AtualizarSubMenu(subModule);
+            }
+            else
+            {
+                subModule.ModuleId = result.Id;
+                await _repositories.GravarSubMenu(subModule);
+            }
+        }
+
+        private static void TratarAcaoPermissao(SubModule subModule, Permission permission)
+        {
+            permission.Acao = permission.Acao.ToLower();
+
+            if (!permission.Acao.Contains(subModule.Descricao.ToLower()))
+                permission.Acao = string.Concat(subModule.Descricao, ".", permission.Acao);
+        }
     }
 }

@@ -14,7 +14,7 @@ namespace Estac.Domain.Interface.Services.Auth
 
         Task<ActionResult> Gravar(PerfilCreateInput input);
 
-        Task<ActionResult> Alterar(ApplicationRole input);
+        Task<ActionResult> Alterar(PerfilUpdateInput input);
 
         Task<ActionResult> Delete(int id);
 

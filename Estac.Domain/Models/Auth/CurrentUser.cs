@@ -19,22 +19,38 @@ namespace Estac.Domain.Models.Auth
 
         public string Email => IsAuthenticated ? _acessor.HttpContext.User.UserEmail() : string.Empty;
 
-        public Guid Id => IsAuthenticated ? Guid.Parse(_acessor.HttpContext.User.UserId()) : Guid.Empty;
+        public int Id => IsAuthenticated ? Convert.ToInt32(_acessor.HttpContext.User.UserId()) : 0;
         public bool IsAuthenticated => _acessor.HttpContext.User.Identity.IsAuthenticated;
 
         public IEnumerable<Claim> Claims => _acessor.HttpContext.User.Claims;
 
         public bool IsInRole(string role) => _acessor.HttpContext.User.IsInRole(role);
 
-        public Guid EmpresaId
+        public int EmpresaId
         {
             get
             {
-                var empresaId = _acessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "empresaId")?.Value;
-                if (Guid.TryParse(empresaId, out var guidOutput) && guidOutput != Guid.Empty)
-                    return guidOutput;
+                var empresaId = _acessor.HttpContext?.User?.Claims
+                    .FirstOrDefault(c => c.Type == "EmpresaId")?.Value;
 
-                return Guid.Empty;
+                if (int.TryParse(empresaId, out var id) && id > 0)
+                    return id;
+
+                return 0;
+            }
+        }
+
+        public int RoleId
+        {
+            get
+            {
+                var empresaId = _acessor.HttpContext?.User?.Claims
+                    .FirstOrDefault(c => c.Type == "RoleId")?.Value;
+
+                if (int.TryParse(empresaId, out var id) && id > 0)
+                    return id;
+
+                return 0;
             }
         }
     }

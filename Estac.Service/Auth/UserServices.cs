@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Estac.Domain.Input.Auth;
 using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Interface.Repositories.Auth;
@@ -147,7 +148,7 @@ namespace Estac.Service.Auth
                 Audience = _bearerTokenSettings.ValidOn,
                 Expires = expires,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256),
-                Subject = new ClaimsIdentity(await Permissoes(user.Id))
+                Subject = new ClaimsIdentity(await Permissoes(user.Id)),
             });
 
             var refreshToken = Guid.NewGuid().ToString().Replace("-", string.Empty);
@@ -176,6 +177,8 @@ namespace Estac.Service.Auth
                 new Claim(ClaimTypes.Name, acessoOutput.UserName),
                 new Claim(ClaimTypes.Email, acessoOutput.Email ?? ""),
                 new Claim(ClaimTypes.Role, acessoOutput.Role),
+                new Claim("RoleId", acessoOutput.RoleId.ToString()),
+                new Claim("EmpresaId", acessoOutput.EstacionamentoId.HasValue ? acessoOutput.EstacionamentoId?.ToString() : acessoOutput.TransportadoraId?.ToString()),
             };
 
             foreach (var permissao in acessoOutput.Permissions.Select(p => p.Descricao).Distinct())

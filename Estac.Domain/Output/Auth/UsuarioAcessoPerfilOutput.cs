@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Estac.Domain.Input.Auth;
 
 namespace Estac.Domain.Output.Auth
 {
@@ -10,7 +6,7 @@ namespace Estac.Domain.Output.Auth
     {
         public UsuarioOutput Usuario { get; set; }
         public RoleOutput Role { get; set; }
-        public List<MenuOuput> Menus { get; set; } = new();
+        public List<MenuOutput> Menus { get; set; } = new();
         public TokenResponse Jwt { get; set; }
     }
 }

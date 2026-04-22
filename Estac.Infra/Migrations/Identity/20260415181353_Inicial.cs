@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Estac.Infra.Migrations.Identity
 {
     /// <inheritdoc />
-    public partial class NovoBanco : Migration
+    public partial class Inicial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,6 +22,8 @@ namespace Estac.Infra.Migrations.Identity
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Ordem = table.Column<int>(type: "int", nullable: false),
+                    Ativo = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    Rota = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Descricao = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false)
                 },
                 constraints: table =>
@@ -54,7 +56,7 @@ namespace Estac.Infra.Migrations.Identity
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PessoaId = table.Column<int>(type: "int", nullable: true),
                     TransportadoraId = table.Column<int>(type: "int", nullable: true),
-                    EstacionadoId = table.Column<int>(type: "int", nullable: true),
+                    EstacionamentoId = table.Column<int>(type: "int", nullable: true),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TemporaryPassword = table.Column<bool>(type: "bit", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: true),
@@ -80,21 +82,6 @@ namespace Estac.Infra.Migrations.Identity
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserPermissions",
-                schema: "dbo",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    PermissionId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserPermissions", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "SubModule",
                 schema: "dbo",
                 columns: table => new
@@ -103,6 +90,8 @@ namespace Estac.Infra.Migrations.Identity
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Ordem = table.Column<int>(type: "int", nullable: false),
                     ModuleId = table.Column<int>(type: "int", nullable: false),
+                    Rota = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Ativo = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     Descricao = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false)
                 },
                 constraints: table =>
@@ -254,6 +243,50 @@ namespace Estac.Infra.Migrations.Identity
                         principalSchema: "dbo",
                         principalTable: "SubModule",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RolePermission",
+                schema: "dbo",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleId = table.Column<int>(type: "int", nullable: false),
+                    PermissionId = table.Column<int>(type: "int", nullable: true),
+                    SubModuleId = table.Column<int>(type: "int", nullable: true),
+                    ModuleId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RolePermission", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RolePermission_Module_ModuleId",
+                        column: x => x.ModuleId,
+                        principalSchema: "dbo",
+                        principalTable: "Module",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_RolePermission_Permission_PermissionId",
+                        column: x => x.PermissionId,
+                        principalSchema: "dbo",
+                        principalTable: "Permission",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_RolePermission_Role_RoleId",
+                        column: x => x.RoleId,
+                        principalSchema: "dbo",
+                        principalTable: "Role",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RolePermission_SubModule_SubModuleId",
+                        column: x => x.SubModuleId,
+                        principalSchema: "dbo",
+                        principalTable: "SubModule",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -276,6 +309,30 @@ namespace Estac.Infra.Migrations.Identity
                 schema: "dbo",
                 table: "RoleClaim",
                 column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RolePermission_ModuleId",
+                schema: "dbo",
+                table: "RolePermission",
+                column: "ModuleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RolePermission_PermissionId",
+                schema: "dbo",
+                table: "RolePermission",
+                column: "PermissionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RolePermission_RoleId",
+                schema: "dbo",
+                table: "RolePermission",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RolePermission_SubModuleId",
+                schema: "dbo",
+                table: "RolePermission",
+                column: "SubModuleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SubModule_ModuleId",
@@ -320,11 +377,11 @@ namespace Estac.Infra.Migrations.Identity
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Permission",
+                name: "RoleClaim",
                 schema: "dbo");
 
             migrationBuilder.DropTable(
-                name: "RoleClaim",
+                name: "RolePermission",
                 schema: "dbo");
 
             migrationBuilder.DropTable(
@@ -336,10 +393,6 @@ namespace Estac.Infra.Migrations.Identity
                 schema: "dbo");
 
             migrationBuilder.DropTable(
-                name: "UserPermissions",
-                schema: "dbo");
-
-            migrationBuilder.DropTable(
                 name: "UserRole",
                 schema: "dbo");
 
@@ -348,7 +401,7 @@ namespace Estac.Infra.Migrations.Identity
                 schema: "dbo");
 
             migrationBuilder.DropTable(
-                name: "SubModule",
+                name: "Permission",
                 schema: "dbo");
 
             migrationBuilder.DropTable(
@@ -357,6 +410,10 @@ namespace Estac.Infra.Migrations.Identity
 
             migrationBuilder.DropTable(
                 name: "User",
+                schema: "dbo");
+
+            migrationBuilder.DropTable(
+                name: "SubModule",
                 schema: "dbo");
 
             migrationBuilder.DropTable(

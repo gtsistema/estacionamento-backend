@@ -2,6 +2,7 @@
 using Azure.Core;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using Estac.Domain.Input.Auth;
+using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Interface.Repositories.Auth;
 using Estac.Domain.Interface.Services.Auth;
 using Estac.Domain.Models;
@@ -29,6 +30,7 @@ namespace Estac.Service.Auth
         private readonly UserManager<ApplicationUser> _identityUserManager;
         private readonly IApplicationRoleManager _roleManager;
         private readonly IPerfilRepositories _perfilRepositories;
+        private readonly IUnitOfWork _unitOfWork;
 
         public PerfilServices(IApplicationUserManager userManager,
                IApplicationSignManager signManager, ICurrentUser currentUser,
@@ -38,7 +40,8 @@ namespace Estac.Service.Auth
                IErrorServices _errorApplication,
                UserManager<ApplicationUser> _identityUserManager,
                IApplicationRoleManager _roleManager,
-               IPerfilRepositories _perfilRepositories) : base(_errorApplication)
+               IPerfilRepositories _perfilRepositories,
+               IUnitOfWork unitOfWork) : base(_errorApplication)
         {
             _bearerTokenSettings = bearerTokenSettings.Value;
             _userManager = userManager;
@@ -49,22 +52,24 @@ namespace Estac.Service.Auth
             this._identityUserManager = _identityUserManager;
             this._roleManager = _roleManager;
             this._perfilRepositories = _perfilRepositories;
+            this._unitOfWork = unitOfWork;
         }
 
         public async Task<ActionResult> Buscar()
         {
             var roles = await _roleManager.ListAsync();
-            return await RetornOk(_mapper.Map<IEnumerable<PerfilOutput>>(roles));
+            return await RetornOk(await _perfilRepositories.BuscarPerfilPermissaoGrid(null));
         }
 
         public async Task<ActionResult> ObterPorId(int id)
         {
-            var role = await _roleManager.FindByIdAsync(id);
-            return await RetornOk(_mapper.Map<PerfilOutput>(role));
+            return await RetornOk(await _perfilRepositories.BuscarPerfilPermissaoGrid(id));
         }
 
         public async Task<ActionResult> Gravar(PerfilCreateInput input)
         {
+            await _unitOfWork.BeginTransactionAsync();
+
             try
             {
                 if (string.IsNullOrWhiteSpace(input?.Nome))
@@ -74,34 +79,62 @@ namespace Estac.Service.Auth
 
                 if (exists)
                     return await RetornNo(false, "Perfil já existe.");
-                
-                var result = await _roleManager.CreateAsync(new ApplicationRole() {Name = input.Nome});
 
+                await _perfilRepositories.AdicionarPerfilSimples(new ApplicationRole() { Name = input.Nome });
 
+                var menus = _mapper.Map<List<Module>>(input.Menus);
 
+                var perfil = await _perfilRepositories.BuscarPerfilPorId(input.Id);
 
-                if (!result.Succeeded)
-                    return await RetornNo(false, result.Errors.Select(e => e.Description).ToString());
+                var rolePermissoesAdicionar = TratarRolePermissionGravar(menus, perfil.Id);
 
-                return await RetornOk(result);
+                await _perfilRepositories.AtualizarPermissoesDoPerfil(rolePermissoesAdicionar, null);
+
+                await _unitOfWork.CommitAsync();
+
+                return await RetornOk(_perfilRepositories.BuscarPerfilPermissaoGrid(input.Id));
             }
             catch (Exception ex)
             {
+                await _unitOfWork.RollbackAsync();
+
                 return await RetornNo(false, ex.Message);
             }
         }
 
-        public async Task<ActionResult> Alterar(ApplicationRole input)
+        public async Task<ActionResult> Alterar(PerfilUpdateInput input)
         {
-            if (string.IsNullOrWhiteSpace(input?.Name))
-                return await RetornNo(false, "Nome do role é obrigatório.");
+            await _unitOfWork.BeginTransactionAsync();
 
-            var result = await _roleManager.UpdateAsync(input);
+            try
+            {
+                if (string.IsNullOrWhiteSpace(input?.Nome))
+                    return await RetornNo(false, "Nome do role é obrigatório.");
 
-            if (!result.Succeeded)
-                return await RetornNo(false, string.Join(", ", result.Errors.Select(e => e.Description)));
+                 _perfilRepositories.AtualizarPerfilSimples(new ApplicationRole() { Id = input.Id, Name = input.Nome });
+               
+                var menus = _mapper.Map<List<Module>>(input.Menus);
 
-            return await RetornOk(result);
+                await AtualizarPermissoesdoPerfil(input, menus, input.Id);
+
+                await _unitOfWork.CommitAsync();
+
+                return await RetornOk(_perfilRepositories.BuscarPerfilPermissaoGrid(input.Id));
+            }
+            catch (Exception ex)
+            {
+                await _unitOfWork.RollbackAsync();
+                return await RetornNo(false, ex.Message);
+            }
+        }
+
+        private async Task AtualizarPermissoesdoPerfil(PerfilUpdateInput input, List<Module> menus, int perfilId)
+        {
+            var rolePermissoesAdicionar = TratarRolePermissionGravar(menus, perfilId);
+
+            var rolePermissoesAnterior = await _perfilRepositories.BuscarRolePermissoes(input.Id);
+
+            await _perfilRepositories.AtualizarPermissoesDoPerfil(rolePermissoesAdicionar, rolePermissoesAnterior);
         }
 
         public async Task<ActionResult> Delete(int id)
@@ -137,6 +170,53 @@ namespace Estac.Service.Auth
                 return await RetornNo(false, string.Join(", ", result.Errors.Select(e => e.Description)));
 
             return await RetornOk(result);
+        }
+
+        private List<RolePermission> TratarRolePermissionGravar(List<Module> menus, int roleId)
+        {
+            List<RolePermission> rolePermissions = new List<RolePermission>();
+
+            foreach (var menu in menus.Where(p => p.Selecionado))
+            {
+                if (menu.SubModules == null || !menu.SubModules.Any())
+                {
+                    rolePermissions.Add(new RolePermission
+                    {
+                        ModuleId = menu.Id,
+                        RoleId = roleId,
+                    });
+
+                    continue;
+                }
+
+                foreach (var subMenu in menu.SubModules.Where(p => p.SelecionadoSub))
+                {
+                    if (subMenu.Permissions == null || !subMenu.Permissions.Any())
+                    {
+                        rolePermissions.Add(new RolePermission
+                        {
+                            ModuleId = menu.Id,
+                            RoleId = roleId,
+                            SubModuleId = subMenu.Id
+                        });
+
+                        continue;
+                    }
+
+                    foreach (var permissao in subMenu.Permissions.Where(p => p.SelecionadoPerm))
+                    {
+                        rolePermissions.Add(new RolePermission
+                        {
+                            RoleId = roleId,
+                            SubModuleId = subMenu.Id,
+                            PermissionId = permissao.Id,
+                            ModuleId = menu.Id
+                        });
+                    }
+                }
+            }
+
+            return rolePermissions;
         }
     }
 }

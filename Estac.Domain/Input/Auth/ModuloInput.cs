@@ -3,22 +3,20 @@ namespace Estac.Domain.Input.Auth
 {
     public class ModuloInput
     {
-        public string Modulo { get; set; }
-
-        public List<SubModuloInput> SubModulos { get; set; }
+        public int MenuId { get; set; }
+        public bool Selecionado { get; set; }
+        public List<SubModuloInput> SubMenus { get; set; } = new();
     }
     public class SubModuloInput
     {
-        public string Nome { get; set; }
-
-        public CrudPermissaoInput Permissoes { get; set; }
+        public int SubMenuId { get; set; }
+        public bool Selecionado { get; set; }
+        public List<PermissaoInput> Permissoes { get; set; } = new();
     }
 
-    public class CrudPermissaoInput
+    public class PermissaoInput
     {
-        public bool Visualizar { get; set; }
-        public bool Criar { get; set; }
-        public bool Alterar { get; set; }
-        public bool Excluir { get; set; }
+        public int PermissaoId { get; set; }
+        public bool Selecionado { get; set; }
     }
 }

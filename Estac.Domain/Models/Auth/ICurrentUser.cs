@@ -6,12 +6,12 @@ namespace Estac.Domain.Models.Auth
 {
     public interface ICurrentUser
     {
-        Guid Id { get; }
+        int Id { get; }
         string Name { get; }
         string Email { get; }
         bool IsAuthenticated { get; }
         IEnumerable<Claim> Claims { get; }
         bool IsInRole(string role);
-        Guid EmpresaId { get; }
+        int EmpresaId { get; }
     }
 }

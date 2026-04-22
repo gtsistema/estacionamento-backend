@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Estac.Domain.Models.Auth
 {
@@ -12,6 +8,8 @@ namespace Estac.Domain.Models.Auth
         public int Id { get; set; }
         public int SubModuleId { get; set; }
         public string Acao { get; set; }
+        [NotMapped]
+        public bool SelecionadoPerm { get; set; }   
         public SubModule SubModule { get; set; }
     }
 }

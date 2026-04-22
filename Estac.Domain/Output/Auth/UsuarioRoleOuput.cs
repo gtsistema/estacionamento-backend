@@ -8,6 +8,7 @@ namespace Estac.Domain.Output.Auth
         public string Email { get; set; }
         public string Nome { get; set; }
         public int? EstacionamentoId { get; set; }
+        public int? TransportadoraId { get; set; }
         public int RoleId { get; set; }
         public string Role { get; set; }
         public List<PermissionOutput> Permissions { get; set; } = new();

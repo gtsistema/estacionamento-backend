@@ -26,7 +26,8 @@ namespace Estac.Infra.Migrations.Identity
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("Id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
@@ -204,23 +205,27 @@ namespace Estac.Infra.Migrations.Identity
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("PermissionId")
+                    b.Property<int?>("ModuleId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PermissionId")
                         .HasColumnType("int");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SubModuleId")
+                    b.Property<int?>("SubModuleId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ModuleId");
+
                     b.HasIndex("PermissionId");
 
-                    b.HasIndex("SubModuleId");
+                    b.HasIndex("RoleId");
 
-                    b.HasIndex("RoleId", "PermissionId")
-                        .IsUnique();
+                    b.HasIndex("SubModuleId");
 
                     b.ToTable("RolePermission", "dbo");
                 });
@@ -375,14 +380,18 @@ namespace Estac.Infra.Migrations.Identity
 
             modelBuilder.Entity("Estac.Domain.Models.Auth.RolePermission", b =>
                 {
+                    b.HasOne("Estac.Domain.Models.Auth.Module", "Module")
+                        .WithMany()
+                        .HasForeignKey("ModuleId")
+                        .HasConstraintName("FK_RolePermission_Module_ModuleId");
+
                     b.HasOne("Estac.Domain.Models.Auth.Permission", "Permission")
                         .WithMany()
                         .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Estac.Domain.Models.Auth.ApplicationRole", "Role")
-                        .WithMany()
+                        .WithMany("RolePermissions")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -390,8 +399,9 @@ namespace Estac.Infra.Migrations.Identity
                     b.HasOne("Estac.Domain.Models.Auth.SubModule", "SubModule")
                         .WithMany()
                         .HasForeignKey("SubModuleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Module");
 
                     b.Navigation("Permission");
 
@@ -460,6 +470,11 @@ namespace Estac.Infra.Migrations.Identity
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Estac.Domain.Models.Auth.ApplicationRole", b =>
+                {
+                    b.Navigation("RolePermissions");
                 });
 
             modelBuilder.Entity("Estac.Domain.Models.Auth.Module", b =>

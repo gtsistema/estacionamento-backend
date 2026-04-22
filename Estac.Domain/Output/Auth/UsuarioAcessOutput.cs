@@ -14,6 +14,7 @@ namespace Estac.Domain.Output.Auth
         public string Email { get; set; }
         public string Nome { get; set; }
         public int? EstacionamentoId { get; set; }
+        public string Role { get; set; }
     }
 
     public class MenuAcessOuput
@@ -35,43 +36,5 @@ namespace Estac.Domain.Output.Auth
         public string Rota { get; set; }
         public bool Ativo { get; set; }
         public int Ordem { get; set; }
-    }
-
-
-    public class RoleOutput
-    {
-        public int Id { get; set; }
-        public string Descricao { get; set; }
-    }
-
-    public class MenuOuput
-    {
-        public int Id { get; set; }
-        public string Descricao { get; set; }
-        public string Icone { get; set; }
-        public bool Ativo { get; set; }
-        public int Ordem { get; set; }
-        public string Rota { get; set; }
-        public List<SubMenuOuput> SubMenus { get; set; } = new();
-    }
-
-
-    public class SubMenuOuput
-    {
-        public int Id { get; set; }
-        public int MenuId { get; set; }
-        public string Descricao { get; set; }
-        public string Rota { get; set; }
-        public bool Ativo { get; set; }
-        public int Ordem { get; set; }
-        public List<PermissionOutput> Permissions { get; set; } = new();
-    }
-
-    public class PermissionOutput
-    {
-        public int Id { get; set; }
-        public int Ordem { get; set; }
-        public int SubMenuId {  get; set; }   
-        public string Descricao { get; set; }
     }
 }

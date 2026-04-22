@@ -1,0 +1,280 @@
+﻿using Estac.Domain.Input.Auth;
+using Estac.Domain.Interface.Services;
+using Estac.Infra.Context;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Estac.Service.Seed.Identity
+{
+    public class SeedMenu
+    {
+        public async Task ExecuteAsync(IServiceProvider services, IdentityContext context)
+        {
+            await Gravar(services, context);
+        }
+
+        private async Task Gravar(IServiceProvider services, IdentityContext context)
+        {
+            var service = services.GetRequiredService<IMenuServices>();
+
+            var menusBase = new List<Func<int, MenuCreateInput>>
+            {
+                MenuDashboard,
+                MenuMovimento,
+                MenuRelatorio,
+                MenuFinaceiro,
+                MenuConfiguracao,
+                MenuCadastro
+            };
+
+            var menusCadastrados = await context.Module.ToListAsync();
+
+            var nomesExistentes = menusCadastrados
+                .Select(x => x.Descricao.ToLower())
+                .ToHashSet();
+
+            var ordemAtual = await context.Module
+                .Where(x => x.Ativo)
+                .MaxAsync(x => (int?)x.Ordem) ?? 0;
+
+            var menusParaGravar = menusBase
+                .Where(menuFunc =>
+                {
+                    var nome = menuFunc(0).Nome.ToLower();
+                    return !nomesExistentes.Contains(nome);
+                })
+                .Select(menuFunc => menuFunc(++ordemAtual))
+                .ToList();
+
+            foreach (var menu in menusParaGravar)
+            {
+                await service.Gravar(menu);
+            }
+        }
+
+        private static MenuCreateInput MenuDashboard(int ordem)
+        {
+            return new MenuCreateInput
+            {
+                Nome = "Dashboard",
+                Ordem = ordem,
+                Ativo = true,
+                Rota = "/dashboard",
+            };
+        }
+
+        private static MenuCreateInput MenuMovimento(int ordem)
+        {
+            return new MenuCreateInput
+            {
+                Nome = "Movimento",
+                Ordem = ordem,
+                Ativo = true,
+                Rota = "/movimento",
+            };
+        }
+
+        private static MenuCreateInput MenuRelatorio(int ordem)
+        {
+            return new MenuCreateInput
+            {
+                Nome = "Relatorio",
+                Ordem = ordem,
+                Ativo = true,
+                Rota = "/relatorio",
+            };
+        }
+
+        private static MenuCreateInput MenuFinaceiro(int ordem)
+        {
+            return new MenuCreateInput
+            {
+                Nome = "Financeiro",
+                Ordem = ordem,
+                Ativo = true,
+                Rota = "/financeiro",
+            };
+        }
+
+        private static MenuCreateInput MenuConfiguracao(int ordem)
+        {
+            return new MenuCreateInput
+            {
+                Nome = "Configuracao",
+                Ordem = ordem,
+                Ativo = true,
+                Rota = "/configuracao",
+                SubMenus = new List<SubMenuCreateInput>
+                {
+                    new SubMenuCreateInput
+                    {
+                        Nome = "perfil",
+                        Ordem = 1,
+                        Ativo = true,
+                        Rota = "/configuracao/perfil",
+                        Permissions = new List<PermissionInput>
+                        {
+                            new PermissionInput
+                            {
+                                Ordem = 1,
+                                Descricao = "Visualizar"
+                            },
+                            new PermissionInput
+                            {
+                                Ordem = 2,
+                                Descricao = "Gravar"
+                            },
+                            new PermissionInput
+                            {
+                                Ordem = 3,
+                                Descricao = "Alterar"
+                            },
+                            new PermissionInput
+                            {
+                                Ordem = 4,
+                                Descricao = "Excluir"
+                            }
+                        }
+                    },
+
+                    new SubMenuCreateInput
+                    {
+                        Nome = "Menu",
+                        Ordem = 3,
+                        Ativo = true,
+                        Rota = "/configuracao/menu",
+                        Permissions = new List<PermissionInput>
+                        {
+                            new PermissionInput
+                            {
+                                Ordem = 1,
+                                Descricao = "Visualizar"
+                            },
+                            new PermissionInput
+                            {
+                                Ordem = 2,
+                                Descricao = "Gravar"
+                            },
+                            new PermissionInput
+                            {
+                                Ordem = 3,
+                                Descricao = "Alterar"
+                            },
+                            new PermissionInput
+                            {
+                                Ordem = 4,
+                                Descricao = "Excluir"
+                            }
+                        }
+                    },
+                }
+            };
+        }
+
+        private static MenuCreateInput MenuCadastro(int ordem)
+        {
+            return new MenuCreateInput
+            {
+                Nome = "Cadastro",
+                Ordem = ordem,
+                Ativo = true,
+                Rota = "/cadastro",
+                SubMenus = new List<SubMenuCreateInput>
+                {
+                    new SubMenuCreateInput
+                    {
+                        Nome = "Estacionamento",
+                        Ordem = 1,
+                        Ativo = true,
+                        Rota = "/cadastro/estacionamento",
+                        Permissions = new List<PermissionInput>
+                        {
+                            new PermissionInput
+                            {
+                                Ordem = 1,
+                                Descricao = "Visualizar"
+                            },
+                            new PermissionInput
+                            {
+                                Ordem = 2,
+                                Descricao = "Gravar"
+                            },
+                            new PermissionInput
+                            {
+                                Ordem = 3,
+                                Descricao = "Alterar"
+                            },
+                            new PermissionInput
+                            {
+                                Ordem = 4,
+                                Descricao = "Excluir"
+                            }
+                        }
+                    },
+
+                    new SubMenuCreateInput
+                    {
+                        Nome = "Motorista",
+                        Ordem = 3,
+                        Ativo = true,
+                        Rota = "/cadastro/motorista",
+                        Permissions = new List<PermissionInput>
+                        {
+                            new PermissionInput
+                            {
+                                Ordem = 1,
+                                Descricao = "Visualizar"
+                            },
+                            new PermissionInput
+                            {
+                                Ordem = 2,
+                                Descricao = "Gravar"
+                            },
+                            new PermissionInput
+                            {
+                                Ordem = 3,
+                                Descricao = "Alterar"
+                            },
+                            new PermissionInput
+                            {
+                                Ordem = 4,
+                                Descricao = "Excluir"
+                            }
+                        }
+                    },
+
+                    new SubMenuCreateInput
+                    {
+                        Nome = "Transportadora",
+                        Ordem = 2,
+                        Ativo = true,
+                        Rota = "/cadastro/transportadora",
+                        Permissions = new List<PermissionInput>
+                        {
+                            new PermissionInput
+                            {
+                                Ordem = 1,
+                                Descricao = "Visualizar"
+                            },
+                            new PermissionInput
+                            {
+                                Ordem = 2,
+                                Descricao = "Gravar"
+                            },
+                            new PermissionInput
+                            {
+                                Ordem = 3,
+                                Descricao = "Alterar"
+                            },
+                            new PermissionInput
+                            {
+                                Ordem = 4,
+                                Descricao = "Excluir"
+                            }
+                        }
+                    },
+                }
+            };
+        } 
+    }
+}

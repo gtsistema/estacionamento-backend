@@ -12,18 +12,14 @@ namespace Estac.Infra.EntityBuilders.User
 
             builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.RoleId)
-                .IsRequired();
+            builder.Property(x => x.SubModuleId);
 
-            builder.Property(x => x.PermissionId)
-                .IsRequired();
-
-            builder.HasIndex(x => new { x.RoleId, x.PermissionId })
-                .IsUnique();
+            builder.Property(x => x.ModuleId);
 
             builder.HasOne(v => v.Role)
-               .WithMany()
-               .HasForeignKey(v => v.RoleId);
+           .WithMany(r => r.RolePermissions) // <-- aqui está o pulo do gato
+           .HasForeignKey(v => v.RoleId)
+           .HasPrincipalKey(r => r.Id);
 
             builder.HasOne(v => v.Permission)
                .WithMany()
@@ -34,6 +30,11 @@ namespace Estac.Infra.EntityBuilders.User
                .WithMany()
                .HasForeignKey(v => v.SubModuleId)
                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(x => x.Module)
+                .WithMany()
+                .HasForeignKey(x => x.ModuleId)
+                .HasConstraintName("FK_RolePermission_Module_ModuleId");
         }
     }
 }

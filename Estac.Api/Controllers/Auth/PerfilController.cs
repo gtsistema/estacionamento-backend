@@ -56,7 +56,7 @@ namespace Estac.Api.Controllers.Auth
 
         [PermissionAuthorize(PermissionAcess.Perfil.Alterar)]
         [HttpPut]
-        public async Task<ActionResult> Alterar([FromBody] ApplicationRole input)
+        public async Task<ActionResult> Alterar([FromBody] PerfilUpdateInput input)
         {
             return await _services.Alterar(input);
         }

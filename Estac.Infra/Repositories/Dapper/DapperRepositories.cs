@@ -70,6 +70,26 @@ public class DapperRepositories : IDapperRepositories
                 cancellationToken: cancellationToken));
     }
 
+    public async Task<IEnumerable<TResult>> QueryAsync<T1, T2, T3, T4, TResult>(
+    string sql,
+    Func<T1, T2, T3, T4, TResult> map,
+    object? param = null,
+    string splitOn = "Id,Id,Id,Id",
+     IDbTransaction? transaction = null,
+     CancellationToken cancellationToken = default)
+    {
+        using var connection = CreateConnection();
+
+        return await connection.QueryAsync(
+            new CommandDefinition(
+                sql,
+                param,
+                transaction,
+                cancellationToken: cancellationToken),
+            map,
+            splitOn: splitOn);
+    }
+
     public IDbConnection CreateConnection()
     {
         var conn = new SqlConnection(_connectionString);
