@@ -6,6 +6,7 @@ using Estac.Domain.Models.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace Estac.Api.Controllers.Auth
 {
     [Authorize]

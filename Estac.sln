@@ -15,8 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estac.Jobs", "Estac.Jobs\Es
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estac.CrossCutting", "Estac.CrossCutting\Estac.CrossCutting.csproj", "{49822985-AE6C-262E-C941-77A83B515D1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gp.Test", "Estac.Test\Gp.Test.csproj", "{1B3DE46B-45E8-CE01-A455-30A69B42DE1F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,10 +45,6 @@ Global
 		{49822985-AE6C-262E-C941-77A83B515D1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49822985-AE6C-262E-C941-77A83B515D1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49822985-AE6C-262E-C941-77A83B515D1F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1B3DE46B-45E8-CE01-A455-30A69B42DE1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1B3DE46B-45E8-CE01-A455-30A69B42DE1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1B3DE46B-45E8-CE01-A455-30A69B42DE1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1B3DE46B-45E8-CE01-A455-30A69B42DE1F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
