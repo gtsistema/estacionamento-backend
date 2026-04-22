@@ -8,7 +8,7 @@ services:
       - "5000:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=db;Database=gts-desenvolvimento;User=sa;Password=@Admin2134;TrustServerCertificate=True;
+      - ConnectionStrings__DefaultConnection=Server=tcp:estacionamento-desenvolvimento.database.windows.net,1433;Initial Catalog=desenvolvimento;User=jeancorrea;Password=Transacao@34121;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
     depends_on:
       - db
     networks:
