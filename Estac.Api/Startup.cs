@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
-using Estac.Api.Controllers.Base;
-using Estac.Api.Controllers.Base.Claim;
+using Estac.Domain.Permission;
 using Estac.Api.Extensions;
 using Estac.CrossCutting.Dependencies;
 using Estac.Domain.Mappers;

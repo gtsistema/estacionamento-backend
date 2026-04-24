@@ -100,10 +100,10 @@ namespace Estac.Service.Seed.Identity
         {
             return new MenuCreateInput
             {
-                Nome = "Gerencimento",
+                Nome = "Gerenciamento",
                 Ordem = ordem,
                 Ativo = true,
-                Rota = "/gerencimento",
+                Rota = "/gerenciamento",
                 SubMenus = new List<SubMenuCreateInput>
                 {
                     new SubMenuCreateInput
@@ -111,7 +111,7 @@ namespace Estac.Service.Seed.Identity
                         Nome = "perfil",
                         Ordem = 1,
                         Ativo = true,
-                        Rota = "/gerencimento/perfil",
+                        Rota = "/gerenciamento/perfil",
                         Permissions = new List<PermissionInput>
                         {
                             new PermissionInput

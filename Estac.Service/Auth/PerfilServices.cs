@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Azure.Core;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using Estac.Domain.Input;
 using Estac.Domain.Input.Auth;
 using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Interface.Repositories.Auth;
@@ -10,7 +11,9 @@ using Estac.Domain.Models.Auth;
 using Estac.Domain.Output;
 using Estac.Domain.Output.Auth;
 using Estac.Domain.Output.Motorista;
+using Estac.Domain.Permission;
 using Estac.Infra.Context;
+using Estac.Infra.Repositories;
 using Estac.Service.Extensions;
 using Estac.Service.Identity.Interface;
 using Microsoft.AspNetCore.Identity;
@@ -57,7 +60,6 @@ namespace Estac.Service.Auth
 
         public async Task<ActionResult> Buscar()
         {
-            var roles = await _roleManager.ListAsync();
             return await RetornOk(await _perfilRepositories.BuscarPerfilPermissaoGrid(null));
         }
 
@@ -68,31 +70,40 @@ namespace Estac.Service.Auth
 
         public async Task<ActionResult> Gravar(PerfilCreateInput input)
         {
+            if (input is null)
+                return await RetornNo(false, "Dados para cadastro do perfil são obrigatórios.");
+
+            if (string.IsNullOrWhiteSpace(input.Nome))
+                return await RetornNo(false, "Nome do perfil é obrigatório.");
+
+            if (input.Menus is null)
+                return await RetornNo(false, "Menus do perfil são obrigatórios.");
+
+            if (!TemAoMenosUmMenuSelecionado(input.Menus))
+                return await RetornNo(false, "Selecione ao menos um menu para o perfil.");
+
+            var exists = await _roleManager.RoleExistsAsync(input.Nome);
+            if (exists)
+                return await RetornNo(false, "Perfil já existe.");
+
             await _unitOfWork.BeginTransactionAsync();
 
             try
             {
-                if (string.IsNullOrWhiteSpace(input?.Nome))
-                    return await RetornNo(false, "Nome do perfil é obrigatório.");
+                var perfil = new ApplicationRole { Name = input.Nome };
 
-                var exists = await _roleManager.RoleExistsAsync(input.Nome);
+                await _perfilRepositories.AdicionarPerfilSimples(perfil);
+                await _unitOfWork.SaveChangesAsync();
 
-                if (exists)
-                    return await RetornNo(false, "Perfil já existe.");
+                var menus = _mapper.Map<List<Module>>(input.Menus) ?? new List<Module>();
 
-                await _perfilRepositories.AdicionarPerfilSimples(new ApplicationRole() { Name = input.Nome });
-
-                var menus = _mapper.Map<List<Module>>(input.Menus);
-
-                var perfil = await _perfilRepositories.BuscarPerfilPorId(input.Id);
-
-                var rolePermissoesAdicionar = TratarRolePermissionGravar(menus, perfil.Id);
+                var rolePermissoesAdicionar = await TratarRolePermissionGravar(menus, perfil.Id);
 
                 await _perfilRepositories.AtualizarPermissoesDoPerfil(rolePermissoesAdicionar, null);
 
                 await _unitOfWork.CommitAsync();
 
-                return await RetornOk(_perfilRepositories.BuscarPerfilPermissaoGrid(input.Id));
+                return await RetornOk(true);
             }
             catch (Exception ex)
             {
@@ -104,18 +115,33 @@ namespace Estac.Service.Auth
 
         public async Task<ActionResult> Alterar(PerfilUpdateInput input)
         {
+            if (input is null)
+                return await RetornNo(false, "Dados para alteração do perfil são obrigatórios.");
+
+            if (input.Id <= 0)
+                return await RetornNo(false, "Id do perfil inválido.");
+
+            if (string.IsNullOrWhiteSpace(input.Nome))
+                return await RetornNo(false, "Nome do role é obrigatório.");
+
+            if (input.Menus is null)
+                return await RetornNo(false, "Menus do perfil são obrigatórios.");
+
+            if (!TemAoMenosUmMenuSelecionado(input.Menus))
+                return await RetornNo(false, "Selecione ao menos um menu para o perfil.");
+
+            var perfilAtual = await _perfilRepositories.BuscarPerfilPorId(input.Id);
+            if (perfilAtual is null)
+                return await RetornNo(false, "Perfil não encontrado.");
+
             await _unitOfWork.BeginTransactionAsync();
 
             try
             {
-                if (string.IsNullOrWhiteSpace(input?.Nome))
-                    return await RetornNo(false, "Nome do role é obrigatório.");
+                await _perfilRepositories.AtualizarPerfilSimplesAsync(new ApplicationRole() { Id = input.Id, Name = input.Nome });
+                var menus = _mapper.Map<List<Module>>(input.Menus) ?? new List<Module>();
 
-                 _perfilRepositories.AtualizarPerfilSimples(new ApplicationRole() { Id = input.Id, Name = input.Nome });
-               
-                var menus = _mapper.Map<List<Module>>(input.Menus);
-
-                await AtualizarPermissoesdoPerfil(input, menus, input.Id);
+                await AtualizarPermissoesdoPerfil(menus, input.Id);
 
                 await _unitOfWork.CommitAsync();
 
@@ -128,30 +154,47 @@ namespace Estac.Service.Auth
             }
         }
 
-        private async Task AtualizarPermissoesdoPerfil(PerfilUpdateInput input, List<Module> menus, int perfilId)
+        private async Task AtualizarPermissoesdoPerfil(List<Module> menus, int perfilId)
         {
-            var rolePermissoesAdicionar = TratarRolePermissionGravar(menus, perfilId);
+            if (menus is null || !menus.Any())
+            {
+                await _perfilRepositories.AtualizarPermissoesDoPerfil(new List<RolePermission>(), await _perfilRepositories.BuscarRolePermissoes(perfilId));
+                return;
+            }
 
-            var rolePermissoesAnterior = await _perfilRepositories.BuscarRolePermissoes(input.Id);
+            var rolePermissoesAnterior = await _perfilRepositories.BuscarRolePermissoes(perfilId);
 
-            await _perfilRepositories.AtualizarPermissoesDoPerfil(rolePermissoesAdicionar, rolePermissoesAnterior);
+            await _perfilRepositories.AtualizarPermissoesDoPerfil(await TratarRolePermissionGravar(menus, perfilId), rolePermissoesAnterior);
         }
 
         public async Task<ActionResult> Delete(int id)
         {
-            var role = await _roleManager.FindByIdAsync(id);
+            await _unitOfWork.BeginTransactionAsync();
 
-            if (role is null)
-                return await RetornNo(false, "Role não encontrada.");
+            try
+            {
+                var role = await _roleManager.FindByIdAsync(id);
 
-            var result = await _roleManager.DeleteAsync(role);
+                if (role is null)
+                    return await RetornNo(false, "Role não encontrada.");
 
-            if (!result.Succeeded)
-                return await RetornNo(false, string.Join(", ", result.Errors.Select(e => e.Description)));
+                var result = await _roleManager.DeleteAsync(role);
 
-            return await RetornOk(true);
+                if (!result.Succeeded)
+                    return await RetornNo(false, string.Join(", ", result.Errors.Select(e => e.Description)));
+
+                await AtualizarPermissoesdoPerfil(null, id);
+
+                await _unitOfWork.CommitAsync();
+
+                return await RetornOk(true);
+            }
+            catch (Exception ex)
+            {
+                await _unitOfWork.RollbackAsync();
+                return await RetornNo(false, ex.Message);
+            }
         }
-
         public async Task<ActionResult> BuscarPerfilPermissaoUsuario(int usuarioId)
         {
             var resultado = await _perfilRepositories.BuscarPerfilPermissaoUsuario(usuarioId);
@@ -172,7 +215,7 @@ namespace Estac.Service.Auth
             return await RetornOk(result);
         }
 
-        private List<RolePermission> TratarRolePermissionGravar(List<Module> menus, int roleId)
+        private async Task<List<RolePermission>> TratarRolePermissionGravar(List<Module> menus, int roleId)
         {
             List<RolePermission> rolePermissions = new List<RolePermission>();
 
@@ -193,11 +236,18 @@ namespace Estac.Service.Auth
                 {
                     if (subMenu.Permissions == null || !subMenu.Permissions.Any())
                     {
+
+                        var permissaoVisualizar = await _perfilRepositories.BuscarPermissao(subMenu.Id, PermissionAcess.Perfil.Visualizar);
+
+                        if(permissaoVisualizar is null)
+                            throw new Exception($"Permissão de visualização não encontrada para o submódulo {subMenu.Descricao}.");
+
                         rolePermissions.Add(new RolePermission
                         {
                             ModuleId = menu.Id,
                             RoleId = roleId,
-                            SubModuleId = subMenu.Id
+                            SubModuleId = subMenu.Id,
+                            PermissionId = permissaoVisualizar.Id
                         });
 
                         continue;
@@ -217,6 +267,12 @@ namespace Estac.Service.Auth
             }
 
             return rolePermissions;
+        }
+
+
+        private static bool TemAoMenosUmMenuSelecionado(IEnumerable<ModuloInput> menus)
+        {
+            return menus.Any(menu => menu != null && menu.Selecionado && menu.MenuId > 0);
         }
     }
 }

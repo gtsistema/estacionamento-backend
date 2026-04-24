@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace Estac.Api.Controllers.Base.Claim
+namespace Estac.Domain.Permission
 {
     public class PermissionAuthorizationHandler
     : AuthorizationHandler<PermissionRequirement>

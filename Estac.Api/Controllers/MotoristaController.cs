@@ -1,6 +1,4 @@
-﻿using Estac.Api.Controllers.Base;
-using Estac.Api.Controllers.Base.Claim;
-using Estac.Api.Controllers.Base.Permission;
+﻿using Estac.Domain.Permission;
 using Estac.Domain.Input.Motorista;
 using Estac.Domain.Interface.Services;
 using Microsoft.AspNetCore.Authorization;

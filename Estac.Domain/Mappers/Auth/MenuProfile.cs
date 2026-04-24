@@ -32,10 +32,10 @@ namespace Estac.Domain.Mappers
              .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.Descricao))
              .ForMember(dest => dest.Permissions, opt => opt.MapFrom(src => src.Permissions));
 
-            CreateMap<PermissionInput, Permission>()
+            CreateMap<PermissionInput, Models.Auth.Permission>()
              .ForMember(dest => dest.Acao, opt => opt.MapFrom(src => src.Descricao));
 
-            CreateMap<Permission, PermissionOutput>()
+            CreateMap<Models.Auth.Permission, PermissionOutput>()
              .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.Acao));
 
             // Map POST input to domain model
@@ -49,7 +49,7 @@ namespace Estac.Domain.Mappers
                .ForMember(dest => dest.SelecionadoSub, opt => opt.MapFrom(src => src.Selecionado))
                .ForMember(dest => dest.Permissions, opt => opt.MapFrom(src => src.Permissoes));
 
-            CreateMap<PermissaoInput, Permission>()
+            CreateMap<PermissaoInput, Models.Auth.Permission>()
              .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.PermissaoId))
              .ForMember(dest => dest.SelecionadoPerm, opt => opt.MapFrom(src => src.Selecionado));
         }

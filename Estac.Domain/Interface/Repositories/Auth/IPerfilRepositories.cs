@@ -15,7 +15,8 @@ namespace Estac.Domain.Interface.Repositories.Auth
         Task AtualizarPermissoesDoPerfil(IEnumerable<RolePermission> rolePermissionsGravar, IEnumerable<RolePermission> rolePermissionsAtuais);
         Task AdicionarPerfilSimples(ApplicationRole role);
         void RemoveTodasPermissoesDoPerfil(IEnumerable<RolePermission> rolePermissions);
-        void AtualizarPerfilSimples(ApplicationRole role);
+        Task AtualizarPerfilSimplesAsync(ApplicationRole role);
         Task<IEnumerable<PerfilDto>> BuscarPerfilPermissaoGrid(int? roleId);
+        Task<Models.Auth.Permission> BuscarPermissao(int subSubMenuId, string acao);
     }
 }

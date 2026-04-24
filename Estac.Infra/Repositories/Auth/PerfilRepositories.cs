@@ -172,9 +172,12 @@ namespace Estac.Infra.Repositories.Auth
             await SaveChangesAsync();
         }
 
-        public void AtualizarPerfilSimples(ApplicationRole role)
+        public async Task AtualizarPerfilSimplesAsync(ApplicationRole role)
         {
-            _context.Set<ApplicationRole>().Update(role);
+            role.NormalizedName = role.Name.ToUpper();
+
+            var entry = await _context.Set<ApplicationRole>().Where(r => r.Id == role.Id).ExecuteUpdateAsync(setters =>
+                setters.SetProperty(r => r.Name, role.Name).SetProperty(r => r.NormalizedName, role.NormalizedName));
         }
 
         private async Task SaveChangesAsync() => await _context.SaveChangesAsync();
@@ -357,5 +360,11 @@ namespace Estac.Infra.Repositories.Auth
 
             return lookup.Values.ToList();
         }
+
+        public async Task<Permission> BuscarPermissao(int subSubMenuId, string acao)
+        {
+            return await _context.Set<Permission>().FirstOrDefaultAsync(rp => rp.SubModuleId == subSubMenuId && rp.Acao.Equals(acao));
+        }
+
     }
 }

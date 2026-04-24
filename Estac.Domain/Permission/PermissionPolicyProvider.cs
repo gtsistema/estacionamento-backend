@@ -1,8 +1,8 @@
-﻿using Estac.Api.Controllers.Base.Claim;
+﻿using Estac.Domain.Permission;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 
-namespace Estac.Api.Controllers.Base.Claim
+namespace Estac.Domain.Permission
 {
     public class PermissionPolicyProvider : DefaultAuthorizationPolicyProvider
     {

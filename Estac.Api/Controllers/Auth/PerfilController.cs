@@ -1,5 +1,5 @@
-using Estac.Api.Controllers.Base.Claim;
-using Estac.Api.Controllers.Base.Permission;
+using Estac.Domain.Permission;
+using Estac.Domain.Permission;
 using Estac.Domain.Input.Auth;
 using Estac.Domain.Interface.Services.Auth;
 using Estac.Domain.Models.Auth;
@@ -59,7 +59,18 @@ namespace Estac.Api.Controllers.Auth
         [HttpPut]
         public async Task<ActionResult> Alterar([FromBody] PerfilUpdateInput input)
         {
-            return await _services.Alterar(input);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                return await _services.Alterar(input);
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Erro ao executar PerfilController.Alterar");
+                return StatusCode(500, new { error = ex.Message });
+            }
         }
 
         [PermissionAuthorize(PermissionAcess.Perfil.Excluir)]

@@ -1,5 +1,5 @@
-﻿using Estac.Api.Controllers.Base.Claim;
-using Estac.Api.Controllers.Base.Permission;
+﻿using Estac.Domain.Permission;
+using Estac.Domain.Permission;
 using Estac.Domain.Input.Auth;
 using Estac.Domain.Interface.Services.Auth;
 using Microsoft.AspNetCore.Authorization;

@@ -1,7 +1,6 @@
 ﻿using Estac.Domain.Input.Auth;
 using Estac.Domain.Models.Auth;
 using Estac.Domain.Output.Auth;
-using Estac.Domain.Shared;
 
 namespace Estac.Domain.Interface.Repositories
 {
@@ -13,14 +12,14 @@ namespace Estac.Domain.Interface.Repositories
         Task AtualizarOrdem(List<MenuOrdemInput> menus, List<SubMenuOrdemInput> subMenus);
         Task<List<MenuAcessOuput>> BuscarMenuUsuario(int roleId);
         Task Atualizar(Module menu);
-        Task AtualizarPermissao(Permission permission);
+        Task AtualizarPermissao(Models.Auth.Permission permission);
         Task GravarSubMenu(SubModule subModule);
         Task AtualizarSubMenu(SubModule subModule);
         Task DeletarSubMenu(SubModule subModule);
         Task Deletar(Module module);
-        Task DeletarPermissao(Permission subModule);
-        Task GravarPermissao(Permission permission);
-        Task<Permission> SelecionarPermissaoPorId(int id);
+        Task DeletarPermissao(Models.Auth.Permission subModule);
+        Task GravarPermissao(Models.Auth.Permission permission);
+        Task<Models.Auth.Permission> SelecionarPermissaoPorId(int id);
         Task<SubModule> SelecionarSubModulePorId(int id);
     }
 }
