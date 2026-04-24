@@ -23,7 +23,7 @@ namespace Estac.Service.Seed.Identity
                 MenuMovimento,
                 MenuRelatorio,
                 MenuFinaceiro,
-                MenuConfiguracao,
+                MenuGerenciamento,
                 MenuCadastro
             };
 
@@ -96,14 +96,14 @@ namespace Estac.Service.Seed.Identity
             };
         }
 
-        private static MenuCreateInput MenuConfiguracao(int ordem)
+        private static MenuCreateInput MenuGerenciamento(int ordem)
         {
             return new MenuCreateInput
             {
-                Nome = "Configuracao",
+                Nome = "Gerencimento",
                 Ordem = ordem,
                 Ativo = true,
-                Rota = "/configuracao",
+                Rota = "/gerencimento",
                 SubMenus = new List<SubMenuCreateInput>
                 {
                     new SubMenuCreateInput
@@ -111,7 +111,7 @@ namespace Estac.Service.Seed.Identity
                         Nome = "perfil",
                         Ordem = 1,
                         Ativo = true,
-                        Rota = "/configuracao/perfil",
+                        Rota = "/gerencimento/perfil",
                         Permissions = new List<PermissionInput>
                         {
                             new PermissionInput
@@ -142,7 +142,7 @@ namespace Estac.Service.Seed.Identity
                         Nome = "Menu",
                         Ordem = 3,
                         Ativo = true,
-                        Rota = "/configuracao/menu",
+                        Rota = "/gerencimento/menu",
                         Permissions = new List<PermissionInput>
                         {
                             new PermissionInput

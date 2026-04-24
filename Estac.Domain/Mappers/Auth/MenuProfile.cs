@@ -38,6 +38,20 @@ namespace Estac.Domain.Mappers
             CreateMap<Permission, PermissionOutput>()
              .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.Acao));
 
+            // Map POST input to domain model
+            CreateMap<ModuloInput, Module>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.MenuId))
+               .ForMember(dest => dest.Selecionado, opt => opt.MapFrom(src => src.Selecionado))
+               .ForMember(dest => dest.SubModules, opt => opt.MapFrom(src => src.SubMenus));
+
+            CreateMap<SubModuloInput, SubModule>()
+               .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.SubMenuId))
+               .ForMember(dest => dest.SelecionadoSub, opt => opt.MapFrom(src => src.Selecionado))
+               .ForMember(dest => dest.Permissions, opt => opt.MapFrom(src => src.Permissoes));
+
+            CreateMap<PermissaoInput, Permission>()
+             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.PermissaoId))
+             .ForMember(dest => dest.SelecionadoPerm, opt => opt.MapFrom(src => src.Selecionado));
         }
     }
 }

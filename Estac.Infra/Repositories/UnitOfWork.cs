@@ -1,16 +1,15 @@
 ﻿using Estac.Domain.Interface.Repositories;
 using Estac.Infra.Context;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
+using System.Transactions;
 
 namespace Estac.Infra.Repositories
 {
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly IdentityContext _identityContext;
         private readonly GtsContext _gtsContext;
 
-        private IDbContextTransaction _transaction;
+        private TransactionScope? _transactionScope;
 
         public UnitOfWork(
             IdentityContext identityContext,
@@ -22,10 +21,18 @@ namespace Estac.Infra.Repositories
 
         public async Task BeginTransactionAsync()
         {
-            _transaction = await _gtsContext.Database.BeginTransactionAsync();
+            if (_transactionScope is not null)
+                throw new InvalidOperationException("Já existe uma transação em andamento para este escopo.");
 
-            await _identityContext.Database
-                .UseTransactionAsync(_transaction.GetDbTransaction());
+            _transactionScope = new TransactionScope(
+                TransactionScopeOption.Required,
+                new TransactionOptions
+                {
+                    IsolationLevel = IsolationLevel.ReadCommitted
+                },
+                TransactionScopeAsyncFlowOption.Enabled);
+
+            await Task.CompletedTask;
         }
 
         public async Task SaveChangesAsync()
@@ -36,12 +43,34 @@ namespace Estac.Infra.Repositories
 
         public async Task CommitAsync()
         {
-            await _transaction.CommitAsync();
+            EnsureTransactionStarted();
+
+            await SaveChangesAsync();
+            _transactionScope!.Complete();
+            _transactionScope.Dispose();
+            _transactionScope = null;
         }
 
         public async Task RollbackAsync()
         {
-            await _transaction.RollbackAsync();
+            if (_transactionScope is null)
+                return;
+
+            _transactionScope.Dispose();
+            _transactionScope = null;
+            await Task.CompletedTask;
+        }
+
+        public void Dispose()
+        {
+            _transactionScope?.Dispose();
+            _transactionScope = null;
+        }
+
+        private void EnsureTransactionStarted()
+        {
+            if (_transactionScope is null)
+                throw new InvalidOperationException("Nenhuma transação foi iniciada.");
         }
     }
 }
