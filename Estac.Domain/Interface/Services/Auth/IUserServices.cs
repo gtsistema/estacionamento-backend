@@ -7,5 +7,10 @@ namespace Estac.Domain.Interface.Services.Auth
     {
         Task<ActionResult> LoginAsync(LoginInput dto);
         Task<ActionResult> RegisterAsync(RegisterInput dto);
+        Task<ActionResult> Buscar();
+        Task<ActionResult> ObterPorId(int id);
+        Task<ActionResult> Alterar(int id, RegisterInput input);
+        Task<ActionResult> Delete(int id);
+        Task<ActionResult> ConfirmarEmailAsync(ConfirmarEmailInput input);
     }
 }

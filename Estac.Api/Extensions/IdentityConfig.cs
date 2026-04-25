@@ -2,6 +2,7 @@
 using System.Text;
 using System;
 using Estac.Domain.Auth;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Estac.Infra.Context;
@@ -16,6 +17,8 @@ namespace Estac.Api.Extensions
     {
         public static IServiceCollection AddIdentityConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<EmailConfirmationSettings>(configuration.GetSection("EmailConfirmation"));
+
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<IdentityContext>()
                 .AddErrorDescriber<IdentityPortugueseMessages>()
@@ -30,6 +33,7 @@ namespace Estac.Api.Extensions
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireLowercase = false;
+                options.SignIn.RequireConfirmedEmail = true;
             });
 
             var bearerTokenSection = configuration.GetSection("BearerTokenSettings");

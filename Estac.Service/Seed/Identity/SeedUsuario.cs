@@ -7,7 +7,10 @@ using Estac.Domain.Input.Pessoa;
 using Estac.Domain.Interface.Services.Auth;
 using Estac.Domain.Models.Auth;
 using Estac.Infra.Context;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Linq;
 using System.Security.Cryptography;
 
 namespace Estac.Service.Seed.Identity
@@ -27,16 +30,27 @@ namespace Estac.Service.Seed.Identity
 
             foreach (var usuario in usuarios)
             {
-                await CriarUsuarioSeNaoExistir(context, userService, usuario);
+                await CriarUsuarioSeNaoExistir(context, userService, services, usuario);
             }
         }
 
-        private static async Task CriarUsuarioSeNaoExistir(IdentityContext context, IUserServices userService, RegisterInput dto)
+        private static async Task CriarUsuarioSeNaoExistir(IdentityContext context, IUserServices userService, IServiceProvider services, RegisterInput dto)
         {
             if (context.Users.Any(x => x.UserName == dto.UserName))
                 return;
 
             await userService.RegisterAsync(dto);
+
+            var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+            var user = await userManager.FindByNameAsync(dto.UserName);
+            if (user is null) return;
+            var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+            var confirmar = await userManager.ConfirmEmailAsync(user, token);
+            if (!confirmar.Succeeded)
+            {
+                var msg = string.Join(" ", confirmar.Errors.Select(e => e.Description));
+                throw new InvalidOperationException($"Falha ao confirmar e-mail do usuário seed {dto.UserName}: {msg}");
+            }
         }
 
         private static RegisterInput CriarUsuarioAdmin(string userName)

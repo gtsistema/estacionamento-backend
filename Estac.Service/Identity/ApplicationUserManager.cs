@@ -87,6 +87,9 @@ namespace Estac.Domain.Auth
         public async Task<IEnumerable<string>> ConfirmEmailAsync(int userId, string token)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user is null)
+                return new[] { "Usuário não encontrado." };
+
             var result = await _userManager.ConfirmEmailAsync(user, token);
 
             return result.Errors.Select(t => t.Description);

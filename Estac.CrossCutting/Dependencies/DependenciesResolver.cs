@@ -1,5 +1,6 @@
 ﻿using Estac.Domain.Clock;
 using Estac.Domain.Extensions.Notifier;
+using Estac.Domain.Auth;
 using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Interface.Repositories.Auth;
 using Estac.Domain.Interface.Services;
@@ -11,6 +12,7 @@ using Estac.Infra.Repositories.Auth;
 using Estac.Infra.Repository;
 using Estac.Service;
 using Estac.Service.Auth;
+using Estac.Service.Email;
 using Estac.Service.Identity;
 using Estac.Service.Identity.Interface;
 using Microsoft.AspNetCore.Authorization;
@@ -23,6 +25,9 @@ namespace Estac.CrossCutting.Dependencies
     {
         public static IServiceCollection ResolveInjectDependencies(this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<SmtpSettings>(configuration.GetSection("Smtp"));
+            services.AddScoped<IEmailSenderService, SmtpEmailSenderService>();
+
             services.AddScoped<INotifier, Notifier>();
             services.AddScoped<IClock, Clock>();
             services.AddScoped<ICurrentUser, CurrentUser>();
@@ -51,6 +56,7 @@ namespace Estac.CrossCutting.Dependencies
             services.AddScoped<ITransportadoraRepositories, TransportadoraRepositories>();
             services.AddScoped<IPessoaRepositories, PessoaRepositories>();
             services.AddScoped<IPerfilRepositories, PerfilRepositories>();
+            services.AddScoped<IUsuarioRepositories, UsuarioRepositories>();
             services.AddScoped<IEstacionamentoRepositories, EstacionamentoRepositories>();
 
             return services;

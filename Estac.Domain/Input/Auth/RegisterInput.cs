@@ -8,7 +8,6 @@ namespace Estac.Domain.Input.Auth
     {
         [Required(ErrorMessage = "Campo obrigatório")]
         public string UserName { get; set; }
-        [Required(ErrorMessage = "Campo obrigatório")]
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
         public string Email { get; set; }

@@ -1,88 +1,96 @@
 ﻿using AutoMapper;
-using DocumentFormat.OpenXml.Spreadsheet;
+using Estac.Domain.Auth;
 using Estac.Domain.Input.Auth;
+using Estac.Domain.Input.Pessoa;
 using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Interface.Repositories.Auth;
+using Estac.Domain.Interface.Services;
 using Estac.Domain.Interface.Services.Auth;
 using Estac.Domain.Models;
 using Estac.Domain.Models.Auth;
 using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output;
 using Estac.Domain.Output.Auth;
-using Estac.Domain.Output.Motorista;
-using Estac.Infra.Context;
-using Estac.Infra.Repositories;
 using Estac.Service.Extensions;
 using Estac.Service.Identity.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq;
 
 namespace Estac.Service.Auth
 {
-    public class UserServices : ServiceResult<ApplicationUser>, IUserServices
+    public partial class UserServices : ServiceResult<ApplicationUser>, IUserServices
     {
         private readonly IApplicationUserManager _userManager;
         private readonly IApplicationSignManager _signManager;
-        private readonly ICurrentUser _currentUser;
         private readonly IMapper _mapper;
-        private readonly GtsContext _context;
         private readonly BearerTokenSettings _bearerTokenSettings;
         private readonly UserManager<ApplicationUser> _identityUserManager;
         private readonly IPessoaRepositories _pessoaRepositories;
         private readonly IPerfilRepositories _perfilRepositories;
         private readonly IMenuRepositories _menuRepositories;
+        private readonly IUsuarioRepositories _usuarioRepositories;
+        private readonly RoleManager<ApplicationRole> _identityRoleManager;
+        private readonly EmailConfirmationSettings _emailConfirmation;
+        private readonly IEmailSenderService _emailSender;
+        private readonly ILogger<UserServices> _logger;
 
-        public UserServices(IApplicationUserManager userManager,
-               IApplicationSignManager signManager, ICurrentUser currentUser,
-               IOptions<BearerTokenSettings> bearerTokenSettings,
-               IMapper mapper,
-               GtsContext context,
-               IErrorServices _errorApplication,
-               UserManager<ApplicationUser> _identityUserManager,
-               IPessoaRepositories _pessoaRepositories,
-               IPerfilRepositories _perfilRepositories,
-               IMenuRepositories _menuRepositories) : base(_errorApplication)
+        public UserServices(
+            IApplicationUserManager userManager,
+            IApplicationSignManager signManager,
+            IOptions<BearerTokenSettings> bearerTokenSettings,
+            IOptions<EmailConfirmationSettings> emailConfirmation,
+            IEmailSenderService emailSender,
+            ILogger<UserServices> logger,
+            IMapper mapper,
+            IErrorServices errorApplication,
+            UserManager<ApplicationUser> identityUserManager,
+            IPessoaRepositories pessoaRepositories,
+            IPerfilRepositories perfilRepositories,
+            IMenuRepositories menuRepositories,
+            IUsuarioRepositories usuarioRepositories,
+            RoleManager<ApplicationRole> identityRoleManager)
+            : base(errorApplication)
         {
             _bearerTokenSettings = bearerTokenSettings.Value;
+            _emailConfirmation = emailConfirmation.Value ?? new EmailConfirmationSettings();
+            _emailSender = emailSender;
+            _logger = logger;
             _userManager = userManager;
             _signManager = signManager;
-            _currentUser = currentUser;
             _mapper = mapper;
-            _context = context;
-            this._identityUserManager = _identityUserManager;
-            this._pessoaRepositories =  _pessoaRepositories;
-            this._perfilRepositories = _perfilRepositories;
-            this._menuRepositories = _menuRepositories;
+            _identityUserManager = identityUserManager;
+            _pessoaRepositories = pessoaRepositories;
+            _perfilRepositories = perfilRepositories;
+            _menuRepositories = menuRepositories;
+            _usuarioRepositories = usuarioRepositories;
+            _identityRoleManager = identityRoleManager;
         }
 
         public async Task<ActionResult> LoginAsync(LoginInput dto)
         {
             try
             {
-                var result = await _signManager.PasswordSignInAsync(dto.UserName, dto.Password);
-
-                if (!result.Succeeded)
-                    return await RetornNo(false, Resources.Resources.MSG_Usuario_Ou_Senha_Invalida);
+                var signIn = await _signManager.PasswordSignInAsync(dto.UserName, dto.Password);
+                if (!signIn.Succeeded)
+                    return await RespostaLoginFalhouAsync(dto.UserName, signIn);
 
                 var user = await _identityUserManager.FindByNameAsync(dto.UserName);
-
                 return await RetornOk(await MontarLoginResponseAsync(user), Resources.Resources.MSG_OperacaoRealizadaSucesso);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return await RetornNo(ex, ex.Message);
             }
-            
         }
 
         public async Task<ActionResult> RegisterAsync(RegisterInput dto)
         {
+            if (string.IsNullOrWhiteSpace(dto.Password))
+                return await RetornNo(false, "Senha é obrigatória no cadastro.");
+
             var pessoa = _mapper.Map<Pessoa>(dto.Pessoa);
             pessoa.Email = dto.Email;
             pessoa.Ativo = true;
@@ -90,104 +98,130 @@ namespace Estac.Service.Auth
             try
             {
                 pessoa.AdicionarPapel(TipoPapel.Funcionario);
-
                 await _pessoaRepositories.Gravar(pessoa);
+
                 var user = _mapper.Map<ApplicationUser>(dto);
                 user.PessoaId = pessoa.Id;
-                user.EmailConfirmed = true;
+                user.EmailConfirmed = false;
                 user.FullName = pessoa.NomeFantasia;
 
-                var result = await _userManager.CreateAsync(user, dto.Password);
+                var create = await _userManager.CreateAsync(user, dto.Password);
 
-                if (!result.Succeeded)
-                    return await RetornNo(false, result.Errors[0]);
+                if (!create.Succeeded)
+                    return await RetornNo(false, PrimeiroErroCadastro(create));
 
                 await _userManager.AddToRoleAsync(user, dto.Perfil.Name);
+
+                var usuarioAtual = await _identityUserManager.FindByNameAsync(dto.UserName) ?? user;
+                var resposta = await MontarRespostaPosRegistroAsync(pessoa, usuarioAtual);
+                return await RetornOk(resposta, Resources.Resources.MSG_OperacaoRealizadaSucesso);
+            }
+            catch (Exception ex)
+            {
+                if (pessoa.Id > 0)
+                    await _pessoaRepositories.Excluir(pessoa.Id);
+                return await RetornNo(ex, Resources.Resources.MSG_OperacaoComErro);
+            }
+        }
+
+        public async Task<ActionResult> Buscar()
+        {
+            return await RetornOk(await _usuarioRepositories.BuscarUsuariosGrid(null));
+        }
+
+        public async Task<ActionResult> ObterPorId(int id)
+        {
+            if (id <= 0)
+                return await RetornNo(false, "Id de usuário inválido.");
+
+            var user = await _identityUserManager.FindByIdAsync(id.ToString());
+            if (user is null || user.IsDeleted == true)
+                return await RetornNo(false, "Usuário não encontrado.");
+
+            return await RetornOk(await MontarUsuarioDetalheAsync(user));
+        }
+
+        public async Task<ActionResult> Alterar(int id, RegisterInput input)
+        {
+            var erroValidacao = ValidarInputAlteracao(id, input);
+            if (erroValidacao != null)
+                return await RetornNo(false, erroValidacao);
+
+            var user = await _identityUserManager.FindByIdAsync(id.ToString());
+            if (user is null || user.IsDeleted == true)
+                return await RetornNo(false, "Usuário não encontrado.");
+
+            var outro = await _identityUserManager.FindByNameAsync(input.UserName);
+            if (outro is not null && outro.Id != id)
+                return await RetornNo(false, "Nome de usuário já está em uso.");
+
+            try
+            {
+                var pessoa = await SincronizarPessoaDoUsuarioAsync(user, input);
+                if (pessoa is null)
+                    return await RetornNo(false, "Pessoa vinculada ao usuário não foi encontrada.");
+
+                var identity = await AtualizarUsuarioIdentityAsync(user, input, pessoa);
+                if (identity != null)
+                    return identity;
+
+                if (!string.IsNullOrWhiteSpace(input.Password))
+                {
+                    var senha = await _userManager.ChangePasswordAsync(user, input.Password);
+                    if (!senha.Succeeded)
+                        return await RetornNo(false, MensagemErrosIdentity(senha));
+                }
+
+                var role = await SincronizarPerfilAsync(user, input.Perfil.Name);
+                if (role != null)
+                    return role;
+
+                var atualizado = await _identityUserManager.FindByIdAsync(id.ToString());
+                return await RetornOk(await MontarUsuarioDetalheAsync(atualizado!));
+            }
+            catch (Exception ex)
+            {
+                return await RetornNo(ex, Resources.Resources.MSG_OperacaoComErro);
+            }
+        }
+
+        public async Task<ActionResult> Delete(int id)
+        {
+            if (id <= 0)
+                return await RetornNo(false, "Id de usuário inválido.");
+
+            var user = await _identityUserManager.FindByIdAsync(id.ToString());
+            if (user is null || user.IsDeleted == true)
+                return await RetornNo(false, "Usuário não encontrado.");
+
+            try
+            {
+                int? pessoaId = user.PessoaId;
+                var remocao = await _identityUserManager.DeleteAsync(user);
+                if (!remocao.Succeeded)
+                    return await RetornNo(false, MensagemErrosIdentity(remocao));
+
+                if (pessoaId is int pid and > 0)
+                    await _pessoaRepositories.Excluir(pid);
 
                 return await RetornOk(Resources.Resources.MSG_OperacaoRealizadaSucesso);
             }
             catch (Exception ex)
             {
-                if(pessoa.Id > 0)
-                {
-                    await _pessoaRepositories.Excluir(pessoa.Id);
-                }
-                
                 return await RetornNo(ex, Resources.Resources.MSG_OperacaoComErro);
             }
         }
 
-        private async Task<UsuarioAcessOutput> MontarLoginResponseAsync(ApplicationUser user)
+        public async Task<ActionResult> ConfirmarEmailAsync(ConfirmarEmailInput input)
         {
-            var permissoes = await _perfilRepositories.BuscarPerfilPorUsuarioToken(user.Id);
+            if (input is null)
+                return await RetornNo(false, "Dados inválidos.");
 
-            var menus = await _menuRepositories.BuscarMenuUsuario(permissoes.RoleId);
+            var erros = (await _userManager.ConfirmEmailAsync(input.UserId, input.Token))?.ToList();
+            if (erros is { Count: > 0 })
+                return await RetornNo(false, string.Join(" ", erros));
 
-            var jwt = await GenerateJwt(user, permissoes);
-
-            return new UsuarioAcessOutput
-            {
-                Jwt = jwt,
-                Menus = menus
-            };
-        }
-
-        private async Task<TokenResponse> GenerateJwt(ApplicationUser user, UsuarioRoleOuput acessoOutput)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_bearerTokenSettings.Secret);
-            var timeInMiliseconds = _bearerTokenSettings.ExpirationInMinutes * 60 * 1000;
-            var expires = DateTime.UtcNow.AddMilliseconds(timeInMiliseconds);
-
-            var refreshTimeInMiliseconds = _bearerTokenSettings.RefreshExpirationInMinutes * 60 * 1000;
-            var refreshExpires = DateTime.UtcNow.AddMinutes(_bearerTokenSettings.RefreshExpirationInMinutes);
-
-            var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
-            {
-                Issuer = _bearerTokenSettings.Issuer,
-                Audience = _bearerTokenSettings.ValidOn,
-                Expires = expires,
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256),
-                Subject = new ClaimsIdentity(await Permissoes(user.Id)),
-            });
-
-            var refreshToken = Guid.NewGuid().ToString().Replace("-", string.Empty);
-
-            return new TokenResponse
-            {
-                ExpiresIn = expires,
-                TimeInMiliseconds = timeInMiliseconds,
-                Token = tokenHandler.WriteToken(token),
-                RefreshToken = new RefreshToken
-                {
-                    Token = refreshToken,
-                    ExpiresIn = refreshExpires,
-                    TimeInMiliseconds = refreshTimeInMiliseconds
-                }
-            };
-        }
-
-        private async Task<List<Claim>> Permissoes(int usuarioId)
-        {
-            var acessoOutput = await _perfilRepositories.BuscarPerfilPorUsuarioToken(usuarioId);
-
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, acessoOutput.UserId.ToString()),
-                new Claim(ClaimTypes.Name, acessoOutput.UserName),
-                new Claim(ClaimTypes.Email, acessoOutput.Email ?? ""),
-                new Claim(ClaimTypes.Role, acessoOutput.Role),
-                new Claim("RoleId", acessoOutput.RoleId.ToString()),
-                new Claim("EmpresaId", acessoOutput.EstacionamentoId.HasValue ? acessoOutput.EstacionamentoId?.ToString() : acessoOutput.TransportadoraId?.ToString()),
-            };
-
-            foreach (var permissao in acessoOutput.Permissions.Select(p => p.Descricao).Distinct())
-            {
-                if(permissao is not null)
-                    claims.Add(new Claim("permission", permissao));
-            }
-
-            return claims;
+            return await RetornOk(new { emailConfirmado = true }, "E-mail confirmado. Você já pode fazer login.");
         }
     }
 }

@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Estac.Domain\Estac.Domain.csproj" />
     <ProjectReference Include="..\Estac.Infra\Estac.Infra.csproj" />
     <ProjectReference Include="..\Estac.Service\Estac.Service.csproj" />
   </ItemGroup>
