@@ -167,6 +167,36 @@ namespace Estac.Service.Seed.Identity
                             }
                         }
                     },
+                    new SubMenuCreateInput
+                    {
+                        Nome = "Usuario",
+                        Ordem = 3,
+                        Ativo = true,
+                        Rota = "/gerenciamento/usuario",
+                        Permissions = new List<PermissionInput>
+                        {
+                            new PermissionInput
+                            {
+                                Ordem = 1,
+                                Descricao = "Visualizar"
+                            },
+                            new PermissionInput
+                            {
+                                Ordem = 2,
+                                Descricao = "Gravar"
+                            },
+                            new PermissionInput
+                            {
+                                Ordem = 3,
+                                Descricao = "Alterar"
+                            },
+                            new PermissionInput
+                            {
+                                Ordem = 4,
+                                Descricao = "Excluir"
+                            }
+                        }
+                    }
                 }
             };
         }
