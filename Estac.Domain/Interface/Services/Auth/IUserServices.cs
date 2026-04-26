@@ -12,5 +12,7 @@ namespace Estac.Domain.Interface.Services.Auth
         Task<ActionResult> Alterar(int id, RegisterInput input);
         Task<ActionResult> Delete(int id);
         Task<ActionResult> ConfirmarEmailAsync(ConfirmarEmailInput input);
+        Task<ActionResult> EsqueciSenhaAsync(EsqueciSenhaInput input);
+        Task<ActionResult> RedefinirSenhaAsync(RedefinirSenhaInput input);
     }
 }

@@ -37,6 +37,26 @@ namespace Estac.Api.Controllers.Auth
             return await _services.ConfirmarEmailAsync(input);
         }
 
+        /// <summary>Tela "Esqueci minha senha": envia e-mail com link para redefinir (resposta genérica por segurança).</summary>
+        [AllowAnonymous]
+        [HttpPost("esqueci-senha")]
+        public async Task<ActionResult> EsqueciSenha([FromBody] EsqueciSenhaInput input)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            return await _services.EsqueciSenhaAsync(input);
+        }
+
+        /// <summary>Formulário de nova senha após o usuário abrir o link do e-mail (query: email, token).</summary>
+        [AllowAnonymous]
+        [HttpPost("redefinir-senha")]
+        public async Task<ActionResult> RedefinirSenha([FromBody] RedefinirSenhaInput input)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            return await _services.RedefinirSenhaAsync(input);
+        }
+
         [PermissionAuthorize(PermissionAcess.Usuario.Visualizar)]
         [HttpGet]
         public async Task<ActionResult> Buscar()

@@ -239,5 +239,32 @@ namespace Estac.Service.Auth
 
             return await RetornOk(new { emailConfirmado = true }, "E-mail confirmado. Você já pode fazer login.");
         }
+
+        public async Task<ActionResult> EsqueciSenhaAsync(EsqueciSenhaInput input)
+        {
+            if (input is null || string.IsNullOrWhiteSpace(input.Email))
+                return await RetornNo(false, "E-mail é obrigatório.");
+
+            return await ProcessarEsqueciSenhaAsync(input.Email.Trim());
+        }
+
+        public async Task<ActionResult> RedefinirSenhaAsync(RedefinirSenhaInput input)
+        {
+            if (input is null)
+                return await RetornNo(false, "Dados inválidos.");
+            if (input.NewPassword != input.ConfirmPassword)
+                return await RetornNo(false, "Confirmação de senha não confere com a nova senha.");
+
+            var user = await _userManager.FindByEmailAsync(input.Email.Trim());
+            if (user is null || user.IsDeleted == true)
+                return await RetornNo(false, "Não foi possível redefinir a senha. Verifique o link ou solicite um novo.");
+
+            var erros = (await _userManager.ResetPasswordAsync(user, input.Token, input.NewPassword))?.ToList();
+
+            if (erros is { Count: > 0 })
+                return await RetornNo(false, string.Join(" ", erros));
+
+            return await RetornOk(new { senhaAlterada = true }, "Senha alterada com sucesso. Você já pode fazer login.");
+        }
     }
 }

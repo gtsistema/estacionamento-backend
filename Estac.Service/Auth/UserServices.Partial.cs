@@ -22,6 +22,9 @@ namespace Estac.Service.Auth
     public partial class UserServices
     {
         private const string AssuntoEmailConfirmacao = "Confirme seu e-mail - GTS Sistema";
+        private const string AssuntoEsqueciSenha = "Redefinição de senha - GTS Sistema";
+        private const string MsgEsqueciSenhaGenerica =
+            "Se existir uma conta com este e-mail, você receberá instruções para redefinir a senha.";
         private const string MsgEmailNaoConfirmado =
             "Confirme o e-mail antes de entrar. Verifique a caixa de entrada ou solicite um novo link.";
 
@@ -167,6 +170,85 @@ namespace Estac.Service.Auth
             if (!path.StartsWith("/"))
                 path = "/" + path;
             return $"{_emailConfirmation.FrontendBaseUrl.TrimEnd('/')}{path}?userId={userId}&token={Uri.EscapeDataString(token)}";
+        }
+
+        private string MontarLinkRedefinirSenhaFrontend(string email, string token)
+        {
+            if (string.IsNullOrWhiteSpace(_emailConfirmation.FrontendBaseUrl) ||
+                string.IsNullOrWhiteSpace(token) ||
+                string.IsNullOrWhiteSpace(email))
+                return null;
+            var path = _emailConfirmation.RedefinirSenhaPath;
+            if (string.IsNullOrWhiteSpace(path))
+                path = "/auth/redefinir-senha";
+            if (!path.StartsWith("/"))
+                path = "/" + path;
+            return $"{_emailConfirmation.FrontendBaseUrl.TrimEnd('/')}{path}?email={Uri.EscapeDataString(email)}&token={Uri.EscapeDataString(token)}";
+        }
+
+        private async Task<ActionResult> ProcessarEsqueciSenhaAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user is null || user.IsDeleted == true)
+            {
+                return await RetornOk(
+                    new EsqueciSenhaOutput
+                    {
+                        Mensagem = MsgEsqueciSenhaGenerica,
+                        EmailEnviado = false
+                    },
+                    MsgEsqueciSenhaGenerica);
+            }
+
+            var token = await _userManager.GerarTokenDeRecuperacaoDeSenhaAsync(user);
+            if (string.IsNullOrEmpty(token))
+            {
+                _logger.LogWarning("Token de recuperação de senha não gerado para {Email}.", email);
+                return await RetornOk(
+                    new EsqueciSenhaOutput { Mensagem = MsgEsqueciSenhaGenerica, EmailEnviado = false },
+                    MsgEsqueciSenhaGenerica);
+            }
+
+            var link = MontarLinkRedefinirSenhaFrontend(email, token);
+            var nome = user.FullName ?? user.UserName;
+            var corpoHtml = MontarCorpoEmailRedefinirSenha(nome, link);
+            var podeEnviar = !string.IsNullOrEmpty(link) && !string.IsNullOrWhiteSpace(user.Email);
+            var enviado = podeEnviar && await _emailSender.EnviarAsync(
+                user.Email,
+                AssuntoEsqueciSenha,
+                corpoHtml,
+                isHtml: true);
+
+            if (!enviado)
+            {
+                _logger.LogWarning(
+                    "E-mail de redefinição de senha não enviado para {Email} (verifique Smtp e FrontendBaseUrl).",
+                    user.Email);
+            }
+
+            return await RetornOk(
+                new EsqueciSenhaOutput
+                {
+                    Mensagem = MsgEsqueciSenhaGenerica,
+                    LinkRedefinicaoNoFrontend =
+                        _emailConfirmation.IncluirLinkNaRespostaEsqueciSenha || !enviado ? link : null,
+                    EmailEnviado = enviado
+                },
+                MsgEsqueciSenhaGenerica);
+        }
+
+        private static string MontarCorpoEmailRedefinirSenha(string nome, string linkRedefinicao)
+        {
+            var nomeSeg = WebUtility.HtmlEncode(nome ?? "usuário");
+            var linkSeg = WebUtility.HtmlEncode(linkRedefinicao ?? "");
+            return $@"<!DOCTYPE html>
+                <html><body>
+                <p>Olá, {nomeSeg}.</p>
+                <p>Recebemos um pedido para redefinir a senha da sua conta no <strong>GTS Sistema</strong>.</p>
+                <p><a href=""{linkSeg}"">Redefinir senha</a></p>
+                <p>Se você não solicitou, ignore este e-mail. O link expira após um tempo.</p>
+                <p style=""word-break:break-all;font-size:12px"">{linkSeg}</p>
+                </body></html>";
         }
 
         private static string MontarCorpoEmailConfirmacao(string nome, string linkConfirmacao)
