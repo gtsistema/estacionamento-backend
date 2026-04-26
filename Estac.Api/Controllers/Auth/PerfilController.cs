@@ -86,5 +86,12 @@ namespace Estac.Api.Controllers.Auth
         {
             return await _services.BuscarPerfilPermissaoUsuario(usuarioId);
         }
+
+        [PermissionAuthorize(PermissionAcess.Perfil.Visualizar)]
+        [HttpGet("usuario/buscarSimplicado")]
+        public async Task<ActionResult> BuscarPerfilSimplicado()
+        {
+            return await _services.BuscarSimplicado();
+        }
     }
 }

@@ -18,5 +18,6 @@ namespace Estac.Domain.Interface.Repositories.Auth
         Task AtualizarPerfilSimplesAsync(ApplicationRole role);
         Task<IEnumerable<PerfilDto>> BuscarPerfilPermissaoGrid(int? roleId);
         Task<Models.Auth.Permission> BuscarPermissao(int subSubMenuId, string acao);
+        Task<IEnumerable<ApplicationRole>> BuscarSimplicado(int empresaId);
     }
 }

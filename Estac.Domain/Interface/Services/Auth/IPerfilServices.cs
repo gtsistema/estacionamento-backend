@@ -19,5 +19,7 @@ namespace Estac.Domain.Interface.Services.Auth
         Task<ActionResult> Delete(int id);
 
         Task<ActionResult> BuscarPerfilPermissaoUsuario(int usuarioId);
+
+        Task<ActionResult> BuscarSimplicado();
     }
 }

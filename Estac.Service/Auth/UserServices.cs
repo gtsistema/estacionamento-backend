@@ -11,6 +11,7 @@ using Estac.Domain.Models.Auth;
 using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output;
 using Estac.Domain.Output.Auth;
+using Estac.Infra.Repositories;
 using Estac.Service.Extensions;
 using Estac.Service.Identity.Interface;
 using Microsoft.AspNetCore.Identity;
@@ -36,6 +37,7 @@ namespace Estac.Service.Auth
         private readonly EmailConfirmationSettings _emailConfirmation;
         private readonly IEmailSenderService _emailSender;
         private readonly ILogger<UserServices> _logger;
+        private readonly IUnitOfWork _unitOfWork;
 
         public UserServices(
             IApplicationUserManager userManager,
@@ -51,7 +53,8 @@ namespace Estac.Service.Auth
             IPerfilRepositories perfilRepositories,
             IMenuRepositories menuRepositories,
             IUsuarioRepositories usuarioRepositories,
-            RoleManager<ApplicationRole> identityRoleManager)
+            RoleManager<ApplicationRole> identityRoleManager,
+            IUnitOfWork unitOfWork)
             : base(errorApplication)
         {
             _bearerTokenSettings = bearerTokenSettings.Value;
@@ -67,6 +70,7 @@ namespace Estac.Service.Auth
             _menuRepositories = menuRepositories;
             _usuarioRepositories = usuarioRepositories;
             _identityRoleManager = identityRoleManager;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ActionResult> LoginAsync(LoginInput dto)
@@ -95,6 +99,8 @@ namespace Estac.Service.Auth
             pessoa.Email = dto.Email;
             pessoa.Ativo = true;
 
+            await _unitOfWork.BeginTransactionAsync();
+
             try
             {
                 pessoa.AdicionarPapel(TipoPapel.Funcionario);
@@ -112,14 +118,16 @@ namespace Estac.Service.Auth
 
                 await _userManager.AddToRoleAsync(user, dto.Perfil.Name);
 
+                await _unitOfWork.CommitAsync();
+
                 var usuarioAtual = await _identityUserManager.FindByNameAsync(dto.UserName) ?? user;
                 var resposta = await MontarRespostaPosRegistroAsync(pessoa, usuarioAtual);
                 return await RetornOk(resposta, Resources.Resources.MSG_OperacaoRealizadaSucesso);
             }
             catch (Exception ex)
             {
-                if (pessoa.Id > 0)
-                    await _pessoaRepositories.Excluir(pessoa.Id);
+                await _unitOfWork.RollbackAsync();
+
                 return await RetornNo(ex, Resources.Resources.MSG_OperacaoComErro);
             }
         }
@@ -155,6 +163,9 @@ namespace Estac.Service.Auth
             if (outro is not null && outro.Id != id)
                 return await RetornNo(false, "Nome de usuário já está em uso.");
 
+
+            await _unitOfWork.BeginTransactionAsync();
+
             try
             {
                 var pessoa = await SincronizarPessoaDoUsuarioAsync(user, input);
@@ -173,6 +184,9 @@ namespace Estac.Service.Auth
                 }
 
                 var role = await SincronizarPerfilAsync(user, input.Perfil.Name);
+
+                await _unitOfWork.CommitAsync();
+
                 if (role != null)
                     return role;
 
@@ -181,6 +195,8 @@ namespace Estac.Service.Auth
             }
             catch (Exception ex)
             {
+                await _unitOfWork.RollbackAsync();
+
                 return await RetornNo(ex, Resources.Resources.MSG_OperacaoComErro);
             }
         }

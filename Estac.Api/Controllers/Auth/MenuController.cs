@@ -1,5 +1,4 @@
 using Estac.Domain.Permission;
-using Estac.Domain.Permission;
 using Estac.Domain.Input.Auth;
 using Estac.Domain.Interface.Services;
 using Estac.Domain.Models.Auth;

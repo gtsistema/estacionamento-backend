@@ -134,11 +134,14 @@ namespace Estac.Service.Auth
             if (perfilAtual is null)
                 return await RetornNo(false, "Perfil não encontrado.");
 
+            if(perfilAtual.Padrao)
+                return await RetornNo(false, "Perfil padrão não pode ser alterado.");
+
             await _unitOfWork.BeginTransactionAsync();
 
             try
             {
-                await _perfilRepositories.AtualizarPerfilSimplesAsync(new ApplicationRole() { Id = input.Id, Name = input.Nome });
+                await _perfilRepositories.AtualizarPerfilSimplesAsync(new ApplicationRole() { Id = input.Id, Name = input.Nome, EmpresaId = _currentUser.EmpresaId });
                 var menus = _mapper.Map<List<Module>>(input.Menus) ?? new List<Module>();
 
                 await AtualizarPermissoesdoPerfil(menus, input.Id);
@@ -269,10 +272,14 @@ namespace Estac.Service.Auth
             return rolePermissions;
         }
 
-
         private static bool TemAoMenosUmMenuSelecionado(IEnumerable<ModuloInput> menus)
         {
             return menus.Any(menu => menu != null && menu.Selecionado && menu.MenuId > 0);
+        }
+
+        public async Task<ActionResult> BuscarSimplicado()
+        {
+            return await RetornOk(await _perfilRepositories.BuscarSimplicado(_currentUser.EmpresaId));
         }
     }
 }

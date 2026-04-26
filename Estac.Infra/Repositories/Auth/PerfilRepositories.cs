@@ -366,5 +366,9 @@ namespace Estac.Infra.Repositories.Auth
             return await _context.Set<Permission>().FirstOrDefaultAsync(rp => rp.SubModuleId == subSubMenuId && rp.Acao.Equals(acao));
         }
 
+        public async Task<IEnumerable<ApplicationRole>> BuscarSimplicado(int empresaId)
+        {
+            return await _context.Set<ApplicationRole>().Where(x => x.EmpresaId == empresaId || x.Padrao ).ToListAsync();
+        }
     }
 }

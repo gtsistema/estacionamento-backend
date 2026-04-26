@@ -20,6 +20,11 @@ namespace Estac.Infra.EntityBuilders.User
                .WithOne(rp => rp.Role)
                .HasForeignKey(rp => rp.RoleId)
                .HasPrincipalKey(r => r.Id);
+
+            builder.Property(v => v.Padrao)
+                .HasColumnType("bit")
+                .IsRequired()
+                .HasDefaultValue(false);
         }
     }
 }
