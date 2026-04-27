@@ -64,8 +64,9 @@ namespace Estac.Infra.Repositories
         public async Task<List<Module>> Buscar()
         {
             var result = await _dataset
-                    .Include(x => x.SubModules)
+                    .Include(x => x.SubModules.Where(x => x.Ativo == true))
                         .ThenInclude(x => x.Permissions)
+                    .Where(x => x.Ativo == true)
                     .OrderBy(o => o.Ordem)
                     .ToListAsync();
 
@@ -122,7 +123,7 @@ namespace Estac.Infra.Repositories
                 .Include(x => x.Module)
                 .Include(x => x.SubModule)
                 .Include(x => x.Permission)
-                .Where(x => x.RoleId == roleId)
+                .Where(x => x.RoleId == roleId && x.Module.Ativo == true && x.SubModule.Ativo == true)
                 .ToListAsync();
 
             var dadosTransformados = dados.Select(x => new

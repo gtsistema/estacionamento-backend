@@ -59,7 +59,7 @@ namespace Estac.Service.Seed.Identity
                 Nome = "Dashboard",
                 Ordem = ordem,
                 Ativo = true,
-                Rota = "/dashboard",
+                Rota = "app/dashboard",
             };
         }
 
@@ -70,7 +70,7 @@ namespace Estac.Service.Seed.Identity
                 Nome = "Movimento",
                 Ordem = ordem,
                 Ativo = true,
-                Rota = "/movimento",
+                Rota = "app/movimento",
             };
         }
 
@@ -81,7 +81,7 @@ namespace Estac.Service.Seed.Identity
                 Nome = "Relatorio",
                 Ordem = ordem,
                 Ativo = true,
-                Rota = "/relatorio",
+                Rota = "app/relatorio",
             };
         }
 
@@ -92,7 +92,7 @@ namespace Estac.Service.Seed.Identity
                 Nome = "Financeiro",
                 Ordem = ordem,
                 Ativo = true,
-                Rota = "/financeiro",
+                Rota = "app/financeiro",
             };
         }
 
@@ -103,7 +103,7 @@ namespace Estac.Service.Seed.Identity
                 Nome = "Gerenciamento",
                 Ordem = ordem,
                 Ativo = true,
-                Rota = "/gerenciamento",
+                Rota = "app/gerenciamento",
                 SubMenus = new List<SubMenuCreateInput>
                 {
                     new SubMenuCreateInput
@@ -111,7 +111,7 @@ namespace Estac.Service.Seed.Identity
                         Nome = "perfil",
                         Ordem = 1,
                         Ativo = true,
-                        Rota = "/gerenciamento/perfil",
+                        Rota = "app/gerenciamento/perfil",
                         Permissions = new List<PermissionInput>
                         {
                             new PermissionInput
@@ -142,7 +142,7 @@ namespace Estac.Service.Seed.Identity
                         Nome = "Menu",
                         Ordem = 3,
                         Ativo = true,
-                        Rota = "/gerencimento/menu",
+                        Rota = "app/gerenciamento/menu",
                         Permissions = new List<PermissionInput>
                         {
                             new PermissionInput
@@ -172,7 +172,7 @@ namespace Estac.Service.Seed.Identity
                         Nome = "Usuario",
                         Ordem = 3,
                         Ativo = true,
-                        Rota = "/gerenciamento/usuario",
+                        Rota = "app/gerenciamento/usuario",
                         Permissions = new List<PermissionInput>
                         {
                             new PermissionInput
@@ -216,7 +216,7 @@ namespace Estac.Service.Seed.Identity
                         Nome = "Estacionamento",
                         Ordem = 1,
                         Ativo = true,
-                        Rota = "/cadastro/estacionamento",
+                        Rota = "app/cadastro/estacionamento",
                         Permissions = new List<PermissionInput>
                         {
                             new PermissionInput
@@ -247,7 +247,7 @@ namespace Estac.Service.Seed.Identity
                         Nome = "Motorista",
                         Ordem = 3,
                         Ativo = true,
-                        Rota = "/cadastro/motorista",
+                        Rota = "app/cadastro/motorista",
                         Permissions = new List<PermissionInput>
                         {
                             new PermissionInput
@@ -278,7 +278,7 @@ namespace Estac.Service.Seed.Identity
                         Nome = "Transportadora",
                         Ordem = 2,
                         Ativo = true,
-                        Rota = "/cadastro/transportadora",
+                        Rota = "app/cadastro/transportadora",
                         Permissions = new List<PermissionInput>
                         {
                             new PermissionInput
