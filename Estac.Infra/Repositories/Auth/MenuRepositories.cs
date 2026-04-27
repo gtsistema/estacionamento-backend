@@ -64,18 +64,18 @@ namespace Estac.Infra.Repositories
         public async Task<List<Module>> Buscar()
         {
             var result = await _dataset
-                    .Include(x => x.SubModules)
+                    .Include(x => x.SubModules.Where(sm => sm.Ativo))
                         .ThenInclude(x => x.Permissions)
-                    .Where(x => x.Ativo == true && (x.SubModules == null || x.SubModules.Any(sm => sm.Ativo == true)))
+                    .Where(x => x.Ativo)
                     .OrderBy(o => o.Ordem)
                     .ToListAsync();
 
-                foreach (var menu in result)
-                {
-                    menu.SubModules = menu.SubModules
-                        .OrderBy(x => x.Ordem)
-                        .ToList();
-                }
+            foreach (var menu in result)
+            {
+                menu.SubModules = (menu.SubModules ?? Enumerable.Empty<SubModule>())
+                    .OrderBy(x => x.Ordem)
+                    .ToList();
+            }
 
             return result;
         }
