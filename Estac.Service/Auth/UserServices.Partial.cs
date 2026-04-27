@@ -310,7 +310,7 @@ namespace Estac.Service.Auth
         private async Task<UsuarioAcessOutput> MontarLoginResponseAsync(ApplicationUser user)
         {
             var permissoes = await _perfilRepositories.BuscarPerfilPorUsuarioToken(user.Id);
-            var menus = await _menuRepositories.BuscarMenuUsuario(permissoes.RoleId);
+            var menus = await _menuRepositories.BuscarMenuUsuarioLogin(permissoes.RoleId);
             var jwt = await GenerateJwtAsync(user);
             return new UsuarioAcessOutput { Jwt = jwt, Menus = menus };
         }

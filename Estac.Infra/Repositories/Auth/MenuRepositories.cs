@@ -64,9 +64,8 @@ namespace Estac.Infra.Repositories
         public async Task<List<Module>> Buscar()
         {
             var result = await _dataset
-                    .Include(x => x.SubModules.Where(sm => sm.Ativo))
+                    .Include(x => x.SubModules)
                         .ThenInclude(x => x.Permissions)
-                    .Where(x => x.Ativo)
                     .OrderBy(o => o.Ordem)
                     .ToListAsync();
 
@@ -117,13 +116,13 @@ namespace Estac.Infra.Repositories
             }
         }
 
-        public async Task<List<MenuAcessOuput>> BuscarMenuUsuario(int roleId)
+        public async Task<List<MenuAcessOuput>> BuscarMenuUsuarioLogin(int roleId)
         {
             var dados = await _context.Set<RolePermission>()
                 .Include(x => x.Module)
                 .Include(x => x.SubModule)
                 .Include(x => x.Permission)
-                .Where(x => x.RoleId == roleId && x.Module.Ativo == true && (x.SubModule == null || x.SubModule.Ativo == true))
+                .Where(x => x.RoleId == roleId && x.Module != null && x.Module.Ativo)
                 .ToListAsync();
 
             var dadosTransformados = dados.Select(x => new
@@ -136,7 +135,9 @@ namespace Estac.Infra.Repositories
                      x.Module.Rota,
                      x.Module.Ordem
                  },
-                 SubMenu = x.SubModule == null ? null : new
+                 SubMenu = x.SubModule == null || !x.SubModule.Ativo
+                     ? null
+                     : new
                  {
                      x.SubModule.Id,
                      x.SubModule.Descricao,
@@ -154,6 +155,9 @@ namespace Estac.Infra.Repositories
 
             foreach (var item in dadosTransformados)
             {
+                if (item.Menu == null)
+                    continue;
+
                 if (!menusDict.TryGetValue(item.Menu.Id, out var menu))
                 {
                     menu = new MenuAcessOuput

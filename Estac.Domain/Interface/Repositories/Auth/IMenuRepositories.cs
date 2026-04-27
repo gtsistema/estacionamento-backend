@@ -10,7 +10,7 @@ namespace Estac.Domain.Interface.Repositories
         Task<Module> SelecionarPorId(int id);
         Task<List<Module>> Buscar();
         Task AtualizarOrdem(List<MenuOrdemInput> menus, List<SubMenuOrdemInput> subMenus);
-        Task<List<MenuAcessOuput>> BuscarMenuUsuario(int roleId);
+        Task<List<MenuAcessOuput>> BuscarMenuUsuarioLogin(int roleId);
         Task Atualizar(Module menu);
         Task AtualizarPermissao(Models.Auth.Permission permission);
         Task GravarSubMenu(SubModule subModule);
