@@ -24,7 +24,7 @@ namespace Estac.Infra.Repositories.Auth
                     u.FullName AS Nome,
                     u.EstacionamentoId,
                     r.Name AS Role,
-                    e.Nome AS Estacionamento
+                    e.Descricao AS Estacionamento
                 FROM dbo.[User] u
                 INNER JOIN gts.Estacionamento e ON e.Id = u.EstacionamentoId
                 OUTER APPLY (
