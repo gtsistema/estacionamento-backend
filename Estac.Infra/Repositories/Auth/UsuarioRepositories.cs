@@ -23,8 +23,10 @@ namespace Estac.Infra.Repositories.Auth
                     u.Email,
                     u.FullName AS Nome,
                     u.EstacionamentoId,
-                    r.Name AS Role
+                    r.Name AS Role,
+                    e.Nome AS Estacionamento
                 FROM dbo.[User] u
+                INNER JOIN gts.Estacionamento e ON e.Id = u.EstacionamentoId
                 OUTER APPLY (
                     SELECT TOP 1 r2.Name
                     FROM dbo.UserRole ur

@@ -14,6 +14,7 @@ namespace Estac.Domain.Output.Auth
         public string Email { get; set; }
         public string Nome { get; set; }
         public int? EstacionamentoId { get; set; }
+        public string Estacionamento { get; set; }
         public string Role { get; set; }
     }
 
