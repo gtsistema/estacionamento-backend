@@ -49,5 +49,13 @@
             public const string Alterar = "transportadora.alterar";
             public const string Excluir = "transportadora.excluir";
         }
+
+        public static class EntradaSaida
+        {
+            public const string Visualizar = "entradaSaida.visualizar";
+            public const string Gravar = "entradaSaida.gravar";
+            public const string Alterar = "entradaSaida.alterar";
+            public const string Excluir = "entradaSaida.excluir";
+        }
     }
 }

@@ -39,6 +39,9 @@ namespace Estac.Infra.Context
             //TRANSPORTADORA
             modelBuilder.Entity<Transportadora>(new TransportadoraMapping().Configure);
 
+            // MOVIMENTO
+            modelBuilder.Entity<EntradaSaida>(new EntradaSaidaMapping().Configure);
+            modelBuilder.Entity<EntradaSaidaSuspensao>(new EntradaSaidaSuspensaoMapping().Configure);
 
             // ESTACIONAMENTO
             modelBuilder.Entity<Estacionamento>(new EstacionamentoMapping().Configure);
@@ -51,6 +54,8 @@ namespace Estac.Infra.Context
         public DbSet<MotoristaVeiculo> MotoristaVeiculo { get; set; }
         public DbSet<Vaga> Vaga { get; set; }
         public DbSet<VagaVeiculo> VagaVeiculo { get; set; }
+        public DbSet<EntradaSaida> EntradaSaida { get; set; }
+        public DbSet<EntradaSaidaSuspensao> EntradaSaidaSuspensao { get; set; }
 
         //VEICULO
         public DbSet<Veiculo> Veiculo { get; set; }

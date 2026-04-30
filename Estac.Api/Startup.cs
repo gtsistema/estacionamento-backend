@@ -148,6 +148,7 @@ namespace Estac.Api
                 cfg.AddProfile<EstacionamentoProfile>();
                 cfg.AddProfile<PessoaProfile>();
                 cfg.AddProfile<MenuProfile>();
+                cfg.AddProfile<EntradaSaidaProfile>();
             });
         }
 
