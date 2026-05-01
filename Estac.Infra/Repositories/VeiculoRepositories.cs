@@ -29,9 +29,8 @@ namespace Estac.Infra.Repositories
         {
             var result = await _dataset
                         .AsNoTracking()
-                        .Where(x => string.IsNullOrEmpty(input.Descricao) || x.Descricao.ToLower().Contains(input.Descricao.ToLower()) &&
-                                    string.IsNullOrEmpty(input.Placa) || x.Placa.ToLower().Contains(input.Placa.ToLower())
-                               && (!input.DataInicial.HasValue && !input.DataFinal.HasValue || x.DataCriacao.Date <= input.DataInicial && x.DataCriacao.Date >= input.DataFinal))
+                        .Where(x => string.IsNullOrEmpty(input.Descricao) || x.Descricao.ToLower().Contains(input.Descricao.ToLower()) ||
+                                    x.Placa.ToLower().Contains(input.Placa.ToLower()))
                         .OrderBy(o => o.Descricao).ThenBy(t => t.DataCriacao)
                         .Select(x => new VeiculoSearchOutput 
                         {
@@ -39,8 +38,8 @@ namespace Estac.Infra.Repositories
                             Ativo = x.Ativo,
                             Cor = x.Cor,
                             Id = x.Id,
-                            Descricao = x.Descricao,
-                            Placa = x.Placa
+                            Placa = x.Placa,
+                            ModeloMarca = x.VeiculoModelo.Descricao + " - " + x.VeiculoModelo.VeiculoMarca.Descricao
                         })
                         .GetPaged(input.NumeroPagina, input.TamanhoPagina);
 

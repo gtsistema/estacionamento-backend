@@ -33,9 +33,7 @@ namespace Estac.Service
         {
             var result = await _repositories.Paginar(filter);
 
-            var mapper = _mapper.Map<IEnumerable<VeiculoOutput>>(result.Results);
-
-            return await RetornOk(mapper);
+            return await RetornOk(result);
         }
 
         public async Task<ActionResult> Gravar(VeiculoPostInput input)

@@ -52,10 +52,18 @@
 
         public static class EntradaSaida
         {
-            public const string Visualizar = "entradaSaida.visualizar";
-            public const string Gravar = "entradaSaida.gravar";
-            public const string Alterar = "entradaSaida.alterar";
-            public const string Excluir = "entradaSaida.excluir";
+            public const string Visualizar = "entradasaida.visualizar";
+            public const string Gravar = "entradasaida.gravar";
+            public const string Alterar = "entradasaida.alterar";
+            public const string Excluir = "entradasaida.excluir";
+        }
+
+        public static class Veiculo
+        {
+            public const string Visualizar = "veiculo.visualizar";
+            public const string Gravar = "veiculo.gravar";
+            public const string Alterar = "veiculo.alterar";
+            public const string Excluir = "veiculo.excluir";
         }
     }
 }

@@ -234,7 +234,7 @@ namespace Estac.Service
             permission.Acao = permission.Acao.ToLower();
 
             if (!permission.Acao.Contains(subModule.Descricao.ToLower()))
-                permission.Acao = string.Concat(subModule.Descricao, ".", permission.Acao);
+                permission.Acao = string.Concat(subModule.Descricao.ToLower(), ".", permission.Acao.ToLower());
         }
     }
 }
