@@ -4,6 +4,7 @@ namespace Estac.Domain.Input.Endereco
 {
     public class PessoaEnderecoInput
     {
+        public int Id { get; set; } 
         public int PessoaId { get; set; }
         public bool Principal { get; set; }
         public TipoEndereco TipoEndereco { get; set; }

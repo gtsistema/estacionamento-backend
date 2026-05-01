@@ -116,7 +116,9 @@ namespace Estac.Service
         private static void ValoresPadrao(Transportadora result)
         {
             result.Pessoa.AdicionarTipoPessoa(TipoPessoa.Juridica);
-            result.Pessoa.AdicionarPapel(TipoPapel.Estacionamento);
+            result.Pessoa.AdicionarPapel(TipoPapel.Tranportadora);
+            result.Descricao = result.Pessoa.NomeFantasia;
+            result.PessoaId = result.Pessoa.Id;
         }
     }
 }

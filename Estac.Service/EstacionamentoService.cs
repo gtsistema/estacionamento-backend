@@ -64,6 +64,11 @@ namespace Estac.Service
                 //if (!validations.IsValid)
                 //    return await RetornNo(false, validations.Errors);
 
+                await _repositories.SelecionarPorDescricao(input.Descricao);
+
+                if(!string.IsNullOrEmpty(input.Descricao))
+                    return await RetornNo(false, "Já existe um estacionamento cadastrado com essa descrição.");
+
                 var result = _mapper.Map<Estacionamento>(input);
                 ValoresPadrao(result);
 

@@ -109,5 +109,13 @@ namespace Estac.Infra.Repositories
               await _context.EstacionamentoFoto
                  .Where(x => x.Id == id).ExecuteDeleteAsync();
         }
+
+        public async Task<Estacionamento> SelecionarPorDescricao(string descricao)
+        {
+            return await _dataset
+                        .AsNoTracking()
+                        .Include(x => x.Pessoa.Enderecos)
+                        .SingleOrDefaultAsync(x => x.Descricao == descricao);
+        }
     }
 }

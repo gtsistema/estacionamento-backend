@@ -15,5 +15,6 @@ namespace Estac.Domain.Interface.Repositories
         Task<IEnumerable<MenuFotoOutput>> ListarFotosPorEstacionamentoAsNoTracking(int id);
         Task UploadFotos(List<EstacionamentoFoto> fotos);
         Task ExcluirFotos(int id);
+        Task<Estacionamento> SelecionarPorDescricao(string descricao);
     }
 }
