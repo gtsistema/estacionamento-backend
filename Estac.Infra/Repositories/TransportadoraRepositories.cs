@@ -27,19 +27,24 @@ namespace Estac.Infra.Repositories
         {
             var result = await _dataset
                         .AsNoTracking()
-                        .Where(x => string.IsNullOrEmpty(input.Descricao) || x.Descricao.ToLower().Contains(input.Descricao.ToLower()) &&
-                                    string.IsNullOrEmpty(input.RazaoSocial) || x.Pessoa.NomeRazaoSocial.ToLower().Contains(input.RazaoSocial.ToLower()) &&
-                                    string.IsNullOrEmpty(input.Fantasia) || x.Pessoa.NomeRazaoSocial.ToLower().Contains(input.Fantasia.ToLower()) &&
-                                    string.IsNullOrEmpty(input.Cnpj) || x.Pessoa.Documento.ToLower().Contains(input.Cnpj.ToLower()) &&
+                        .Include(x => x.Pessoa.Contatos)
+                        .Where(x => (string.IsNullOrEmpty(input.Descricao) || x.Descricao.ToLower().Contains(input.Descricao.ToLower())) &&
+                                    (string.IsNullOrEmpty(input.RazaoSocial) || x.Pessoa.NomeRazaoSocial.ToLower().Contains(input.RazaoSocial.ToLower())) &&
+                                    (string.IsNullOrEmpty(input.NomeFantasia) || x.Pessoa.NomeFantasia.ToLower().Contains(input.NomeFantasia.ToLower())) &&
+                                    (string.IsNullOrEmpty(input.Cnpj) || x.Pessoa.Documento.ToLower().Contains(input.Cnpj.ToLower())) &&
                                     (!input.DataInicial.HasValue && !input.DataFinal.HasValue || x.Pessoa.DataCriacao.Date <= input.DataInicial && x.Pessoa.DataCriacao.Date >= input.DataFinal))
                         .OrderBy(o => o.Descricao).ThenBy(t => t.Pessoa.DataCriacao)
                         .Select(x => new TransportadoraSearchOutput 
                         {
                             Id = x.Id,  
-                            Descricao = x.Descricao,
                             PessoaId = x.PessoaId,
                             Fantasia = x.Pessoa.NomeFantasia,
-                            RazaoSocial = x.Pessoa.NomeRazaoSocial
+                            RazaoSocial = x.Pessoa.NomeRazaoSocial,
+                            Cnpj = x.Pessoa.Documento,
+                            Email = x.Pessoa.Email,
+                            Contato = x.Pessoa.Contatos.Where(x => x.Principal).FirstOrDefault().Numero,
+                            ativo = x.Pessoa.Ativo
+                            
                         })
                         .GetPaged(input.NumeroPagina, input.TamanhoPagina);
 
