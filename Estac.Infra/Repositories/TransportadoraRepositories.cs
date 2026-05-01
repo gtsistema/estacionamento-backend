@@ -23,6 +23,15 @@ namespace Estac.Infra.Repositories
             _dataset = context.Set<Transportadora>();
         }
 
+        public async Task<Transportadora> SelecionarPorIdCompleto(int id)
+        {
+            return await _dataset
+                        .AsNoTracking()
+                        .Include(x => x.Pessoa.Enderecos)
+                        .Include(x => x.Pessoa.Contatos)
+                        .SingleOrDefaultAsync(x => x.Id == id);
+        }
+
         public async Task<PagedResult<TransportadoraSearchOutput>> Paginar(TransportadoraFilterInput input)
         {
             var result = await _dataset

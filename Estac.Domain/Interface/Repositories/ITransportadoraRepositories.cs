@@ -9,6 +9,7 @@ namespace Estac.Domain.Interface.Repositories
 {
     public interface ITransportadoraRepositories : IBaseRepositoriesNone<Transportadora>
     {
+        Task<Transportadora> SelecionarPorIdCompleto(int id);
         Task<PagedResult<TransportadoraSearchOutput>> Paginar(TransportadoraFilterInput input);
     }
 }

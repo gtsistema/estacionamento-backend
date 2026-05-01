@@ -1,5 +1,4 @@
 ﻿using Estac.Domain.Permission;
-using Estac.Domain.Permission;
 using Estac.Domain.Input.Estacionamento;
 using Estac.Domain.Interface.Services;
 using Microsoft.AspNetCore.Authorization;

@@ -29,7 +29,7 @@ namespace Estac.Service
         {
             try
             {
-                var result = await _repositories.Selecionar(id);
+                var result = await _repositories.SelecionarPorIdCompleto(id);
 
                 return await RetornOk(_mapper.Map<TransportadoraOutput>(result));
             }
