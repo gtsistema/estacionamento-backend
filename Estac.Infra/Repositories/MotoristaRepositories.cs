@@ -29,17 +29,19 @@ namespace Estac.Infra.Repositories
         {
             var result = await _dataset
                         .AsNoTracking()
-                        .Where(x => string.IsNullOrEmpty(input.Descricao) || x.Descricao.ToLower().Contains(input.Descricao.ToLower()) &&
-                                    string.IsNullOrEmpty(input.Nome) || x.Pessoa.Descricao.ToLower().Contains(input.Nome.ToLower())
-                               && (!input.DataInicial.HasValue && !input.DataFinal.HasValue || x.Pessoa.DataCriacao.Date <= input.DataInicial && x.Pessoa.DataCriacao.Date >= input.DataFinal))
+                        .Where(x => string.IsNullOrEmpty(input.Descricao) ||
+                                        x.Descricao.ToLower().Contains(input.Descricao.ToLower()) ||
+                                        x.Pessoa.NomeRazaoSocial.ToLower().Contains(input.Descricao.ToLower()))
                         .OrderBy(o => o.Descricao).ThenBy(t => t.Pessoa.DataCriacao)
                         .Select(x => new MotoristaSearchOutput 
                         {
                             Id = x.Id,  
-                            Descricao = x.Descricao,
                             PessoaId = x.PessoaId,
-                            Nome = x.Pessoa.Descricao,
-                            CNH = x.CNH
+                            Descricao = x.Descricao ?? x.Pessoa.NomeFantasia,
+                            CNH = x.CNH,
+                            ValidadeCNH = x.ValidadeCNH,
+                            DataCriacao = x.Pessoa.DataCriacao,
+                            DataAtualizacao = x.Pessoa.DataAtualizacao
                         })
                         .GetPaged(input.NumeroPagina, input.TamanhoPagina);
 
