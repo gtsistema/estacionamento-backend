@@ -41,7 +41,8 @@ namespace Estac.Infra.Repositories
                             CNH = x.CNH,
                             ValidadeCNH = x.ValidadeCNH,
                             DataCriacao = x.Pessoa.DataCriacao,
-                            DataAtualizacao = x.Pessoa.DataAtualizacao
+                            DataAtualizacao = x.Pessoa.DataAtualizacao,
+                            Cpf = x.Pessoa.Documento
                         })
                         .GetPaged(input.NumeroPagina, input.TamanhoPagina);
 
