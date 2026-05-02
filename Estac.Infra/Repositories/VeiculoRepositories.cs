@@ -49,7 +49,9 @@ namespace Estac.Infra.Repositories
                             Cor = x.Cor,
                             Id = x.Id,
                             Placa = x.Placa,
-                            ModeloMarca = x.VeiculoModelo.Descricao + " - " + x.VeiculoModelo.VeiculoMarca.Descricao
+                            ModeloMarca = x.VeiculoModelo != null ? x.VeiculoModelo.Descricao + " - " + x.VeiculoModelo.VeiculoMarca.Descricao : null,
+                            MotoristaId = x.MotoristaId,
+                            Motorista = x.Motorista != null ? x.Motorista.Descricao : null,
                         })
                         .GetPaged(input.NumeroPagina, input.TamanhoPagina);
 

@@ -9,5 +9,7 @@ namespace Estac.Domain.Output.Veiculo
         public string ModeloMarca { get; set; }
         public bool Ativo { get; set; }
         public string Cor { get; set; }
+        public int? MotoristaId { get; set; }
+        public string Motorista {  get; set; }
     }
 }
