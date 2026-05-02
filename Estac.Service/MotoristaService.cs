@@ -7,6 +7,7 @@ using Estac.Domain.Models;
 using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output;
 using Estac.Domain.Output.Motorista;
+using Estac.Infra.Repositories;
 using Estac.Service.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,12 +17,24 @@ namespace Estac.Service
     {
         private readonly IMotoristaRepositories _repositories;
         private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IPessoaContatoRepositories _contatoRepositories;
+        private readonly IPessoaEnderecoRepositories _enderecoRepositories;
+        private readonly IVeiculoRepositories _veiculoRepositories;
 
         public MotoristaService(IErrorServices _errorServices,
-                               IMotoristaRepositories repositories, IMapper mapper) : base(_errorServices)
+                               IMotoristaRepositories repositories, IMapper mapper,
+                               IUnitOfWork unitOfWork,
+                               IPessoaContatoRepositories contatoRepositories,
+                               IPessoaEnderecoRepositories enderecoRepositories,
+                               IVeiculoRepositories veiculoRepositories) : base(_errorServices)
         {
             _repositories = repositories;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
+            _contatoRepositories = contatoRepositories;
+            _enderecoRepositories = enderecoRepositories;
+            _veiculoRepositories = veiculoRepositories;
         }
 
         public async Task<ActionResult> ObterPorId(int id)
@@ -42,18 +55,20 @@ namespace Estac.Service
         {
             try
             {
+
                 //var validations = MotoristaPostInput.Validar(input);
 
                 //if (!validations.IsValid)
                 //    return await RetornNo(false, validations.Errors);
 
-                var result = _mapper.Map<Motorista>(input);
+                var motorista = _mapper.Map<Motorista>(input);
 
-                ValoresPadrao(result);
+                
+                ValoresPadrao(motorista);
 
-                await _repositories.Gravar(result);
+                await _repositories.Gravar(motorista);
 
-                return await RetornOk(result);
+                return await RetornOk(motorista);
             }
             catch (Exception ex) 
             {
@@ -64,8 +79,11 @@ namespace Estac.Service
 
         private static void ValoresPadrao(Motorista result)
         {
+            result.Descricao = result.Pessoa.NomeFantasia.ToString();
             result.Pessoa.AdicionarTipoPessoa(TipoPessoa.Fisica);
             result.Pessoa.AdicionarPapel(TipoPapel.Estacionamento);
+            result.Pessoa.Contatos = null;
+            result.Pessoa.Enderecos = null;
         }
 
         public async Task<ActionResult> Alterar(MotoristaPutInput input)
@@ -77,12 +95,16 @@ namespace Estac.Service
                 //if (!validations.IsValid)
                 //    return await RetornNo(false, validations.Errors);
 
-                var result = _mapper.Map<Motorista>(input);
-                ValoresPadrao(result);
+                var motorista = _mapper.Map<Motorista>(input);
 
-                await _repositories.Alterar(result);
+                await _contatoRepositories.AtualizarContatos(motorista.Pessoa.Id, motorista.Pessoa.Contatos);
+                await _enderecoRepositories.AtualizarEndereco(motorista.Pessoa.Id, motorista.Pessoa.Enderecos);
 
-                return await RetornOk(await _repositories.Alterar(result));
+                ValoresPadrao(motorista);
+
+                await _repositories.Alterar(motorista);
+
+                return await RetornOk(await _repositories.Alterar(motorista));
             }
             catch (Exception ex) 
             {

@@ -30,7 +30,7 @@ namespace Estac.Service
             _mapper = mapper;
             _contatoRepositories = contatoRepositories;
             _enderecoRepositories = enderecoRepositories;
-            this._unitOfWork = unitOfWork;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ActionResult> ObterPorId(int id)
@@ -104,10 +104,12 @@ namespace Estac.Service
                 await _enderecoRepositories.AtualizarEndereco(transportadora.Pessoa.Id, transportadora.Pessoa.Enderecos);
 
                 ValoresPadrao(transportadora);
+                transportadora.Pessoa.Contatos = null;
+                transportadora.Pessoa.Enderecos = null;
 
                 await _repositories.Alterar(transportadora);
-                await _unitOfWork.SaveChangesAsync();
 
+                await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.CommitAsync();
 
                 return await RetornOk(_repositories.SelecionarPorIdCompleto(transportadora.Id));
@@ -140,8 +142,7 @@ namespace Estac.Service
             result.Pessoa.AdicionarPapel(TipoPapel.Tranportadora);
             result.Descricao = result.Pessoa.NomeFantasia;
             result.PessoaId = result.Pessoa.Id;
-            result.Pessoa.Contatos = null;
-            result.Pessoa.Enderecos = null;
+           
         }
     }
 }

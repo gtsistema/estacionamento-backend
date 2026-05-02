@@ -1,6 +1,6 @@
 ﻿using Estac.Domain.Output.Base;
-using Estac.Domain.Models;
-using Estac.Domain.Models.Base;
+using Estac.Domain.Output.Motorista;
+using Estac.Domain.Output.Pessoa;
 
 namespace Estac.Domain.Output.Veiculo
 {
@@ -10,10 +10,9 @@ namespace Estac.Domain.Output.Veiculo
         public int? Ano { get; set; }
         public bool Ativo { get; set; }
         public string Cor { get; set; }
-        public int? VeiculoModeloId { get; set; }
-        public int? VeiculoDetalheId { get; set; }
-        public VeiculoDetalheOutput VeiculoDetalhe { get; set; }
-        public VeiculoModeloOutput VeiculoMarca { get; set; }
+        public VeiculoDetalheOutput Detalhe { get; set; }
+        public VeiculoModeloOutput Modelo { get; set; }
+        public MotoristaOutput Motorista { get; set; }
     }
 
     public class VeiculoDetalheOutput()

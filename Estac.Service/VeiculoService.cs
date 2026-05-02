@@ -5,6 +5,7 @@ using Estac.Domain.Interface.Services;
 using Estac.Domain.Models;
 using Estac.Domain.Output;
 using Estac.Domain.Output.Veiculo;
+using Estac.Infra.Repositories;
 using Estac.Service.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,17 +15,20 @@ namespace Estac.Service
     {
         private readonly IVeiculoRepositories _repositories;
         private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
         public VeiculoService(IErrorServices _errorServices,
-                               IVeiculoRepositories repositories, IMapper mapper) : base(_errorServices)
+                               IVeiculoRepositories repositories, IMapper mapper,
+                               IUnitOfWork unitOfWork) : base(_errorServices)
         {
             _repositories = repositories;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ActionResult> ObterPorId(int id)
         {
-            var result = await _repositories.Selecionar(id);
+            var result = await _repositories.SelecionarPorIdCompleto(id);
 
             return await RetornOk(_mapper.Map<VeiculoOutput>(result));
         }
@@ -60,6 +64,9 @@ namespace Estac.Service
 
         public async Task<ActionResult> Alterar(VeiculoPutInput input)
         {
+
+            await _unitOfWork.BeginTransactionAsync();
+
             try
             {
                 //var validations = VeiculoPutInput.Validar(input);
@@ -68,6 +75,10 @@ namespace Estac.Service
                 //    return await RetornNo(false, validations.Errors);
 
                 var result = _mapper.Map<Veiculo>(input);
+
+                await _unitOfWork.SaveChangesAsync();
+
+                await _unitOfWork.CommitAsync();
 
                 return await RetornOk(await _repositories.Alterar(result));
             }

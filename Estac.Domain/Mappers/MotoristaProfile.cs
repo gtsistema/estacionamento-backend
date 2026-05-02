@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Estac.Domain.Input.Motorista;
+using Estac.Domain.Input.Pessoa;
 using Estac.Domain.Models;
 using Estac.Domain.Output.Motorista;
+using Estac.Domain.Output.Pessoa;
 
 namespace Estac.Domain.Mappers.Auth
 {
@@ -9,13 +11,30 @@ namespace Estac.Domain.Mappers.Auth
     {
         public MotoristaProfile()
         {
-            CreateMap<MotoristaPostInput, Motorista>();
-            CreateMap<MotoristaPutInput, Motorista>();
+            CreateMap<MotoristaPostInput, Motorista>()
+                .ForMember(d => d.Pessoa, opt => opt.MapFrom(s => s.Pessoa));
+
+            CreateMap<MotoristaPutInput, Motorista>()
+
+                .ForMember(d => d.Pessoa, opt => opt.MapFrom(s => s.Pessoa));
+
             CreateMap<Motorista, MotoristaOutput>()
                 .ForMember(d => d.PessoaFisica, opt => opt.MapFrom(s => s.Pessoa));
+
             CreateMap<MotoristaSearchOutput, MotoristaOutput>()
                 .ForMember(d => d.PessoaFisica, opt => opt.Ignore());
+
+            CreateMap<Pessoa, PessoaMotorista>()
+                .ForMember(d => d.Cpf, opt => opt.MapFrom(s => s.Documento))
+                .ForMember(d => d.Email, opt => opt.MapFrom(s => s.Email));
+
             CreateMap<Veiculo, VeiculoVinculoResumoOutput>();
+
+            CreateMap<Pessoa, PessoaMotoristaOutput>()
+              .ForMember(dest => dest.Cpf, opt => opt.MapFrom(src => src.Documento))
+              .ForMember(dest => dest.Ativo, opt => opt.MapFrom(src => src.Ativo))
+              .ForMember(dest => dest.Contatos, opt => opt.MapFrom(src => src.Contatos))
+              .ForMember(dest => dest.Enderecos, opt => opt.MapFrom(src => src.Enderecos));
         }
     }
 }
