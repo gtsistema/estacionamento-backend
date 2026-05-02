@@ -2,6 +2,8 @@
 using Estac.Domain.Input.Endereco;
 using Estac.Domain.Input.PessoaContato;
 using Estac.Domain.Models.Enuns;
+using Estac.Domain.Validators;
+using FluentValidation.Results;
 
 namespace Estac.Domain.Input.Pessoa
 {
@@ -13,7 +15,11 @@ namespace Estac.Domain.Input.Pessoa
         public string Documento { get; set; }
         public string Email { get; set; }
         public bool Ativo { get; set; }
-        public List<PessoaEnderecoInput> Enderecos { get; set; } = new List<PessoaEnderecoInput>();
-        public List<PessoaContatoInput> Contatos { get; set; } = new List<PessoaContatoInput>();
+        public IEnumerable<PessoaEnderecoInput> Enderecos { get; set; } = new List<PessoaEnderecoInput>();
+        public IEnumerable<PessoaContatoInput> Contatos { get; set; } = new List<PessoaContatoInput>();
+
+        /// <summary>Valida campos obrigatórios de pessoa jurídica (reutilizável em outros serviços).</summary>
+        public static ValidationResult ValidarComoPessoaJuridica(PessoaInput input) =>
+            new PessoaJuridicaInputValidator().Validate(input);
     }
 }

@@ -55,6 +55,8 @@ namespace Estac.CrossCutting.Dependencies
             services.AddScoped<IVeiculoModeloRepositories, VeiculoModeloRepositories>();
             services.AddScoped<IMenuRepositories, MenuRepositories>();
             services.AddScoped<ITransportadoraRepositories, TransportadoraRepositories>();
+            services.AddScoped<IPessoaContatoRepositories, PessoaContatoRepositories>();
+            services.AddScoped<IPessoaEnderecoRepositories, PessoaEnderecoRepositories>();
             services.AddScoped<IPessoaRepositories, PessoaRepositories>();
             services.AddScoped<IPerfilRepositories, PerfilRepositories>();
             services.AddScoped<IUsuarioRepositories, UsuarioRepositories>();

@@ -16,11 +16,57 @@ namespace Estac.Infra.Repositories
     {
         private DbSet<Transportadora> _dataset;
         private readonly IMapper _mapper;
+       
 
-        public TransportadoraRepositories(GtsContext context, IMapper _mapper) : base(context)
+        public TransportadoraRepositories(
+            GtsContext context,
+            IMapper _mapper ) : base(context)
         {
             this._mapper = _mapper;
             _dataset = context.Set<Transportadora>();
+        }
+
+        /// <summary>
+        /// O <see cref="BaseRepositoriesNone{T}.Alterar(T)"/> só aplica <c>SetValues</c> em <c>Transportadora</c>;
+        /// a tabela <c>Pessoa</c> não é atualizada sem incluir e copiar os escalares explicitamente.
+        /// </summary>
+        public override async Task<Transportadora> Alterar(Transportadora item)
+        {
+            try
+            {
+                var result = await _dataset
+                    .Include(x => x.Pessoa)
+                    .SingleOrDefaultAsync(p => p.Id.Equals(item.Id));
+
+                if (result == null)
+                    return null;
+
+                item.PessoaId = result.PessoaId;
+                _context.Entry(result).CurrentValues.SetValues(item);
+
+                if (item.Pessoa != null && result.Pessoa != null)
+                {
+                    var destino = result.Pessoa;
+                    var origem = item.Pessoa;
+                    var dataCriacao = destino.DataCriacao;
+
+                    destino.TipoPessoa = origem.TipoPessoa;
+                    destino.NomeRazaoSocial = origem.NomeRazaoSocial;
+                    destino.NomeFantasia = origem.NomeFantasia;
+                    destino.Documento = origem.Documento;
+                    destino.Email = origem.Email;
+                    destino.Ativo = origem.Ativo;
+                    destino.Descricao = origem.Descricao;
+                    destino.DataCriacao = dataCriacao;
+                    destino.DataAtualizacao = DateTime.Now;
+                }
+            }
+            catch (DbUpdateException)
+            {
+                throw;
+            }
+
+            return item;
         }
 
         public async Task<Transportadora> SelecionarPorIdCompleto(int id)

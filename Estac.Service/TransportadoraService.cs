@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using DocumentFormat.OpenXml.Office2010.Excel;
-using DocumentFormat.OpenXml.Spreadsheet;
 using Estac.Domain.Input.Transportadora;
 using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Interface.Services;
@@ -8,6 +6,7 @@ using Estac.Domain.Models;
 using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output;
 using Estac.Domain.Output.Transportadora;
+using Estac.Infra.Repositories;
 using Estac.Service.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,12 +16,21 @@ namespace Estac.Service
     {
         private readonly ITransportadoraRepositories _repositories;
         private readonly IMapper _mapper;
+        private readonly IPessoaContatoRepositories _contatoRepositories;
+        private readonly IPessoaEnderecoRepositories _enderecoRepositories;
+        private readonly IUnitOfWork _unitOfWork;
 
         public TransportadoraService(IErrorServices _errorServices,
-                               ITransportadoraRepositories repositories, IMapper mapper) : base(_errorServices)
+                               ITransportadoraRepositories repositories, IMapper mapper,
+                               IPessoaContatoRepositories contatoRepositories,
+            IPessoaEnderecoRepositories enderecoRepositories,
+               IUnitOfWork unitOfWork) : base(_errorServices)
         {
             _repositories = repositories;
             _mapper = mapper;
+            _contatoRepositories = contatoRepositories;
+            _enderecoRepositories = enderecoRepositories;
+            this._unitOfWork = unitOfWork;
         }
 
         public async Task<ActionResult> ObterPorId(int id)
@@ -57,17 +65,17 @@ namespace Estac.Service
         {
             try
             {
-                //var validations = TransportadoraPostInput.Validar(input);
+                var validations = TransportadoraPostInput.Validar(input);
 
-                //if (!validations.IsValid)
-                //    return await RetornNo(false, validations.Errors);
+                if (!validations.IsValid)
+                    return await RetornNo(new { }, validations.Errors);
 
                 var result = _mapper.Map<Transportadora>(input);
                 ValoresPadrao(result);
 
                 await _repositories.Gravar(result);
 
-                return await RetornOk(result);
+                return await RetornOk(_repositories.SelecionarPorIdCompleto(result.Id));
             }
             catch (Exception ex) 
             {
@@ -78,21 +86,36 @@ namespace Estac.Service
 
         public async Task<ActionResult> Alterar(TransportadoraPutInput input)
         {
+            var validations = TransportadoraPutInput.Validar(input);
+
+            if (!validations.IsValid)
+                return await RetornNo(new { }, validations.Errors);
+
+            await _unitOfWork.BeginTransactionAsync();
+
             try
             {
-                //var validations = TransportadoraPutInput.Validar(input);
+                var transportadora = _mapper.Map<Transportadora>(input);
 
-                //if (!validations.IsValid)
-                //    return await RetornNo(false, validations.Errors);
+                transportadora.Id = input.Id;
+                transportadora.Descricao = input.PessoaJuridica.NomeFantasia;
 
-                var result = _mapper.Map<Transportadora>(input);
-                await _repositories.Alterar(result);
-                ValoresPadrao(result);
+                await _contatoRepositories.AtualizarContatos(transportadora.Pessoa.Id, transportadora.Pessoa.Contatos);
+                await _enderecoRepositories.AtualizarEndereco(transportadora.Pessoa.Id, transportadora.Pessoa.Enderecos);
 
-                return await RetornOk(await _repositories.Alterar(result));
+                ValoresPadrao(transportadora);
+
+                await _repositories.Alterar(transportadora);
+                await _unitOfWork.SaveChangesAsync();
+
+                await _unitOfWork.CommitAsync();
+
+                return await RetornOk(_repositories.SelecionarPorIdCompleto(transportadora.Id));
             }
             catch (Exception ex) 
             {
+                await _unitOfWork.RollbackAsync();
+
                 return await RetornNo(false, ex.Message);
             }
         }
@@ -117,6 +140,8 @@ namespace Estac.Service
             result.Pessoa.AdicionarPapel(TipoPapel.Tranportadora);
             result.Descricao = result.Pessoa.NomeFantasia;
             result.PessoaId = result.Pessoa.Id;
+            result.Pessoa.Contatos = null;
+            result.Pessoa.Enderecos = null;
         }
     }
 }

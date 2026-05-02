@@ -83,7 +83,7 @@ namespace Estac.Infra.Repository
             }
         }
 
-        public async Task<T> Alterar(T item)
+        public virtual async Task<T> Alterar(T item)
         {
             try
             {

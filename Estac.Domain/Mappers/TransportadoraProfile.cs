@@ -12,10 +12,10 @@ namespace Estac.Domain.Mappers
         {
             // Map POST input to domain model
             CreateMap<TransportadoraPostInput, Transportadora>()
-               .ForMember(dest => dest.Pessoa, opt => opt.MapFrom(src => src.Transportadora));
+               .ForMember(dest => dest.Pessoa, opt => opt.MapFrom(src => src.PessoaJuridica));
 
             CreateMap<TransportadoraPutInput, Transportadora>()
-               .ForMember(dest => dest.Pessoa, opt => opt.MapFrom(src => src.Transportadora));
+               .ForMember(dest => dest.Pessoa, opt => opt.MapFrom(src => src.PessoaJuridica));
 
             CreateMap<Transportadora, TransportadoraOutput>()
               .ForMember(dest => dest.Pessoa, opt => opt.MapFrom(src => src.Pessoa));
