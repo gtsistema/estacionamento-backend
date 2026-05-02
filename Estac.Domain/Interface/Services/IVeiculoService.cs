@@ -13,5 +13,6 @@ namespace Estac.Domain.Interface.Services
         Task<ActionResult> Gravar(VeiculoPostInput input);
         Task<ActionResult> Alterar(VeiculoPutInput input);
         Task<ActionResult> Excluir(int id);
+        Task<ActionResult> ObterVinculosPorPlaca(string placa);
     }
 }

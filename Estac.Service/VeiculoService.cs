@@ -126,5 +126,18 @@ namespace Estac.Service
 
             return null;
         }
+
+        public async Task<ActionResult> ObterVinculosPorPlaca(string placa)
+        {
+            if (string.IsNullOrWhiteSpace(placa))
+                return await RetornNo(false, "Placa informada é inválida.");
+
+            var result = await _repositories.ObterVinculosPorPlaca(placa);
+
+            if (result == null)
+                return await RetornNo(false, "Veículo não localizado na base de dados.", 404);
+
+            return await RetornOk(result);
+        }
     }
 }

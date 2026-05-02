@@ -3,6 +3,8 @@ using Estac.Domain.Extensions;
 using Estac.Domain.Input.Veiculo;
 using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Models;
+using Estac.Domain.Output.Motorista;
+using Estac.Domain.Output.Transportadora;
 using Estac.Domain.Output.Veiculo;
 using Estac.Domain.Shared;
 using Estac.Infra.Context;
@@ -186,6 +188,53 @@ namespace Estac.Infra.Repositories
             await _context.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<MotoristaVinculosPorPlacaOutput> ObterVinculosPorPlaca(string placa)
+        {
+            var placaNorm = VeiculoPlacaHelper.Normalizar(placa);
+            if (string.IsNullOrEmpty(placaNorm))
+                return null;
+
+            var veiculo = await _context.Veiculo
+                .AsNoTracking()
+                .Include(v => v.Motorista)!.ThenInclude(m => m.Pessoa)
+                .Include(v => v.Transportadora)!.ThenInclude(t => t.Pessoa)
+                .FirstOrDefaultAsync(v => v.Placa != null && v.Placa == placaNorm);
+
+            if (veiculo == null)
+                return null;
+
+            IReadOnlyList<TransportadoraVeiculoVinculoOutput> vinculos;
+            if (veiculo.TransportadoraId.HasValue)
+            {
+                var tid = veiculo.TransportadoraId.Value;
+                vinculos = await _context.Veiculo.AsNoTracking()
+                    .Where(v => v.TransportadoraId == tid)
+                    .OrderBy(v => v.Placa)
+                    .Select(v => new TransportadoraVeiculoVinculoOutput
+                    {
+                        TransportadoraId = tid,
+                        VeiculoId = v.Id,
+                        Placa = v.Placa
+                    })
+                    .ToListAsync();
+
+                foreach (var v in vinculos)
+                    v.Placa = VeiculoPlacaHelper.FormatarExibicao(v.Placa);
+            }
+            else
+            {
+                vinculos = Array.Empty<TransportadoraVeiculoVinculoOutput>();
+            }
+
+            return new MotoristaVinculosPorPlacaOutput
+            {
+                Motorista = veiculo.Motorista != null ? _mapper.Map<MotoristaOutput>(veiculo.Motorista) : null,
+                Veiculo = _mapper.Map<VeiculoVinculoResumoOutput>(veiculo),
+                Transportadora = veiculo.Transportadora != null ? _mapper.Map<TransportadoraOutput>(veiculo.Transportadora) : null,
+                VinculosTransportadoraVeiculo = vinculos
+            };
         }
     }
 }

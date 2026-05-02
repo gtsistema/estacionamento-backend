@@ -54,5 +54,12 @@ namespace Estac.Api.Controllers
         {
             return await _services.Excluir(id);
         }
+
+        [PermissionAuthorize(PermissionAcess.Motorista.Visualizar)]
+        [HttpGet("por-placa/{placa}")]
+        public async Task<ActionResult> ObterVinculosPorPlaca(string placa)
+        {
+            return await _services.ObterVinculosPorPlaca(placa);
+        }
     }
 }

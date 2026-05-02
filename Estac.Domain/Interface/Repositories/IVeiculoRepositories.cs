@@ -2,6 +2,7 @@
 using Estac.Domain.Input.Veiculo;
 using Estac.Domain.Models;
 using Estac.Domain.Models.Enuns;
+using Estac.Domain.Output.Motorista;
 using Estac.Domain.Output.Veiculo;
 using Estac.Domain.Shared;
 
@@ -13,7 +14,7 @@ namespace Estac.Domain.Interface.Repositories
         Task<Veiculo> SelecionarPorIdCompleto(int id);
         Task<Veiculo> GravarCompleto(Veiculo veiculo);
         Task<Veiculo?> AlterarCompleto(Veiculo dados);
-        /// <summary>Remove o veículo e os detalhes vinculados (tabela VeiculoDetalhe).</summary>
         Task<bool> ExcluirCompleto(int id);
+        Task<MotoristaVinculosPorPlacaOutput> ObterVinculosPorPlaca(string placa);
     }
 }
