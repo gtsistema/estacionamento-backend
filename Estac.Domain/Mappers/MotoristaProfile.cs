@@ -11,9 +11,11 @@ namespace Estac.Domain.Mappers.Auth
         {
             CreateMap<MotoristaPostInput, Motorista>();
             CreateMap<MotoristaPutInput, Motorista>();
-            CreateMap<Motorista, MotoristaOutput>();
+            CreateMap<Motorista, MotoristaOutput>()
+                .ForMember(d => d.PessoaFisica, opt => opt.MapFrom(s => s.Pessoa));
             CreateMap<MotoristaSearchOutput, MotoristaOutput>()
                 .ForMember(d => d.PessoaFisica, opt => opt.Ignore());
+            CreateMap<Veiculo, VeiculoVinculoResumoOutput>();
         }
     }
 }

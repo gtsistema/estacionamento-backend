@@ -27,10 +27,20 @@ namespace Estac.Infra.Repositories
 
         public async Task<PagedResult<VeiculoSearchOutput>> Paginar(VeiculoFilterInput input)
         {
+            var termoBusca = string.IsNullOrWhiteSpace(input.Descricao) ? null : input.Descricao.Trim().ToLower();
+            var placa = string.IsNullOrWhiteSpace(input.Placa) ? null : input.Placa.Trim().ToLower();
+
             var result = await _dataset
                         .AsNoTracking()
-                        .Where(x => string.IsNullOrEmpty(input.Descricao) || x.Descricao.ToLower().Contains(input.Descricao.ToLower()) ||
-                                    x.Placa.ToLower().Contains(input.Placa.ToLower()))
+                        .Where(x =>
+                            (!input.TransportadoraId.HasValue
+                                || (x.TransportadoraId != null && x.TransportadoraId == input.TransportadoraId.Value))
+                            && (termoBusca == null
+                                || (x.Descricao != null && x.Descricao.ToLower().Contains(termoBusca))
+                                || (x.Placa != null && x.Placa.ToLower().Contains(termoBusca))
+                                || (x.VeiculoModelo != null && x.VeiculoModelo.Descricao != null
+                                    && x.VeiculoModelo.Descricao.ToLower().Contains(termoBusca)))
+                            && (placa == null || (x.Placa != null && x.Placa.ToLower().Contains(placa))))
                         .OrderBy(o => o.Descricao).ThenBy(t => t.DataCriacao)
                         .Select(x => new VeiculoSearchOutput 
                         {

@@ -4,6 +4,7 @@ namespace Estac.Domain.Input.Veiculo
 {
     public class VeiculoFilterInput : FilterInput
     {
+        public int? TransportadoraId { get; set; }
         public string Placa { get; set; }
     }
 }

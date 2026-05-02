@@ -26,6 +26,13 @@ namespace Estac.Api.Controllers
         }
 
         [PermissionAuthorize(PermissionAcess.Motorista.Visualizar)]
+        [HttpGet("por-placa/{placa}")]
+        public async Task<ActionResult> ObterVinculosPorPlaca(string placa)
+        {
+            return await _services.ObterVinculosPorPlaca(placa);
+        }
+
+        [PermissionAuthorize(PermissionAcess.Motorista.Visualizar)]
 
         [HttpGet("{id}")]
         public async Task<ActionResult> ObterPorId(int id)

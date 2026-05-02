@@ -10,7 +10,11 @@ namespace Estac.Domain.Models
         public string Cor { get; set; }
         public int? VeiculoModeloId { get; set; }
         public int? VeiculoDetalheId { get; set; }
+        public int? TransportadoraId { get; set; }
+        public int? MotoristaId { get; set; }
         public VeiculoDetalhe VeiculoDetalhe { get; set; }
         public VeiculoModelo VeiculoModelo { get; set; }
+        public Transportadora Transportadora { get; set; }
+        public Motorista Motorista { get; set; }
     }
 }

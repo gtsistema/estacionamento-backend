@@ -1,5 +1,4 @@
-﻿
-using Estac.Domain.Input.Motorista;
+﻿using Estac.Domain.Input.Motorista;
 using Estac.Domain.Models;
 using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output.Motorista;
@@ -10,5 +9,6 @@ namespace Estac.Domain.Interface.Repositories
     public interface IMotoristaRepositories : IBaseRepositoriesNone<Motorista>
     {
         Task<PagedResult<MotoristaSearchOutput>> Paginar(MotoristaFilterInput input);
+        Task<MotoristaVinculosPorPlacaOutput?> ObterVinculosPorPlaca(string placa);
     }
 }
