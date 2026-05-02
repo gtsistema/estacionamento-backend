@@ -62,7 +62,7 @@ namespace Estac.Infra.Repositories
 
         public async Task<MotoristaVinculosPorPlacaOutput> ObterVinculosPorPlaca(string placa)
         {
-            var placaNorm = (placa ?? string.Empty).Trim().ToUpperInvariant();
+            var placaNorm = VeiculoPlacaHelper.Normalizar(placa);
             if (string.IsNullOrEmpty(placaNorm))
                 return null;
 
@@ -70,7 +70,7 @@ namespace Estac.Infra.Repositories
                 .AsNoTracking()
                 .Include(v => v.Motorista)!.ThenInclude(m => m.Pessoa)
                 .Include(v => v.Transportadora)!.ThenInclude(t => t.Pessoa)
-                .FirstOrDefaultAsync(v => v.Placa != null && v.Placa.ToUpper() == placaNorm);
+                .FirstOrDefaultAsync(v => v.Placa != null && v.Placa == placaNorm);
 
             if (veiculo == null)
                 return null;
@@ -89,6 +89,9 @@ namespace Estac.Infra.Repositories
                         Placa = v.Placa
                     })
                     .ToListAsync();
+
+                foreach (var v in vinculos)
+                    v.Placa = VeiculoPlacaHelper.FormatarExibicao(v.Placa);
             }
             else
             {

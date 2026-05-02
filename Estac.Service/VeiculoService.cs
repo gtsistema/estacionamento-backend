@@ -8,20 +8,25 @@ using Estac.Domain.Output.Veiculo;
 using Estac.Infra.Repositories;
 using Estac.Service.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Estac.Service
 {
     public class VeiculoService : ServiceResult<VeiculoOutput>, IVeiculoService
     {
         private readonly IVeiculoRepositories _repositories;
+        private readonly ITransportadoraRepositories _transportadoraRepositories;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
         public VeiculoService(IErrorServices _errorServices,
-                               IVeiculoRepositories repositories, IMapper mapper,
+                               IVeiculoRepositories repositories,
+                               ITransportadoraRepositories transportadoraRepositories,
+                               IMapper mapper,
                                IUnitOfWork unitOfWork) : base(_errorServices)
         {
             _repositories = repositories;
+            _transportadoraRepositories = transportadoraRepositories;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -44,62 +49,82 @@ namespace Estac.Service
         {
             try
             {
-                //var validations = VeiculoPostInput.Validar(input);
+                var transportadoraInvalida = await ValidarTransportadoraObrigatoria(input.TransportadoraId);
 
-                //if (!validations.IsValid)
-                //    return await RetornNo(false, validations.Errors);
+                if (transportadoraInvalida != null)
+                    return transportadoraInvalida;
 
-                var result = _mapper.Map<Veiculo>(input);
-
-                await _repositories.Gravar(result);
-
-                return await RetornOk(result);
+                var veiculo = _mapper.Map<Veiculo>(input);
+                var salvo = await _repositories.GravarCompleto(veiculo);
+                var completo = await _repositories.SelecionarPorIdCompleto(salvo.Id);
+                return await RetornOk(_mapper.Map<VeiculoOutput>(completo));
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 return await RetornNo(false, ex.Message);
             }
-          
         }
 
         public async Task<ActionResult> Alterar(VeiculoPutInput input)
         {
+            var transportadoraInvalida = await ValidarTransportadoraObrigatoria(input.TransportadoraId);
+            if (transportadoraInvalida != null)
+                return transportadoraInvalida;
 
             await _unitOfWork.BeginTransactionAsync();
 
             try
             {
-                //var validations = VeiculoPutInput.Validar(input);
+                var veiculo = _mapper.Map<Veiculo>(input);
+                var atualizado = await _repositories.AlterarCompleto(veiculo);
 
-                //if (!validations.IsValid)
-                //    return await RetornNo(false, validations.Errors);
-
-                var result = _mapper.Map<Veiculo>(input);
+                if (atualizado == null)
+                {
+                    await _unitOfWork.RollbackAsync();
+                    return await RetornNo(false, "Veículo não localizado na base de dados.");
+                }
 
                 await _unitOfWork.SaveChangesAsync();
-
                 await _unitOfWork.CommitAsync();
 
-                return await RetornOk(await _repositories.Alterar(result));
+                var completo = await _repositories.SelecionarPorIdCompleto(atualizado.Id);
+                return await RetornOk(_mapper.Map<VeiculoOutput>(completo));
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
+                await _unitOfWork.RollbackAsync();
                 return await RetornNo(false, ex.Message);
             }
         }
 
         public async Task<ActionResult> Excluir(int id)
         {
-            var result = await _repositories.Existe(id);
+            try
+            {
+                var transportadora = await _repositories.ExcluirCompleto(id);
 
-            if (!result)
-                return await RetornNo(false, "Produto não localizado na base de dados!");
+                if (!transportadora)
+                    return await RetornNo(false, "Veículo não localizado na base de dados.");
 
-            var despesa = await _repositories.Selecionar(id);
+                return await RetornOk(true);
+            }
+            catch (DbUpdateException)
+            {
+                return await RetornNo(false,
+                    "Não é possível excluir o veículo: existem registros vinculados (ex.: movimentações de entrada/saída ou outros vínculos).");
+            }
+        }
 
-            await _repositories.Excluir(id);
+        private async Task<ActionResult> ValidarTransportadoraObrigatoria(int? transportadoraId)
+        {
+            if (!transportadoraId.HasValue)
+                return await RetornNo(false, "Transportadora é obrigatória.");
 
-            return await RetornOk(true);
+            var existe = await _transportadoraRepositories.SelecionarIdSimplificado(transportadoraId.Value);
+            if (existe is null)
+                return await RetornNo(false, "Transportadora não localizada na base de dados.");
+
+            return null;
         }
     }
 }

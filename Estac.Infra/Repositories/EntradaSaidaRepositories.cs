@@ -40,7 +40,7 @@ namespace Estac.Infra.Repositories
 
         public async Task<EntradaSaida> SelecionarPorPlaca(string placa)
         {
-            var placaNormalizada = placa.Trim().ToLower();
+            var placaNormalizada = VeiculoPlacaHelper.Normalizar(placa);
 
             return await _dataset
                 .AsNoTracking()
@@ -49,21 +49,25 @@ namespace Estac.Infra.Repositories
                 .Include(x => x.Veiculo).ThenInclude(x => x.VeiculoDetalhe)
                 .Include(x => x.Veiculo).ThenInclude(x => x.VeiculoModelo).ThenInclude(x => x.VeiculoMarca)
                 .Include(x => x.Suspensoes)
-                .Where(x => x.Veiculo.Placa.ToLower() == placaNormalizada)
+                .Where(x => x.Veiculo.Placa == placaNormalizada)
                 .OrderByDescending(x => x.DataHoraEntrada)
                 .FirstOrDefaultAsync();
         }
 
         public async Task<PagedResult<EntradaSaidaSearchOutput>> Paginar(EntradaSaidaFilterInput input)
         {
-            return await _dataset
+            var placaFiltroNorm = string.IsNullOrWhiteSpace(input.Placa) ? null : VeiculoPlacaHelper.Normalizar(input.Placa);
+            if (string.IsNullOrEmpty(placaFiltroNorm))
+                placaFiltroNorm = null;
+
+            var result = await _dataset
                 .AsNoTracking()
                 .Include(x => x.Motorista).ThenInclude(x => x.Pessoa)
                 .Include(x => x.Transportadora).ThenInclude(x => x.Pessoa)
                 .Include(x => x.Veiculo)
                 .Where(x =>
                     (string.IsNullOrEmpty(input.Descricao) || x.Descricao.ToLower().Contains(input.Descricao.ToLower())) &&
-                    (string.IsNullOrEmpty(input.Placa) || x.Veiculo.Placa.ToLower().Contains(input.Placa.ToLower())) &&
+                    (placaFiltroNorm == null || x.Veiculo.Placa.Contains(placaFiltroNorm)) &&
                     (!input.MotoristaId.HasValue || x.MotoristaId == input.MotoristaId.Value) &&
                     (!input.TransportadoraId.HasValue || x.TransportadoraId == input.TransportadoraId.Value) &&
                     (!input.SomenteEmAberto || !x.DataHoraSaida.HasValue) &&
@@ -89,6 +93,11 @@ namespace Estac.Infra.Repositories
                     DataHoraSaida = x.DataHoraSaida
                 })
                 .GetPaged(input.NumeroPagina, input.TamanhoPagina);
+
+            foreach (var item in result.Results)
+                item.PlacaVeiculo = VeiculoPlacaHelper.FormatarExibicao(item.PlacaVeiculo);
+
+            return result;
         }
     }
 }

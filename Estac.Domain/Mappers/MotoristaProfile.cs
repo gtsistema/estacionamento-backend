@@ -6,6 +6,7 @@ using Estac.Domain.Input.PessoaContato;
 using Estac.Domain.Models;
 using Estac.Domain.Output.Motorista;
 using Estac.Domain.Output.Pessoa;
+using Estac.Domain.Shared;
 
 namespace Estac.Domain.Mappers.Auth
 {
@@ -30,7 +31,8 @@ namespace Estac.Domain.Mappers.Auth
                 .ForMember(d => d.Cpf, opt => opt.MapFrom(s => s.Documento))
                 .ForMember(d => d.Email, opt => opt.MapFrom(s => s.Email));
 
-            CreateMap<Veiculo, VeiculoVinculoResumoOutput>();
+            CreateMap<Veiculo, VeiculoVinculoResumoOutput>()
+                .ForMember(d => d.Placa, opt => opt.MapFrom(s => VeiculoPlacaHelper.FormatarExibicao(s.Placa)));
 
             CreateMap<PessoaEndereco, PessoaEnderecoInput>();
 

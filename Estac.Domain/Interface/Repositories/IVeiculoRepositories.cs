@@ -11,5 +11,9 @@ namespace Estac.Domain.Interface.Repositories
     {
         Task<PagedResult<VeiculoSearchOutput>> Paginar(VeiculoFilterInput input);
         Task<Veiculo> SelecionarPorIdCompleto(int id);
+        Task<Veiculo> GravarCompleto(Veiculo veiculo);
+        Task<Veiculo?> AlterarCompleto(Veiculo dados);
+        /// <summary>Remove o veículo e os detalhes vinculados (tabela VeiculoDetalhe).</summary>
+        Task<bool> ExcluirCompleto(int id);
     }
 }

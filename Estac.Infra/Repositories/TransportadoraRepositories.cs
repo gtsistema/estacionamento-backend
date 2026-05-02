@@ -105,5 +105,11 @@ namespace Estac.Infra.Repositories
 
             return result;
         }
+        public async Task<Transportadora> SelecionarIdSimplificado(int id)
+        {
+            return await _dataset
+                        .AsNoTracking()
+                        .SingleOrDefaultAsync(x => x.Id == id);
+        }
     }
 }

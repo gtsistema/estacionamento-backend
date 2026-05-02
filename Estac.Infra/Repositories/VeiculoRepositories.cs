@@ -28,7 +28,8 @@ namespace Estac.Infra.Repositories
         public async Task<PagedResult<VeiculoSearchOutput>> Paginar(VeiculoFilterInput input)
         {
             var termoBusca = string.IsNullOrWhiteSpace(input.Descricao) ? null : input.Descricao.Trim().ToLower();
-            var placa = string.IsNullOrWhiteSpace(input.Placa) ? null : input.Placa.Trim().ToLower();
+            var termoBuscaPlacaNorm = termoBusca == null ? null : VeiculoPlacaHelper.Normalizar(termoBusca);
+            var placaFiltroNorm = string.IsNullOrWhiteSpace(input.Placa) ? null : VeiculoPlacaHelper.Normalizar(input.Placa);
 
             var result = await _dataset
                         .AsNoTracking()
@@ -37,10 +38,10 @@ namespace Estac.Infra.Repositories
                                 || (x.TransportadoraId != null && x.TransportadoraId == input.TransportadoraId.Value))
                             && (termoBusca == null
                                 || (x.Descricao != null && x.Descricao.ToLower().Contains(termoBusca))
-                                || (x.Placa != null && x.Placa.ToLower().Contains(termoBusca))
+                                || (termoBuscaPlacaNorm != null && x.Placa != null && x.Placa.Contains(termoBuscaPlacaNorm))
                                 || (x.VeiculoModelo != null && x.VeiculoModelo.Descricao != null
                                     && x.VeiculoModelo.Descricao.ToLower().Contains(termoBusca)))
-                            && (placa == null || (x.Placa != null && x.Placa.ToLower().Contains(placa))))
+                            && (placaFiltroNorm == null || (x.Placa != null && x.Placa.Contains(placaFiltroNorm))))
                         .OrderBy(o => o.Descricao).ThenBy(t => t.DataCriacao)
                         .Select(x => new VeiculoSearchOutput 
                         {
@@ -54,6 +55,9 @@ namespace Estac.Infra.Repositories
                             Motorista = x.Motorista != null ? x.Motorista.Descricao : null,
                         })
                         .GetPaged(input.NumeroPagina, input.TamanhoPagina);
+
+            foreach (var item in result.Results)
+                item.Placa = VeiculoPlacaHelper.FormatarExibicao(item.Placa);
 
             return result;
         }
@@ -72,6 +76,116 @@ namespace Estac.Infra.Repositories
                             .ThenInclude(m => m.Pessoa)
                                 .ThenInclude(p => p.Enderecos)
                         .SingleOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<Veiculo> GravarCompleto(Veiculo veiculo)
+        {
+            veiculo.Transportadora = null;
+            veiculo.Motorista = null;
+            veiculo.VeiculoModelo = null;
+
+            veiculo.Placa = VeiculoPlacaHelper.Normalizar(veiculo.Placa);
+
+            if (string.IsNullOrWhiteSpace(veiculo.Descricao))
+                veiculo.Descricao = veiculo.Placa ?? string.Empty;
+
+            veiculo.Id = 0;
+            veiculo.DataCriacao = DateTime.Now;
+
+            if (veiculo.VeiculoDetalhe != null)
+            {
+                veiculo.VeiculoDetalhe.Id = 0;
+                veiculo.VeiculoDetalhe.VeiculoId = 0;
+                if (string.IsNullOrWhiteSpace(veiculo.VeiculoDetalhe.Descricao))
+                    veiculo.VeiculoDetalhe.Descricao = veiculo.Descricao;
+            }
+
+            await _context.AddAsync(veiculo);
+            await _context.SaveChangesAsync();
+
+            return veiculo;
+        }
+
+        public async Task<Veiculo> AlterarCompleto(Veiculo dados)
+        {
+            var entity = await _dataset
+                .Include(v => v.VeiculoDetalhe)
+                .FirstOrDefaultAsync(v => v.Id == dados.Id);
+
+            if (entity == null)
+                return null;
+
+            entity.Placa = VeiculoPlacaHelper.Normalizar(dados.Placa);
+            entity.Ano = dados.Ano;
+            entity.Ativo = dados.Ativo;
+            entity.Cor = dados.Cor;
+            entity.Descricao = string.IsNullOrWhiteSpace(dados.Descricao)
+                ? entity.Placa ?? entity.Descricao
+                : dados.Descricao;
+            entity.TransportadoraId = dados.TransportadoraId;
+            entity.MotoristaId = dados.MotoristaId;
+            entity.VeiculoModeloId = dados.VeiculoModeloId;
+
+            if (dados.VeiculoDetalhe != null)
+            {
+                var fallbackDesc = entity.Descricao ?? entity.Placa ?? string.Empty;
+
+                if (entity.VeiculoDetalhe != null)
+                {
+                    CopiarCamposDetalhe(dados.VeiculoDetalhe, entity.VeiculoDetalhe, fallbackDesc);
+                }
+                else
+                {
+                    var novo = new VeiculoDetalhe { VeiculoId = entity.Id };
+                    CopiarCamposDetalhe(dados.VeiculoDetalhe, novo, fallbackDesc);
+                    entity.VeiculoDetalhe = novo;
+                }
+            }
+
+            entity.DataAtualizacao = DateTime.Now;
+
+            return entity;
+        }
+
+        private static void CopiarCamposDetalhe(VeiculoDetalhe origem, VeiculoDetalhe destino, string descricaoFallback)
+        {
+            destino.Uf = origem.Uf;
+            destino.NomeProprietario = origem.NomeProprietario;
+            destino.CpfCnpjProprietario = origem.CpfCnpjProprietario;
+            destino.KmAtual = origem.KmAtual;
+            destino.KmRastreador = origem.KmRastreador;
+            destino.CapacidadeCombustivel = origem.CapacidadeCombustivel;
+            destino.CapacidadeArla = origem.CapacidadeArla;
+            destino.MediaMinima = origem.MediaMinima;
+            destino.MediaMaxima = origem.MediaMaxima;
+            destino.InscricaoEstadual = origem.InscricaoEstadual;
+            destino.VeiculoTerceiro = origem.VeiculoTerceiro;
+            destino.Observacoes = origem.Observacoes;
+            destino.Descricao = string.IsNullOrWhiteSpace(origem.Descricao)
+                ? descricaoFallback
+                : origem.Descricao;
+        }
+
+        /// <summary>
+        /// Exclui <see cref="VeiculoDetalhe"/> pelo <c>VeiculoId</c> e em seguida o <see cref="Veiculo"/>.
+        /// </summary>
+        public async Task<bool> ExcluirCompleto(int id)
+        {
+            var veiculo = await _dataset.FirstOrDefaultAsync(v => v.Id == id);
+            if (veiculo == null)
+                return false;
+
+            var detalhes = await _context.VeiculoDetalhe
+                .Where(d => d.VeiculoId == id)
+                .ToListAsync();
+
+            foreach (var d in detalhes)
+                _context.Remove(d);
+
+            _context.Remove(veiculo);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }
