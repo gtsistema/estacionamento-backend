@@ -62,7 +62,13 @@ namespace Estac.Infra.Repositories
                         .AsNoTracking()
                         .Include(x => x.VeiculoDetalhe)
                         .Include(x => x.VeiculoModelo)
-                        .Include(x => x.Motorista.Pessoa)
+                            .ThenInclude(m => m.VeiculoMarca)
+                        .Include(x => x.Motorista)
+                            .ThenInclude(m => m.Pessoa)
+                                .ThenInclude(p => p.Contatos)
+                        .Include(x => x.Motorista)
+                            .ThenInclude(m => m.Pessoa)
+                                .ThenInclude(p => p.Enderecos)
                         .SingleOrDefaultAsync(x => x.Id == id);
         }
     }

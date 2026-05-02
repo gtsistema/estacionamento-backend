@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Estac.Domain.Input.Endereco;
 using Estac.Domain.Input.Motorista;
 using Estac.Domain.Input.Pessoa;
+using Estac.Domain.Input.PessoaContato;
 using Estac.Domain.Models;
 using Estac.Domain.Output.Motorista;
 using Estac.Domain.Output.Pessoa;
@@ -30,7 +32,12 @@ namespace Estac.Domain.Mappers.Auth
 
             CreateMap<Veiculo, VeiculoVinculoResumoOutput>();
 
+            CreateMap<PessoaEndereco, PessoaEnderecoInput>();
+
+            CreateMap<PessoaContato, PessoaContatoInput>();
+
             CreateMap<Pessoa, PessoaMotoristaOutput>()
+              .ForMember(dest => dest.Nome, opt => opt.MapFrom(src => src.NomeRazaoSocial))
               .ForMember(dest => dest.Cpf, opt => opt.MapFrom(src => src.Documento))
               .ForMember(dest => dest.Ativo, opt => opt.MapFrom(src => src.Ativo))
               .ForMember(dest => dest.Contatos, opt => opt.MapFrom(src => src.Contatos))
