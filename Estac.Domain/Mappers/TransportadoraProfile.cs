@@ -20,7 +20,6 @@ namespace Estac.Domain.Mappers
             CreateMap<Transportadora, TransportadoraOutput>()
               .ForMember(dest => dest.Pessoa, opt => opt.MapFrom(src => src.Pessoa));
 
-            CreateMap<ContaBancariaInput, ContaBancaria>();
 
             CreateMap<ContaBancaria, ContaBancariaOutput>();
 

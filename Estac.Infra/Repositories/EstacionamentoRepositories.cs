@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections;
 using System.Configuration;
 using System.Data;
+using System.Linq;
 
 namespace Estac.Infra.Repositories
 {
@@ -24,6 +25,68 @@ namespace Estac.Infra.Repositories
         {
             this._mapper = _mapper;
             _dataset = context.Set<Estacionamento>();
+        }
+
+        /// <summary>
+        /// O <see cref="BaseRepositoriesNone{T}.Alterar(T)"/> só aplica <c>SetValues</c> em <c>Estacionamento</c>;
+        /// contas em <c>ContaBancaria</c> precisam ser atualizadas ou inseridas explicitamente.
+        /// </summary>
+        public override async Task<Estacionamento> Alterar(Estacionamento item)
+        {
+            try
+            {
+                var incomingContas = item.ContasBancarias?.Where(c => c != null).ToList();
+
+                item.ContasBancarias = null;
+
+                var result = await _dataset
+                    .Include(x => x.ContasBancarias)
+                    .SingleOrDefaultAsync(p => p.Id.Equals(item.Id));
+
+                if (result == null)
+                    return null;
+
+                item.PessoaId = result.PessoaId;
+
+                _context.Entry(result).CurrentValues.SetValues(item);
+
+                if (incomingContas != null && incomingContas.Count > 0)
+                {
+                    var incoming = incomingContas[0];
+                    incoming.EstacionamentoId = result.Id;
+
+                    var existentes = result.ContasBancarias?.ToList() ?? new List<ContaBancaria>();
+
+                    ContaBancaria alvo = null;
+                    if (incoming.Id > 0)
+                        alvo = existentes.FirstOrDefault(c => c.Id == incoming.Id);
+                    else if (existentes.Count > 0)
+                        alvo = existentes[0];
+
+                    if (alvo != null)
+                    {
+                        var dataCriacao = alvo.DataCriacao;
+                        incoming.Id = alvo.Id;
+                        incoming.EstacionamentoId = result.Id;
+                        incoming.DataCriacao = dataCriacao;
+                        _context.Entry(alvo).CurrentValues.SetValues(incoming);
+                    }
+                    else
+                    {
+                        incoming.Id = 0;
+                        incoming.EstacionamentoId = result.Id;
+                        await _context.ContaBancaria.AddAsync(incoming);
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                throw;
+            }
+
+            return item;
         }
 
         public async Task<Estacionamento> SelecionarPorIdCompleto(int id)
