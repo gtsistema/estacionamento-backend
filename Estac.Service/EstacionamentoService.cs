@@ -59,14 +59,9 @@ namespace Estac.Service
         {
             try
             {
-                //var validations = EstacionamentoPostInput.Validar(input);
+                var estacionamento = await _repositories.SelecionarPorDescricao(input.Descricao);
 
-                //if (!validations.IsValid)
-                //    return await RetornNo(false, validations.Errors);
-
-                await _repositories.SelecionarPorDescricao(input.Descricao);
-
-                if(!string.IsNullOrEmpty(input.Descricao))
+                if(estacionamento is not null)
                     return await RetornNo(false, "Já existe um estacionamento cadastrado com essa descrição.");
 
                 var result = _mapper.Map<Estacionamento>(input);
