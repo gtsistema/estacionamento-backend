@@ -14,4 +14,3 @@ namespace Estac.Domain.Output.Pessoa
         public List<PessoaContatoOutput> Contatos { get; set; } = new List<PessoaContatoOutput>();
     }
 }
-}
