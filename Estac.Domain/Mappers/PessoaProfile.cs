@@ -16,6 +16,7 @@ namespace Estac.Domain.Mappers.Auth
                 .ForMember(dest => dest.Contatos, opt => opt.MapFrom(src => src.Contatos));
 
             CreateMap<Pessoa, PessoaOutput>()
+               .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.Descricao))
                .ForMember(dest => dest.Enderecos, opt => opt.MapFrom(src => src.Enderecos))
                .ForMember(dest => dest.Contatos, opt => opt.MapFrom(src => src.Contatos));
 
