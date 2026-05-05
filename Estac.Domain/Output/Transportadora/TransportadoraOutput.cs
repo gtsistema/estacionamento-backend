@@ -5,6 +5,6 @@ namespace Estac.Domain.Output.Transportadora
 {
     public class TransportadoraOutput : BaseOutput
     {
-        public PessoaOutput Pessoa { get; set; }
+        public PessoaTransportadoraOutput Pessoa { get; set; }
     }
 }
