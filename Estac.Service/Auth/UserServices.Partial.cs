@@ -97,7 +97,7 @@ namespace Estac.Service.Auth
             }
 
             user.EstacionamentoId = input.EstacionamentoId;
-            user.FullName = pessoa.NomeFantasia;
+            user.FullName = pessoa.Descricao;
             user.EmailConfirmed = true;
 
             var update = await _identityUserManager.UpdateAsync(user);
@@ -133,7 +133,7 @@ namespace Estac.Service.Auth
         {
             var token = await _userManager.GerarTokenDeConfirmacaoDeEmailAsync(usuarioAtual);
             var link = MontarLinkConfirmacaoFrontend(usuarioAtual.Id, token);
-            var nomeSaudacao = pessoa.NomeFantasia ?? usuarioAtual.UserName;
+            var nomeSaudacao = pessoa.Descricao ?? usuarioAtual.UserName;
             var corpoHtml = MontarCorpoEmailConfirmacao(nomeSaudacao, link);
             var podeEnviar = !string.IsNullOrEmpty(link) && !string.IsNullOrWhiteSpace(usuarioAtual.Email);
             var enviado = podeEnviar && await _emailSender.EnviarAsync(
@@ -276,7 +276,7 @@ namespace Estac.Service.Auth
                     pessoaInput = new PessoaUsuarioImput
                     {
                         Id = pessoa.Id,
-                        Nome = pessoa.NomeFantasia,
+                        Nome = pessoa.Descricao,
                         Documento = pessoa.Documento,
                         TipoPessoa = pessoa.TipoPessoa
                     };

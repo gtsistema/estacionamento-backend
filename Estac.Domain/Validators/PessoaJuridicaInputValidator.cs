@@ -20,7 +20,7 @@ namespace Estac.Domain.Validators
                 .NotEmpty().WithMessage("Razão social é obrigatória.")
                 .MaximumLength(200);
 
-            RuleFor(x => x.NomeFantasia)
+            RuleFor(x => x.Descricao)
                 .NotEmpty().WithMessage("Nome fantasia é obrigatório.")
                 .MaximumLength(200);
 

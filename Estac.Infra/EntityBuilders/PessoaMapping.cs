@@ -26,7 +26,7 @@ namespace Estac.Infra.EntityBuilders
                 .HasMaxLength(150)
                 .IsRequired();
 
-            builder.Property(p => p.NomeFantasia)
+            builder.Property(p => p.Descricao)
                 .HasColumnType("varchar(150)")
                 .HasMaxLength(150);
 

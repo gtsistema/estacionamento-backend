@@ -116,7 +116,7 @@ namespace Estac.Infra.Repositories
                              PessoaId = x.PessoaId,
                              Documento = x.Pessoa.Documento,
                              Ativo = x.Pessoa.Ativo,
-                             NomeFantasia = x.Pessoa.NomeFantasia,
+                             DescricaoPessoa = x.Pessoa.Descricao,
                              NomeRazaoSocial = x.Pessoa.NomeRazaoSocial,
                              Email = x.Pessoa.Email,
                              Tipo = x.Pessoa.TipoPessoa,

@@ -79,7 +79,7 @@ namespace Estac.Service
 
         private static void ValoresPadrao(Motorista result)
         {
-            result.Descricao = result.Pessoa.NomeFantasia.ToString();
+            result.Descricao = result.Pessoa.Descricao;
             result.Pessoa.AdicionarTipoPessoa(TipoPessoa.Fisica);
             result.Pessoa.AdicionarPapel(TipoPapel.Estacionamento);
             result.Pessoa.Contatos = null;

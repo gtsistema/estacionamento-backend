@@ -7,8 +7,8 @@ namespace Estac.Domain.Input.Estacionamento
 {
     public class EstacionamentoPostInput : BaseIntInput
     {
-        /// <summary>Identificador do estacionamento (obrigatório no PUT).</summary>
         public int Id { get; set; }
+        public string Descricao { get; set; }
         public int PessoaId { get; set; }
         public int? CapacidadeVeiculo { get; set; }
         public string TamanhoTerreno { get; set; }
@@ -19,6 +19,7 @@ namespace Estac.Domain.Input.Estacionamento
         public TipoCobranca TipoCobranca { get; set; }
         public byte? CobrancaPorcentagem { get; set; }
         public decimal? CobrancaValor { get; set; }
+        public bool Ativo { get; set; }
         public PessoaInput Pessoa { get; set; }
         public ContaBancariaInput ContaBancaria { get; set; }
     }

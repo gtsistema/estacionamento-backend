@@ -98,7 +98,7 @@ namespace Estac.Service
                 var transportadora = _mapper.Map<Transportadora>(input);
 
                 transportadora.Id = input.Id;
-                transportadora.Descricao = input.PessoaJuridica.NomeFantasia;
+                transportadora.Descricao = input.PessoaJuridica.Descricao;
 
                 await _contatoRepositories.AtualizarContatos(transportadora.Pessoa.Id, transportadora.Pessoa.Contatos);
                 await _enderecoRepositories.AtualizarEndereco(transportadora.Pessoa.Id, transportadora.Pessoa.Enderecos);
@@ -140,7 +140,7 @@ namespace Estac.Service
         {
             result.Pessoa.AdicionarTipoPessoa(TipoPessoa.Juridica);
             result.Pessoa.AdicionarPapel(TipoPapel.Tranportadora);
-            result.Descricao = result.Pessoa.NomeFantasia;
+            result.Descricao = result.Pessoa.Descricao;
             result.PessoaId = result.Pessoa.Id;
            
         }

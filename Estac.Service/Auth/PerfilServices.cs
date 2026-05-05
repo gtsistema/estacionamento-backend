@@ -134,8 +134,8 @@ namespace Estac.Service.Auth
             if (perfilAtual is null)
                 return await RetornNo(false, "Perfil não encontrado.");
 
-            if(perfilAtual.Padrao)
-                return await RetornNo(false, "Perfil padrão não pode ser alterado.");
+            //if(perfilAtual.Padrao)
+            //    return await RetornNo(false, "Perfil padrão não pode ser alterado.");
 
             await _unitOfWork.BeginTransactionAsync();
 

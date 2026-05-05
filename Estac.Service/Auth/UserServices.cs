@@ -109,7 +109,7 @@ namespace Estac.Service.Auth
                 var user = _mapper.Map<ApplicationUser>(dto);
                 user.PessoaId = pessoa.Id;
                 user.EmailConfirmed = false;
-                user.FullName = pessoa.NomeFantasia;
+                user.FullName = pessoa.Descricao;
 
                 var create = await _userManager.CreateAsync(user, dto.Password);
 

@@ -52,7 +52,6 @@ namespace Estac.Infra.Repositories
 
                     destino.TipoPessoa = origem.TipoPessoa;
                     destino.NomeRazaoSocial = origem.NomeRazaoSocial;
-                    destino.NomeFantasia = origem.NomeFantasia;
                     destino.Documento = origem.Documento;
                     destino.Email = origem.Email;
                     destino.Ativo = origem.Ativo;
@@ -85,7 +84,7 @@ namespace Estac.Infra.Repositories
                         .Include(x => x.Pessoa.Contatos)
                         .Where(x => (string.IsNullOrEmpty(input.Descricao) || x.Descricao.ToLower().Contains(input.Descricao.ToLower())) &&
                                     (string.IsNullOrEmpty(input.RazaoSocial) || x.Pessoa.NomeRazaoSocial.ToLower().Contains(input.RazaoSocial.ToLower())) &&
-                                    (string.IsNullOrEmpty(input.NomeFantasia) || x.Pessoa.NomeFantasia.ToLower().Contains(input.NomeFantasia.ToLower())) &&
+                                    (string.IsNullOrEmpty(input.DescricaoPessoa) || x.Pessoa.Descricao.ToLower().Contains(input.DescricaoPessoa.ToLower())) &&
                                     (string.IsNullOrEmpty(input.Cnpj) || x.Pessoa.Documento.ToLower().Contains(input.Cnpj.ToLower())) &&
                                     (!input.DataInicial.HasValue && !input.DataFinal.HasValue || x.Pessoa.DataCriacao.Date <= input.DataInicial && x.Pessoa.DataCriacao.Date >= input.DataFinal))
                         .OrderBy(o => o.Descricao).ThenBy(t => t.Pessoa.DataCriacao)
@@ -93,7 +92,7 @@ namespace Estac.Infra.Repositories
                         {
                             Id = x.Id,  
                             PessoaId = x.PessoaId,
-                            Fantasia = x.Pessoa.NomeFantasia,
+                            Fantasia = x.Pessoa.Descricao,
                             RazaoSocial = x.Pessoa.NomeRazaoSocial,
                             Cnpj = x.Pessoa.Documento,
                             Email = x.Pessoa.Email,

@@ -40,7 +40,7 @@ namespace Estac.Infra.Repositories
                             && (termoBusca == null
                                 || (x.Descricao != null && x.Descricao.ToLower().Contains(termoBusca))
                                 || (x.Pessoa.NomeRazaoSocial != null && x.Pessoa.NomeRazaoSocial.ToLower().Contains(termoBusca))
-                                || (x.Pessoa.NomeFantasia != null && x.Pessoa.NomeFantasia.ToLower().Contains(termoBusca))
+                                || (x.Pessoa.Descricao != null && x.Pessoa.Descricao.ToLower().Contains(termoBusca))
                                 || (x.Pessoa.Documento != null && x.Pessoa.Documento.ToLower().Contains(termoBusca)))
                             && (cpf == null|| (x.Pessoa.Documento != null && x.Pessoa.Documento.ToLower().Contains(cpf))))
                         .OrderBy(o => o.Descricao).ThenBy(t => t.Pessoa.DataCriacao)
@@ -48,7 +48,7 @@ namespace Estac.Infra.Repositories
                         {
                             Id = x.Id,  
                             PessoaId = x.PessoaId,
-                            Descricao = x.Descricao ?? x.Pessoa.NomeFantasia,
+                            Descricao = x.Descricao ?? x.Pessoa.Descricao,
                             CNH = x.CNH,
                             ValidadeCNH = x.ValidadeCNH,
                             DataCriacao = x.Pessoa.DataCriacao,

@@ -11,7 +11,8 @@ namespace Estac.Domain.Output.Estacionamento
         public string Documento { get; set; }
         public bool Ativo { get; set; }
         public string NomeRazaoSocial { get; set; }
-        public string NomeFantasia { get; set; }
+        /// <summary>Descrição da pessoa (ex.: nome fantasia), vinda de <c>Pessoa.Descricao</c>.</summary>
+        public string DescricaoPessoa { get; set; }
         public TipoPessoa Tipo { get; set; }
         public string Email { get; set; }
     }

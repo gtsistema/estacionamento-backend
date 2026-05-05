@@ -180,6 +180,7 @@ namespace Estac.Service
         {
             result.Pessoa.AdicionarTipoPessoa(TipoPessoa.Juridica);
             result.Pessoa.AdicionarPapel(TipoPapel.Estacionamento);
+            result.Descricao = result.Pessoa.Descricao;
         }
     }
 }
