@@ -32,9 +32,9 @@ namespace Estac.Domain.Mappers.Auth
             CreateMap<PessoaContatoInput, PessoaContato>();
             CreateMap<PessoaContato, PessoaContatoOutput>();
 
-            CreateMap<PessoaTransportadoraOutput, Pessoa>()
+            CreateMap<Pessoa, PessoaTransportadoraOutput >()
               .ForMember(dest => dest.Documento, opt => opt.MapFrom(src => src.Documento))
-              .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.NomeFantasia))
+              .ForMember(dest => dest.NomeFantasia, opt => opt.MapFrom(src => src.Descricao))
               .ForMember(dest => dest.Enderecos, opt => opt.MapFrom(src => src.Enderecos))
               .ForMember(dest => dest.Contatos, opt => opt.MapFrom(src => src.Contatos));
             
