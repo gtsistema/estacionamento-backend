@@ -29,11 +29,12 @@ namespace Estac.Infra.Repositories.Auth
                     t.Descricao AS Transportadora,
                     t.Id AS TransportadoraId,
                     CASE 
-                        WHEN LEN(REPLACE(REPLACE(REPLACE(u.FullName, '.', ''), '-', ''), '/', '')) = 11
-                        THEN STUFF(STUFF(STUFF(REPLACE(REPLACE(REPLACE(u.FullName, '.', ''), '-', ''), '/', ''), 4, 0, '.'), 8, 0, '.'), 12, 0, '-')
-                        ELSE u.FullName
+                        WHEN LEN(REPLACE(REPLACE(REPLACE(p.Documento, '.', ''), '-', ''), '/', '')) = 11
+                        THEN STUFF(STUFF(STUFF(REPLACE(REPLACE(REPLACE(p.Documento, '.', ''), '-', ''), '/', ''), 4, 0, '.'), 8, 0, '.'), 12, 0, '-')
+                        ELSE p.Documento
                     END AS Cpf
                 FROM dbo.[User] u
+                INNER JOIN gts.Pessoa p ON p.Id = u.PessoaId
                 LEFT JOIN gts.Estacionamento e ON e.Id = u.EstacionamentoId
                 LEFT JOIN gts.Transportadora t ON t.Id = u.TransportadoraId
                 OUTER APPLY (

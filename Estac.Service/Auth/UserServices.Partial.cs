@@ -56,6 +56,7 @@ namespace Estac.Service.Auth
             if (input.Perfil is null || string.IsNullOrWhiteSpace(input.Perfil.Name)) return "Perfil é obrigatório.";
             if (!string.IsNullOrEmpty(input.Password) && input.Password != input.ConfirmPassword)
                 return "Confirmação de senha não confere.";
+
             return null;
         }
 

@@ -98,6 +98,9 @@ namespace Estac.Service.Auth
             if (string.IsNullOrWhiteSpace(dto.Password))
                 return await RetornNo(false, "Senha é obrigatória no cadastro.");
 
+            if (dto.EstacionamentoId.HasValue == false || dto.TransportadoraId.HasValue == false)
+                return await RetornNo(false, "Estacionamento ou Transportadora são obrigatórios no cadastro.");
+
             var pessoa = _mapper.Map<Pessoa>(dto.Pessoa);
             pessoa.Ativo = true;
 
@@ -154,6 +157,9 @@ namespace Estac.Service.Auth
             var erroValidacao = ValidarInputAlteracao(id, input);
             if (erroValidacao != null)
                 return await RetornNo(false, erroValidacao);
+
+            if (input.EstacionamentoId.HasValue == false || input.TransportadoraId.HasValue == false)
+                return await RetornNo(false, "Estacionamento ou Transportadora são obrigatórios no cadastro.");
 
             var user = await _identityUserManager.FindByIdAsync(id.ToString());
             if (user is null || user.IsDeleted == true)
