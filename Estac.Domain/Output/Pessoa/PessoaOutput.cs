@@ -1,5 +1,4 @@
 ﻿using Estac.Domain.Input.Endereco;
-using Estac.Domain.Input.PessoaContato;
 using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output.Base;
 using Estac.Domain.Output.Endereco;

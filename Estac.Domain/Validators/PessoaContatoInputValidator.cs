@@ -7,9 +7,22 @@ namespace Estac.Domain.Validators
     {
         public PessoaContatoInputValidator()
         {
-            RuleFor(x => x.Numero)
-                .NotEmpty().WithMessage("Contato: número é obrigatório.")
-                .MaximumLength(30);
+            RuleFor(x => x.Descricao)
+                .MaximumLength(200);
+
+            RuleFor(x => x.Cpf)
+                .MaximumLength(14);
+
+            RuleFor(x => x.Telefone)
+                .MaximumLength(20);
+
+            RuleFor(x => x.Email)
+                .EmailAddress().WithMessage("Contato: e-mail inválido.")
+                .MaximumLength(150)
+                .When(x => !string.IsNullOrWhiteSpace(x.Email));
+
+            RuleFor(x => x.Observacao)
+                .MaximumLength(500);
         }
     }
 }

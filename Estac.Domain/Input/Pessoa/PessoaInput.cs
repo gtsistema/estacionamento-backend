@@ -13,7 +13,6 @@ namespace Estac.Domain.Input.Pessoa
         public string NomeRazaoSocial { get; set; }
         public string Descricao { get; set; }
         public string Documento { get; set; }
-        public string Email { get; set; }
         public bool Ativo { get; set; }
         public IEnumerable<PessoaEnderecoInput> Enderecos { get; set; } = new List<PessoaEnderecoInput>();
         public IEnumerable<PessoaContatoInput> Contatos { get; set; } = new List<PessoaContatoInput>();

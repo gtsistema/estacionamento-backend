@@ -118,7 +118,11 @@ namespace Estac.Infra.Repositories
                              Ativo = x.Pessoa.Ativo,
                              DescricaoPessoa = x.Pessoa.Descricao,
                              NomeRazaoSocial = x.Pessoa.NomeRazaoSocial,
-                             Email = x.Pessoa.Email,
+                             Email = x.Pessoa.Contatos
+                                 .Where(c => c.Email != null && c.Email != "")
+                                 .OrderByDescending(c => c.Principal)
+                                 .Select(c => c.Email)
+                                 .FirstOrDefault(),
                              Tipo = x.Pessoa.TipoPessoa,
                          })
                         .GetPaged(input.NumeroPagina, input.TamanhoPagina);

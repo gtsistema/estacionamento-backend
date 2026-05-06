@@ -9,6 +9,7 @@ using Estac.Infra.Context;
 using Estac.Infra.Repository;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using System.Linq;
 
 namespace Estac.Infra.Repositories
 {
@@ -53,7 +54,6 @@ namespace Estac.Infra.Repositories
                     destino.TipoPessoa = origem.TipoPessoa;
                     destino.NomeRazaoSocial = origem.NomeRazaoSocial;
                     destino.Documento = origem.Documento;
-                    destino.Email = origem.Email;
                     destino.Ativo = origem.Ativo;
                     destino.Descricao = origem.Descricao;
                     destino.DataCriacao = dataCriacao;
@@ -95,8 +95,12 @@ namespace Estac.Infra.Repositories
                             Fantasia = x.Pessoa.Descricao,
                             RazaoSocial = x.Pessoa.NomeRazaoSocial,
                             Cnpj = x.Pessoa.Documento,
-                            Email = x.Pessoa.Email,
-                            Contato = x.Pessoa.Contatos.Where(x => x.Principal).FirstOrDefault().Numero,
+                            Email = x.Pessoa.Contatos
+                                .Where(c => c.Email != null && c.Email != "")
+                                .OrderByDescending(c => c.Principal)
+                                .Select(c => c.Email)
+                                .FirstOrDefault(),
+                            Contato = x.Pessoa.Contatos.Where(c => c.Principal).Select(c => c.Telefone ?? c.Email ?? c.Cpf).FirstOrDefault(),
                             ativo = x.Pessoa.Ativo
                             
                         })

@@ -14,6 +14,14 @@ namespace Estac.Infra.Repositories
             _context = context;
         }
 
+        public async Task<IReadOnlyList<PessoaContato>> ListarPorPessoaIdAsync(int pessoaId)
+        {
+            return await _context.Set<PessoaContato>()
+                .AsNoTracking()
+                .Where(x => x.PessoaId == pessoaId)
+                .ToListAsync();
+        }
+
         public async Task AtualizarContatos(int pessoaId, IEnumerable<PessoaContato> contatos)
         {
             var lista = contatos ?? Enumerable.Empty<PessoaContato>();

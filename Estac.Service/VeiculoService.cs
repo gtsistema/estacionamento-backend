@@ -49,7 +49,7 @@ namespace Estac.Service
         {
             try
             {
-                var transportadoraInvalida = await ValidarTransportadoraObrigatoria(input.TransportadoraId);
+                var transportadoraInvalida = await Validar(input.TransportadoraId);
 
                 if (transportadoraInvalida != null)
                     return transportadoraInvalida;
@@ -67,7 +67,7 @@ namespace Estac.Service
 
         public async Task<ActionResult> Alterar(VeiculoPutInput input)
         {
-            var transportadoraInvalida = await ValidarTransportadoraObrigatoria(input.TransportadoraId);
+            var transportadoraInvalida = await Validar(input.TransportadoraId);
             if (transportadoraInvalida != null)
                 return transportadoraInvalida;
 
@@ -115,7 +115,7 @@ namespace Estac.Service
             }
         }
 
-        private async Task<ActionResult> ValidarTransportadoraObrigatoria(int? transportadoraId)
+        private async Task<ActionResult> Validar(int? transportadoraId)
         {
             if (!transportadoraId.HasValue)
                 return await RetornNo(false, "Transportadora é obrigatória.");

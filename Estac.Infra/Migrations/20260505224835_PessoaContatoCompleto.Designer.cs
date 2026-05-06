@@ -4,6 +4,7 @@ using Estac.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Estac.Infra.Migrations
 {
     [DbContext(typeof(GtsContext))]
-    partial class GtsContextModelSnapshot : ModelSnapshot
+    [Migration("20260505224835_PessoaContatoCompleto")]
+    partial class PessoaContatoCompleto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -410,6 +413,10 @@ namespace Estac.Infra.Migrations
                         .IsRequired()
                         .HasMaxLength(18)
                         .HasColumnType("varchar(18)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(150)");
 
                     b.Property<string>("InscricaoEstadual")
                         .HasColumnType("nvarchar(max)");

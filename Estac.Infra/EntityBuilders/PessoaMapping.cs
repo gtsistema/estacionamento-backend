@@ -35,10 +35,6 @@ namespace Estac.Infra.EntityBuilders
                 .HasMaxLength(18)
                 .IsRequired();
 
-            builder.Property(p => p.Email)
-                .HasColumnType("varchar(150)")
-                .HasMaxLength(150);
-
             builder.Property(p => p.Ativo)
                 .HasColumnType("bit")
                 .HasDefaultValue(true);

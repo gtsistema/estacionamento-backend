@@ -38,6 +38,7 @@ namespace Estac.Service.Auth
         private readonly IEmailSenderService _emailSender;
         private readonly ILogger<UserServices> _logger;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IPessoaContatoRepositories _pessoaContatoRepositories;
 
         public UserServices(
             IApplicationUserManager userManager,
@@ -54,7 +55,8 @@ namespace Estac.Service.Auth
             IMenuRepositories menuRepositories,
             IUsuarioRepositories usuarioRepositories,
             RoleManager<ApplicationRole> identityRoleManager,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IPessoaContatoRepositories pessoaContatoRepositories)
             : base(errorApplication)
         {
             _bearerTokenSettings = bearerTokenSettings.Value;
@@ -71,6 +73,7 @@ namespace Estac.Service.Auth
             _usuarioRepositories = usuarioRepositories;
             _identityRoleManager = identityRoleManager;
             _unitOfWork = unitOfWork;
+            _pessoaContatoRepositories = pessoaContatoRepositories;
         }
 
         public async Task<ActionResult> LoginAsync(LoginInput dto)
@@ -96,7 +99,6 @@ namespace Estac.Service.Auth
                 return await RetornNo(false, "Senha é obrigatória no cadastro.");
 
             var pessoa = _mapper.Map<Pessoa>(dto.Pessoa);
-            pessoa.Email = dto.Email;
             pessoa.Ativo = true;
 
             await _unitOfWork.BeginTransactionAsync();
@@ -105,6 +107,7 @@ namespace Estac.Service.Auth
             {
                 pessoa.AdicionarPapel(TipoPapel.Funcionario);
                 await _pessoaRepositories.Gravar(pessoa);
+                await SincronizarEmailContatoPrincipalAsync(pessoa.Id, dto.Email);
 
                 var user = _mapper.Map<ApplicationUser>(dto);
                 user.PessoaId = pessoa.Id;
