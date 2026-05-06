@@ -144,12 +144,10 @@ namespace Estac.Service.Auth
         {
             if (id <= 0)
                 return await RetornNo(false, "Id de usuário inválido.");
+        
+            var usuario = await _usuarioRepositories.SelecionarUsuarioPessoaPorId(id);
 
-            var user = await _identityUserManager.FindByIdAsync(id.ToString());
-            if (user is null || user.IsDeleted == true)
-                return await RetornNo(false, "Usuário não encontrado.");
-
-            return await RetornOk(await MontarUsuarioDetalheAsync(user));
+            return await RetornOk(usuario);
         }
 
         public async Task<ActionResult> Alterar(int id, RegisterInput input)
@@ -193,8 +191,7 @@ namespace Estac.Service.Auth
                 if (role != null)
                     return role;
 
-                var atualizado = await _identityUserManager.FindByIdAsync(id.ToString());
-                return await RetornOk(await MontarUsuarioDetalheAsync(atualizado!));
+                return await RetornOk(await _usuarioRepositories.SelecionarUsuarioPessoaPorId(id));
             }
             catch (Exception ex)
             {
@@ -213,6 +210,8 @@ namespace Estac.Service.Auth
             if (user is null || user.IsDeleted == true)
                 return await RetornNo(false, "Usuário não encontrado.");
 
+            await _unitOfWork.BeginTransactionAsync();
+
             try
             {
                 int? pessoaId = user.PessoaId;
@@ -223,10 +222,14 @@ namespace Estac.Service.Auth
                 if (pessoaId is int pid and > 0)
                     await _pessoaRepositories.Excluir(pid);
 
+                await _unitOfWork.CommitAsync();
+
                 return await RetornOk(Resources.Resources.MSG_OperacaoRealizadaSucesso);
             }
             catch (Exception ex)
             {
+                await _unitOfWork.RollbackAsync();
+
                 return await RetornNo(ex, Resources.Resources.MSG_OperacaoComErro);
             }
         }

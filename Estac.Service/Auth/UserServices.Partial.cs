@@ -306,47 +306,6 @@ namespace Estac.Service.Auth
                 </body></html>";
         }
 
-        private async Task<UsuarioDetalheOutput> MontarUsuarioDetalheAsync(ApplicationUser user)
-        {
-            var pessoaInput = new PessoaUsuarioImput();
-            if (user.PessoaId is int pessoaId and > 0)
-            {
-                var pessoa = await _pessoaRepositories.Selecionar(pessoaId);
-                if (pessoa is not null)
-                {
-                    pessoaInput = new PessoaUsuarioImput
-                    {
-                        Id = pessoa.Id,
-                        Nome = pessoa.Descricao,
-                        Cpf = pessoa.Documento.FormatarCpf(),
-                    };
-                }
-            }
-
-            var roleNames = await _identityUserManager.GetRolesAsync(user);
-            var roleName = roleNames.FirstOrDefault();
-            ApplicationRole perfil;
-            if (string.IsNullOrWhiteSpace(roleName))
-            {
-                perfil = new ApplicationRole();
-            }
-            else
-            {
-                var roleEntity = await _identityRoleManager.FindByNameAsync(roleName);
-                perfil = roleEntity ?? new ApplicationRole { Name = roleName };
-            }
-
-            return new UsuarioDetalheOutput
-            {
-                Id = user.Id,
-                UserName = user.UserName!,
-                Email = user.Email!,
-                EstacionamentoId = user.EstacionamentoId ?? 0,
-                Pessoa = pessoaInput,
-                Perfil = perfil
-            };
-        }
-
         private async Task<UsuarioAcessOutput> MontarLoginResponseAsync(ApplicationUser user)
         {
             var permissoes = await _perfilRepositories.BuscarPerfilPorUsuarioToken(user.Id);

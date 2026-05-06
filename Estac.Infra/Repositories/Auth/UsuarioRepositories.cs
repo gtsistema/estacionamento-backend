@@ -1,6 +1,7 @@
 ﻿using Estac.Domain.Interface.Repositories.Auth;
 using Estac.Domain.Interface.Repositories.Dapper;
 using Estac.Domain.Output.Auth;
+using Estac.Domain.Output.Auth.Usuario;
 using Estac.Infra.Context;
 
 namespace Estac.Infra.Repositories.Auth
@@ -39,6 +40,35 @@ namespace Estac.Infra.Repositories.Auth
 
             var result = await _dapperRepositories.QueryAsync<UsuarioOutput>(sql, new { usuarioId });
             return result;
+        }
+
+        public async Task<UsuarioCadastroOutput> SelecionarUsuarioPessoaPorId(int id)
+        {
+            string query = $@"
+					 SELECT 
+                        p.Id AS PessoaId,
+                        p.Descricao AS Nome,
+                        CASE 
+                            WHEN LEN(REPLACE(REPLACE(REPLACE(p.Documento, '.', ''), '-', ''), '/', '')) = 11
+                            THEN STUFF(STUFF(STUFF(REPLACE(REPLACE(REPLACE(p.Documento, '.', ''), '-', ''), '/', ''), 4, 0, '.'), 8, 0, '.'), 12, 0, '-')
+                            ELSE p.Documento
+                        END AS Cpf,
+                        COALESCE(t.Id, e.Id) AS EmpresaId,
+                        COALESCE(t.Descricao, e.Descricao) AS Empresa,
+                        u.Id AS UsuarioId,
+                        u.Email,
+                        u.UserName,
+						r.Id as PerfilId,
+						r.Name as Perfil
+                    FROM gts.Pessoa p
+                    INNER JOIN dbo.[User] u  ON p.Id = u.PessoaId
+                    INNER JOIN dbo.[UserRole] ur  ON u.Id = ur.UserId
+                    INNER JOIN dbo.[Role] r  ON ur.RoleId = r.Id
+                    LEFT JOIN gts.Transportadora t ON t.Id = u.TransportadoraId
+                    LEFT JOIN gts.Estacionamento e ON e.Id = u.EstacionamentoId
+                    WHERE u.Id = @usuarioId";
+
+            return await _dapperRepositories.QueryFirstOrDefaultAsync<UsuarioCadastroOutput>(query, new { usuarioId = id });
         }
     }
 }
