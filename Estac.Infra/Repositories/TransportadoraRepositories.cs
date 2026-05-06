@@ -101,8 +101,11 @@ namespace Estac.Infra.Repositories
                                 .Select(c => c.Email)
                                 .FirstOrDefault(),
                             Contato = x.Pessoa.Contatos.Where(c => c.Principal).Select(c => c.Telefone ?? c.Email ?? c.Cpf).FirstOrDefault(),
-                            ativo = x.Pessoa.Ativo
-                            
+                            ativo = x.Pessoa.Ativo,
+                            ResponsavelLegal = x.ResponsavelLegal,
+                            ResponsavelCpf = x.ResponsavelCpf,
+                            ResponsavelEmail = x.ResponsavelEmail,
+                            ResponsavelTelefone = x.ResponsavelTelefone
                         })
                         .GetPaged(input.NumeroPagina, input.TamanhoPagina);
 

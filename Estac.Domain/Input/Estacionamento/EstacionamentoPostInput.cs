@@ -12,8 +12,10 @@ namespace Estac.Domain.Input.Estacionamento
         public int PessoaId { get; set; }
         public int? CapacidadeVeiculo { get; set; }
         public string TamanhoTerreno { get; set; }
-        public string ResposanvelLegal { get; set; }
+        public string ResponsavelLegal { get; set; }
         public string ResponsavelCpf { get; set; }
+        public string ResponsavelEmail { get; set; }
+        public string ResponsavelTelefone { get; set; }
         public bool? PossuiSeguranca { get; set; }
         public bool? PossuiBanheiro { get; set; }
         public TipoCobranca TipoCobranca { get; set; }

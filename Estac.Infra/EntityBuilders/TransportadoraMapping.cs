@@ -20,6 +20,26 @@ namespace Estac.Infra.EntityBuilders
             builder.Property(m => m.PessoaId)
                    .IsRequired();
 
+            builder.Property(v => v.ResponsavelLegal)
+                .HasColumnName("ResponsavelLegal")
+                .HasColumnType("varchar(150)")
+                .HasMaxLength(150);
+
+            builder.Property(v => v.ResponsavelCpf)
+                .HasColumnName("ResponsavelCpf")
+                .HasColumnType("varchar(14)")
+                .HasMaxLength(14);
+
+            builder.Property(v => v.ResponsavelEmail)
+                .HasColumnName("ResponsavelEmail")
+                .HasColumnType("varchar(150)")
+                .HasMaxLength(150);
+
+            builder.Property(v => v.ResponsavelTelefone)
+                .HasColumnName("ResponsavelTelefone")
+                .HasColumnType("varchar(20)")
+                .HasMaxLength(20);
+
             builder.HasOne(m => m.Pessoa)
                    .WithMany() // ou .WithMany(p => p.Motoristas) se existir coleção
                    .HasForeignKey(m => m.PessoaId)

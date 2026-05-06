@@ -15,5 +15,9 @@ namespace Estac.Domain.Output.Estacionamento
         public string DescricaoPessoa { get; set; }
         public TipoPessoa Tipo { get; set; }
         public string Email { get; set; }
+        public string ResponsavelLegal { get; set; }
+        public string ResponsavelCpf { get; set; }
+        public string ResponsavelEmail { get; set; }
+        public string ResponsavelTelefone { get; set; }
     }
 }

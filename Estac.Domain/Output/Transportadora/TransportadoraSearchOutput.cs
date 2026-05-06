@@ -10,5 +10,9 @@
         public bool ativo { get; set; }
         public int PessoaId { get; set; }
         public string Contato { get; set; }
+        public string ResponsavelLegal { get; set; }
+        public string ResponsavelCpf { get; set; }
+        public string ResponsavelEmail { get; set; }
+        public string ResponsavelTelefone { get; set; }
     }
 }

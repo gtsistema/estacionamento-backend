@@ -18,8 +18,8 @@ namespace Estac.Infra.EntityBuilders
                .HasColumnType("varchar(150)")
                .HasMaxLength(150);
 
-            builder.Property(v => v.ResposanvelLegal)
-               .HasColumnName("ResposanvelLegal")
+            builder.Property(v => v.ResponsavelLegal)
+               .HasColumnName("ResponsavelLegal")
                .HasColumnType("varchar(150)")
                .HasMaxLength(150);
 
@@ -27,6 +27,16 @@ namespace Estac.Infra.EntityBuilders
               .HasColumnName("ResponsavelCpf")
               .HasColumnType("varchar(14)")
               .HasMaxLength(14);
+
+            builder.Property(v => v.ResponsavelEmail)
+              .HasColumnName("ResponsavelEmail")
+              .HasColumnType("varchar(150)")
+              .HasMaxLength(150);
+
+            builder.Property(v => v.ResponsavelTelefone)
+              .HasColumnName("ResponsavelTelefone")
+              .HasColumnType("varchar(20)")
+              .HasMaxLength(20);
 
             builder.Property(v => v.TamanhoTerreno)
                .HasColumnType("varchar(15)")

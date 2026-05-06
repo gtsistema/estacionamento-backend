@@ -124,6 +124,10 @@ namespace Estac.Infra.Repositories
                                  .Select(c => c.Email)
                                  .FirstOrDefault(),
                              Tipo = x.Pessoa.TipoPessoa,
+                             ResponsavelLegal = x.ResponsavelLegal,
+                             ResponsavelCpf = x.ResponsavelCpf,
+                             ResponsavelEmail = x.ResponsavelEmail,
+                             ResponsavelTelefone = x.ResponsavelTelefone,
                          })
                         .GetPaged(input.NumeroPagina, input.TamanhoPagina);
 
