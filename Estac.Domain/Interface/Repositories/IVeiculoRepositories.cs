@@ -1,7 +1,6 @@
 ﻿
 using Estac.Domain.Input.Veiculo;
 using Estac.Domain.Models;
-using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output.Motorista;
 using Estac.Domain.Output.Veiculo;
 using Estac.Domain.Shared;

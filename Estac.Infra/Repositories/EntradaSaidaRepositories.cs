@@ -90,12 +90,15 @@ namespace Estac.Infra.Repositories
                     VeiculoId = x.VeiculoId,
                     PlacaVeiculo = x.Veiculo.Placa,
                     DataHoraEntrada = x.DataHoraEntrada,
-                    DataHoraSaida = x.DataHoraSaida
+                    DataHoraSaida = x.DataHoraSaida,
+                    Status = x.Status
                 })
                 .GetPaged(input.NumeroPagina, input.TamanhoPagina);
 
             foreach (var item in result.Results)
+            {
                 item.PlacaVeiculo = VeiculoPlacaHelper.FormatarExibicao(item.PlacaVeiculo);
+            }
 
             return result;
         }

@@ -40,6 +40,11 @@ namespace Estac.Infra.EntityBuilders
                 .HasMaxLength(30)
                 .IsRequired(false);
 
+            builder.Property(v => v.TipoCarga)
+                .HasConversion<byte?>()
+                .HasColumnType("tinyint")
+                .IsRequired(false);
+
             builder.Property(v => v.VeiculoModeloId)
                 .HasColumnType("int");
 

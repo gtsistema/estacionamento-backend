@@ -4,6 +4,7 @@ using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Interface.Services;
 using Estac.Domain.Models;
 using Estac.Domain.Models.Auth;
+using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output;
 using Estac.Domain.Output.EntradaSaida;
 using Estac.Service.Extensions;
@@ -94,9 +95,14 @@ namespace Estac.Service
                 result.TempoTotalSuspensaoMinutos = 0;
                 result.UsuarioRegistroEntradaId = _currentUser.Id;
                 result.UsuarioRegistroEntradaNome = _currentUser.Name;
+                result.Descricao = input.Veiculo?.Placa + " - " + input.Motorista?.PessoaFisica?.Nome;
+                result.Status = Enum.IsDefined(typeof(EntradaSaidaStatus), input.Status)
+                    ? input.Status
+                    : EntradaSaidaStatus.EmAberto;
+
                 await _repositories.Gravar(result);
 
-                return await RetornOk(result);
+                return await RetornOk(_mapper.Map<EntradaSaidaOutput>(result));
             }
             catch (Exception ex)
             {
@@ -115,7 +121,7 @@ namespace Estac.Service
                 var result = _mapper.Map<EntradaSaida>(input);
                 await _repositories.Alterar(result);
 
-                return await RetornOk(result);
+                return await RetornOk(_mapper.Map<EntradaSaidaOutput>(result));
             }
             catch (Exception ex)
             {
@@ -192,9 +198,10 @@ namespace Estac.Service
                 result.DataHoraUltimaEntradaPatio = null;
                 result.PermanenciaSuspensa = false;
                 result.Finalizado = true;
+                result.Status = EntradaSaidaStatus.Finalizado;
 
                 await _repositories.Alterar(result);
-                return await RetornOk(result);
+                return await RetornOk(_mapper.Map<EntradaSaidaOutput>(result));
             }
             catch (Exception ex)
             {
@@ -252,9 +259,10 @@ namespace Estac.Service
 
             result.PermanenciaSuspensa = true;
             result.DataHoraUltimaEntradaPatio = null;
+            result.Status = EntradaSaidaStatus.Suspenso;
 
             await _repositories.Alterar(result);
-            return await RetornOk(result);
+            return await RetornOk(_mapper.Map<EntradaSaidaOutput>(result));
         }
 
         private async Task<ActionResult> RetornarAoPatio(EntradaSaida result, DateTime dataEvento)
@@ -283,9 +291,10 @@ namespace Estac.Service
 
             result.PermanenciaSuspensa = false;
             result.DataHoraUltimaEntradaPatio = dataEvento;
+            result.Status = EntradaSaidaStatus.EmAberto;
 
             await _repositories.Alterar(result);
-            return await RetornOk(result);
+            return await RetornOk(_mapper.Map<EntradaSaidaOutput>(result));
         }
 
         private static void AdicionarMinutosPermanencia(EntradaSaida result, DateTime inicio, DateTime fim)

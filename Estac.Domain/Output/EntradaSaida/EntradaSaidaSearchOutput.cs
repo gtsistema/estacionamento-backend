@@ -1,3 +1,6 @@
+using Estac.Domain.Models.Enuns;
+using Newtonsoft.Json;
+
 namespace Estac.Domain.Output.EntradaSaida
 {
     public class EntradaSaidaSearchOutput
@@ -12,5 +15,6 @@ namespace Estac.Domain.Output.EntradaSaida
         public string PlacaVeiculo { get; set; }
         public DateTime DataHoraEntrada { get; set; }
         public DateTime? DataHoraSaida { get; set; }
+        public EntradaSaidaStatus Status { get; set; }
     }
 }

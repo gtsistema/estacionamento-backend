@@ -1,4 +1,5 @@
 ﻿using Estac.Domain.Input.Base;
+using Estac.Domain.Models.Enuns;
 
 namespace Estac.Domain.Input.Veiculo
 {
@@ -11,6 +12,7 @@ namespace Estac.Domain.Input.Veiculo
         public int? Ano { get; set; }
         public bool Ativo { get; set; }
         public string Cor { get; set; }
+        public TipoCarga? TipoCarga { get; set; }
         public int? TransportadoraId { get; set; }
         public int? MotoristaId { get; set; }
         public int? VeiculoModeloId { get; set; }

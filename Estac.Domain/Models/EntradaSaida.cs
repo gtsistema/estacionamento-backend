@@ -1,4 +1,5 @@
 using Estac.Domain.Models.Base;
+using Estac.Domain.Models.Enuns;
 
 namespace Estac.Domain.Models
 {
@@ -18,7 +19,9 @@ namespace Estac.Domain.Models
         public int TempoTotalSuspensaoMinutos { get; set; }
         public bool PermanenciaSuspensa { get; set; }
         public bool Finalizado { get; set; }
+        public EntradaSaidaStatus Status { get; set; }
         public DateTime? DataHoraFinalizacao { get; set; }
+        public string Observacao { get; set; }
         public Motorista Motorista { get; set; }
         public Transportadora Transportadora { get; set; }
         public Veiculo Veiculo { get; set; }

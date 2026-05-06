@@ -52,6 +52,7 @@ namespace Estac.Infra.Repositories
                             Cor = x.Cor,
                             Id = x.Id,
                             Placa = x.Placa,
+                            TipoCarga = x.TipoCarga,
                             ModeloMarca = x.VeiculoModelo != null ? x.VeiculoModelo.Descricao + " - " + x.VeiculoModelo.VeiculoMarca.Descricao : null,
                             MotoristaId = x.MotoristaId,
                             Motorista = x.Motorista != null ? x.Motorista.Descricao : null,
@@ -121,6 +122,7 @@ namespace Estac.Infra.Repositories
             entity.Ano = dados.Ano;
             entity.Ativo = dados.Ativo;
             entity.Cor = dados.Cor;
+            entity.TipoCarga = dados.TipoCarga;
             entity.Descricao = string.IsNullOrWhiteSpace(dados.Descricao)
                 ? entity.Placa ?? entity.Descricao
                 : dados.Descricao;

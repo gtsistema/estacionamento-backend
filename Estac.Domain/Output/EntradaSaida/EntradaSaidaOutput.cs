@@ -8,6 +8,7 @@ namespace Estac.Domain.Output.EntradaSaida
     public class EntradaSaidaOutput : BaseOutput
     {
         public string Descricao { get; set; }
+        public string Status { get; set; }
         public int MotoristaId { get; set; }
         public int TransportadoraId { get; set; }
         public int VeiculoId { get; set; }
@@ -22,6 +23,7 @@ namespace Estac.Domain.Output.EntradaSaida
         public int TempoTotalSuspensaoMinutos { get; set; }
         public bool PermanenciaSuspensa { get; set; }
         public bool Finalizado { get; set; }
+        public string Observacao { get; set; }
         public DateTime? DataHoraFinalizacao { get; set; }
         public MotoristaOutput Motorista { get; set; }
         public TransportadoraOutput Transportadora { get; set; }

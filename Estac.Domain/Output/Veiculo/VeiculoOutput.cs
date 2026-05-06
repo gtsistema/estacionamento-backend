@@ -1,6 +1,7 @@
 ﻿using Estac.Domain.Output.Base;
 using Estac.Domain.Output.Motorista;
 using Estac.Domain.Output.Pessoa;
+using Estac.Domain.Models.Enuns;
 
 namespace Estac.Domain.Output.Veiculo
 {
@@ -10,6 +11,7 @@ namespace Estac.Domain.Output.Veiculo
         public int? Ano { get; set; }
         public bool Ativo { get; set; }
         public string Cor { get; set; }
+        public TipoCarga? TipoCarga { get; set; }
         public VeiculoDetalheOutput Detalhe { get; set; }
         public VeiculoModeloOutput Modelo { get; set; }
         public MotoristaOutput Motorista { get; set; }

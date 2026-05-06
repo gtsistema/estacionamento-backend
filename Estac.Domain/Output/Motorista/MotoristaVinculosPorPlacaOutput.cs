@@ -1,3 +1,4 @@
+using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output.Base;
 using Estac.Domain.Output.Transportadora;
 
@@ -16,6 +17,7 @@ namespace Estac.Domain.Output.Motorista
         public string Placa { get; set; }
         public int? Ano { get; set; }
         public string Cor { get; set; }
+        public TipoCarga? TipoCarga { get; set; }
         public int? TransportadoraId { get; set; }
         public int? MotoristaId { get; set; }
     }

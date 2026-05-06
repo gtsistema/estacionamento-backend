@@ -1,4 +1,5 @@
 using Estac.Domain.Models;
+using Estac.Domain.Models.Enuns;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -77,6 +78,12 @@ namespace Estac.Infra.EntityBuilders
                 .HasColumnType("bit")
                 .IsRequired()
                 .HasDefaultValue(false);
+
+            builder.Property(x => x.Status)
+                .HasConversion<byte>()
+                .HasColumnType("tinyint")
+                .IsRequired()
+                .HasDefaultValue(EntradaSaidaStatus.EmAberto);
 
             builder.Property(x => x.DataHoraFinalizacao)
                 .HasColumnType("datetime")
