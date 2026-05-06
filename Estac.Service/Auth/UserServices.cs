@@ -107,7 +107,6 @@ namespace Estac.Service.Auth
             {
                 pessoa.AdicionarPapel(TipoPapel.Funcionario);
                 await _pessoaRepositories.Gravar(pessoa);
-                await SincronizarEmailContatoPrincipalAsync(pessoa.Id, dto.Email);
 
                 var user = _mapper.Map<ApplicationUser>(dto);
                 user.PessoaId = pessoa.Id;
