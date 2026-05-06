@@ -101,7 +101,7 @@ namespace Estac.Infra.Repositories
 
         public async Task<PagedResult<EstacionamentoSearchOutput>> Paginar(EstacionamentoFilterInput input)
         {
-            return await _dataset
+            var result = await _dataset
                         .AsNoTracking()
                         .Include(x => x.Pessoa.Enderecos)
                         .Include(x => x.Pessoa.Contatos)
@@ -125,6 +125,13 @@ namespace Estac.Infra.Repositories
                          })
                         .GetPaged(input.NumeroPagina, input.TamanhoPagina);
 
+            foreach (var item in result.Results)
+            {
+                item.Cnpj = item.Cnpj.FormatarCnpj();
+                item.ResponsavelCpf = item.ResponsavelCpf.FormatarCpf();
+            }
+
+            return result;
         }
 
         public async Task<IEnumerable<MenuFotoOutput>> ListarFotosPorEstacionamentoAsNoTracking(int estacionamentoId)

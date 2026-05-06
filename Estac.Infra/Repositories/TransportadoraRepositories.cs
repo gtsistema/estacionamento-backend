@@ -79,13 +79,15 @@ namespace Estac.Infra.Repositories
 
         public async Task<PagedResult<TransportadoraSearchOutput>> Paginar(TransportadoraFilterInput input)
         {
+            var cnpjFiltro = string.IsNullOrWhiteSpace(input.Cnpj) ? null : input.Cnpj.SomenteDigitos().ToLower();
+
             var result = await _dataset
                         .AsNoTracking()
                         .Include(x => x.Pessoa.Contatos)
                         .Where(x => (string.IsNullOrEmpty(input.Descricao) || x.Descricao.ToLower().Contains(input.Descricao.ToLower())) &&
                                     (string.IsNullOrEmpty(input.RazaoSocial) || x.Pessoa.NomeRazaoSocial.ToLower().Contains(input.RazaoSocial.ToLower())) &&
                                     (string.IsNullOrEmpty(input.DescricaoPessoa) || x.Pessoa.Descricao.ToLower().Contains(input.DescricaoPessoa.ToLower())) &&
-                                    (string.IsNullOrEmpty(input.Cnpj) || x.Pessoa.Documento.ToLower().Contains(input.Cnpj.ToLower())) &&
+                                    (cnpjFiltro == null || (x.Pessoa.Documento != null && x.Pessoa.Documento.ToLower().Contains(cnpjFiltro))) &&
                                     (!input.DataInicial.HasValue && !input.DataFinal.HasValue || x.Pessoa.DataCriacao.Date <= input.DataInicial && x.Pessoa.DataCriacao.Date >= input.DataFinal))
                         .OrderBy(o => o.Descricao).ThenBy(t => t.Pessoa.DataCriacao)
                         .Select(x => new TransportadoraSearchOutput 
@@ -108,6 +110,12 @@ namespace Estac.Infra.Repositories
                             ResponsavelTelefone = x.ResponsavelTelefone
                         })
                         .GetPaged(input.NumeroPagina, input.TamanhoPagina);
+
+            foreach (var item in result.Results)
+            {
+                item.Cnpj = item.Cnpj.FormatarCnpj();
+                item.ResponsavelCpf = item.ResponsavelCpf.FormatarCpf();
+            }
 
             return result;
         }

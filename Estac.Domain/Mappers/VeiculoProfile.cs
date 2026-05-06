@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Estac.Domain.Extensions;
 using Estac.Domain.Input.Veiculo;
 using Estac.Domain.Input.VeiculoModelo;
 using Estac.Domain.Models;
@@ -30,14 +31,16 @@ namespace Estac.Domain.Mappers.Auth
               .ForMember(dest => dest.Modelo, opt => opt.MapFrom(src => src.VeiculoModelo));
 
 
-            CreateMap<VeiculoDetalhe, VeiculoDetalheOutput>();
+            CreateMap<VeiculoDetalhe, VeiculoDetalheOutput>()
+                .ForMember(dest => dest.CpfCnpjProprietario, opt => opt.MapFrom(src => src.CpfCnpjProprietario.FormatarCpfOuCnpj()));
 
             CreateMap<VeiculoModelo, VeiculoModeloOutput>()
                 .ForMember(dest => dest.VeiculoMarca, opt => opt.MapFrom(src => src.VeiculoMarca));
 
             CreateMap<VeiculoMarca, VeiculoMarcaOutput>();
 
-            CreateMap<VeiculoDetalheInput, VeiculoDetalhe>();
+            CreateMap<VeiculoDetalheInput, VeiculoDetalhe>()
+                .ForMember(dest => dest.CpfCnpjProprietario, opt => opt.MapFrom(src => src.CpfCnpjProprietario.SomenteDigitos()));
             CreateMap<VeiculoMarcaInput, VeiculoMarca>();
 
             CreateMap<VeiculoModeloPostInput, VeiculoModelo>()

@@ -30,7 +30,7 @@ namespace Estac.Infra.Repositories
         public async Task<PagedResult<MotoristaSearchOutput>> Paginar(MotoristaFilterInput input)
         {
             var termoBusca = string.IsNullOrWhiteSpace(input.Descricao) ? null : input.Descricao.Trim().ToLower();
-            var cpf = string.IsNullOrWhiteSpace(input.Cpf) ? null : input.Cpf.Trim().ToLower();
+            var cpf = string.IsNullOrWhiteSpace(input.Cpf) ? null : input.Cpf.SomenteDigitos().ToLower();
 
             var result = await _dataset
                         .AsNoTracking()
@@ -56,6 +56,9 @@ namespace Estac.Infra.Repositories
                             Cpf = x.Pessoa.Documento
                         })
                         .GetPaged(input.NumeroPagina, input.TamanhoPagina);
+
+            foreach (var item in result.Results)
+                item.Cpf = item.Cpf.FormatarCpf();
 
             return result;
         }

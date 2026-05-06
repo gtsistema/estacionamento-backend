@@ -3,6 +3,38 @@ namespace Estac.Domain.Extensions
 {
     public static class StringExtentions
     {
+        /// <summary>Remove pontuação; único formato persistido em banco para CPF/CNPJ.</summary>
+        public static string SomenteDigitos(this string valor)
+        {
+            if (valor == null)
+                return null;
+            return new string(valor.Where(char.IsDigit).ToArray());
+        }
+
+        /// <summary>Máscara de CNPJ (99.999.999/9999-99) quando há 14 dígitos.</summary>
+        public static string FormatarCnpj(this string valor)
+        {
+            if (string.IsNullOrWhiteSpace(valor))
+                return string.Empty;
+            var d = valor.SomenteDigitos();
+            if (d.Length != 14)
+                return valor.Trim();
+            return $"{d[..2]}.{d[2..5]}.{d[5..8]}/{d[8..12]}-{d[12..14]}";
+        }
+
+        /// <summary>Aplica máscara de CPF ou CNPJ conforme quantidade de dígitos.</summary>
+        public static string FormatarCpfOuCnpj(this string valor)
+        {
+            if (string.IsNullOrWhiteSpace(valor))
+                return valor;
+            var d = valor.SomenteDigitos();
+            if (d.Length == 11)
+                return d.FormatarCpf();
+            if (d.Length == 14)
+                return d.FormatarCnpj();
+            return valor.Trim();
+        }
+
         public static string FormatarCpf(this string documento)
         {
             if (string.IsNullOrWhiteSpace(documento))

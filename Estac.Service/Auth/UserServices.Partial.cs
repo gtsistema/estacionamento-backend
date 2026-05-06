@@ -1,3 +1,4 @@
+using Estac.Domain.Extensions;
 using Estac.Domain.Input.Auth;
 using Estac.Domain.Input.Pessoa;
 using Estac.Domain.Models;
@@ -317,7 +318,7 @@ namespace Estac.Service.Auth
                     {
                         Id = pessoa.Id,
                         Nome = pessoa.Descricao,
-                        Cpf = pessoa.Documento,
+                        Cpf = pessoa.Documento.FormatarCpf(),
                         TipoPessoa = pessoa.TipoPessoa
                     };
                 }
