@@ -11,7 +11,8 @@ namespace Estac.Domain.Input.Auth
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
         public string Email { get; set; }
-        public int EstacionamentoId { get; set; }
+        public int? EstacionamentoId { get; set; }
+        public int? TransportadoraId { get; set; }
         public PessoaUsuarioImput Pessoa { get; set; }
         public ApplicationRole Perfil { get; set; }
     }

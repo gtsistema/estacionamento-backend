@@ -138,6 +138,7 @@ namespace Estac.Service.Auth
             }
 
             user.EstacionamentoId = input.EstacionamentoId;
+            user.TransportadoraId = input.TransportadoraId;
             user.FullName = pessoa.Descricao;
             user.EmailConfirmed = true;
 
