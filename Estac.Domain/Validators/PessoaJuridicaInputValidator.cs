@@ -29,10 +29,6 @@ namespace Estac.Domain.Validators
                 .NotEmpty().WithMessage("CNPJ é obrigatório.")
                 .Must(DocumentoBrasil.CnpjValido).WithMessage("CNPJ inválido.");
 
-            RuleFor(x => x.Contatos)
-                .Must(c => c != null && c.Any(x => !string.IsNullOrWhiteSpace(x.Email)))
-                .WithMessage("Informe pelo menos um contato com e-mail.");
-
             RuleForEach(x => x.Enderecos)
                 .SetValidator(new PessoaEnderecoInputValidator())
                 .When(x => x.Enderecos != null && x.Enderecos.Any());
