@@ -22,10 +22,15 @@ namespace Estac.Domain.Mappers.Auth
 
                 .ForMember(d => d.Pessoa, opt => opt.MapFrom(s => s.Pessoa));
 
-            CreateMap<PessoaMotorista, Pessoa>()
+            CreateMap<PessoaMotoristaInput, Pessoa>()
                 .ForMember(dest => dest.Documento, opt => opt.MapFrom(src => src.Cpf.SomenteDigitos()))
                 .ForMember(dest => dest.NomeRazaoSocial, opt => opt.MapFrom(src => src.Nome))
                 .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.Nome));
+
+            CreateMap<PessoaEstacionamentoInput, Pessoa>()
+               .ForMember(dest => dest.Documento, opt => opt.MapFrom(src => src.Cnpj.SomenteDigitos()))
+               .ForMember(dest => dest.NomeRazaoSocial, opt => opt.MapFrom(src => src.NomeRazaoSocial))
+               .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.NomeFantasia));
 
             CreateMap<Motorista, MotoristaOutput>()
                 .ForMember(d => d.PessoaFisica, opt => opt.MapFrom(s => s.Pessoa));
@@ -33,7 +38,7 @@ namespace Estac.Domain.Mappers.Auth
             CreateMap<MotoristaSearchOutput, MotoristaOutput>()
                 .ForMember(d => d.PessoaFisica, opt => opt.Ignore());
 
-            CreateMap<Pessoa, PessoaMotorista>()
+            CreateMap<Pessoa, PessoaMotoristaInput>()
                 .ForMember(d => d.Cpf, opt => opt.MapFrom(s => s.Documento.FormatarCpf()))
                 .ForMember(d => d.Email, opt => opt.MapFrom(s => s.ObtemEmailPrincipal()));
 

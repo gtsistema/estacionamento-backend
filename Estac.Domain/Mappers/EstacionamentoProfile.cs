@@ -20,7 +20,7 @@ namespace Estac.Domain.Mappers
                     src.ContaBancaria == null
                         ? null
                         : new List<ContaBancaria> { ctx.Mapper.Map<ContaBancaria>(src.ContaBancaria) }))
-               .ForMember(dest => dest.Pessoa, opt => opt.MapFrom(src => src.Pessoa))
+               .ForMember(dest => dest.Pessoa, opt => opt.MapFrom(src => src.PessoaJuridica))
                .ForMember(dest => dest.ResponsavelCpf, opt => opt.MapFrom(src => src.ResponsavelCpf.SomenteDigitos()));
 
 
@@ -29,7 +29,7 @@ namespace Estac.Domain.Mappers
                     src.ContaBancaria == null
                         ? null
                         : new List<ContaBancaria> { ctx.Mapper.Map<ContaBancaria>(src.ContaBancaria) }))
-               .ForMember(dest => dest.Pessoa, opt => opt.MapFrom(src => src.Pessoa))
+               .ForMember(dest => dest.Pessoa, opt => opt.MapFrom(src => src.PessoaJuridica))
                .ForMember(dest => dest.ResponsavelCpf, opt => opt.MapFrom(src => src.ResponsavelCpf.SomenteDigitos()));
 
             CreateMap<Estacionamento, EstacionamentoOutput>()

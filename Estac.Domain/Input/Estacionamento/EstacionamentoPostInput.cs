@@ -23,7 +23,7 @@ namespace Estac.Domain.Input.Estacionamento
         public decimal? CobrancaValor { get; set; }
         public byte[] Contrato { get; set; }
         public bool Ativo { get; set; }
-        public PessoaInput Pessoa { get; set; }
+        public PessoaEstacionamentoInput PessoaJuridica { get; set; }
         public ContaBancariaInput ContaBancaria { get; set; }
     }
 }

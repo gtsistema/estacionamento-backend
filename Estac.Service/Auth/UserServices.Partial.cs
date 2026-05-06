@@ -319,7 +319,6 @@ namespace Estac.Service.Auth
                         Id = pessoa.Id,
                         Nome = pessoa.Descricao,
                         Cpf = pessoa.Documento.FormatarCpf(),
-                        TipoPessoa = pessoa.TipoPessoa
                     };
                 }
             }

@@ -66,7 +66,6 @@ namespace Estac.Service.Seed.Identity
                 {
                     Nome = "Administrador",
                     Cpf = StringExtentions.GerarCpf(),
-                    TipoPessoa = Domain.Models.Enuns.TipoPessoa.Fisica
                 },
                 Perfil = new ApplicationRole
                 {

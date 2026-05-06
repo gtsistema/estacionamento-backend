@@ -7,6 +7,5 @@ namespace Estac.Domain.Input.Pessoa
         public int Id { get; set; }
         public string Nome { get; set; }    
         public string Cpf { get; set; }
-        public TipoPessoa TipoPessoa { get; set; }
     }
 }
