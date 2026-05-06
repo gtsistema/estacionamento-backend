@@ -17,5 +17,10 @@ namespace Estac.Infra.Repositories
             this._mapper = _mapper;
             _dataset = context.Set<Pessoa>();
         }
+
+        public async Task<Pessoa> SelecionarIdSimplesAsync(int id)
+        {
+            return await _dataset.FirstOrDefaultAsync(x => x.Id == id);
+        }
     }
 }

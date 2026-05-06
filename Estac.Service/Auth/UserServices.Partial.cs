@@ -63,12 +63,11 @@ namespace Estac.Service.Auth
         {
             if (user.PessoaId is int pessoaIdVinculo && pessoaIdVinculo > 0)
             {
-                var pessoa = await _pessoaRepositories.Selecionar(pessoaIdVinculo);
+                var pessoa = await _pessoaRepositories.SelecionarIdSimplesAsync(pessoaIdVinculo);
                 if (pessoa is null) return null;
                 _mapper.Map(input.Pessoa, pessoa);
                 pessoa.Ativo = true;
                 await _pessoaRepositories.Alterar(pessoa);
-                await SincronizarEmailContatoPrincipalAsync(pessoa.Id, input.Email);
                 return pessoa;
             }
 
@@ -77,48 +76,7 @@ namespace Estac.Service.Auth
             nova.AdicionarPapel(TipoPapel.Funcionario);
             await _pessoaRepositories.Gravar(nova);
             user.PessoaId = nova.Id;
-            await SincronizarEmailContatoPrincipalAsync(nova.Id, input.Email);
             return nova;
-        }
-
-        private async Task SincronizarEmailContatoPrincipalAsync(int pessoaId, string email)
-        {
-            var emailTrim = string.IsNullOrWhiteSpace(email) ? null : email.Trim();
-            var existentes = await _pessoaContatoRepositories.ListarPorPessoaIdAsync(pessoaId);
-            var lista = existentes
-                .Select(c => new PessoaContato
-                {
-                    Id = 0,
-                    Descricao = c.Descricao,
-                    PessoaId = pessoaId,
-                    Cpf = c.Cpf,
-                    Telefone = c.Telefone,
-                    Email = c.Email,
-                    Principal = c.Principal,
-                    Observacao = c.Observacao
-                })
-                .ToList();
-
-            var principal = lista.FirstOrDefault(c => c.Principal);
-            if (principal != null)
-            {
-                principal.Email = emailTrim;
-            }
-            else if (!string.IsNullOrWhiteSpace(emailTrim))
-            {
-                lista.Add(new PessoaContato
-                {
-                    Descricao = "Principal",
-                    Email = emailTrim,
-                    Principal = true,
-                    PessoaId = pessoaId
-                });
-            }
-
-            if (lista.Count == 0 && string.IsNullOrWhiteSpace(emailTrim))
-                return;
-
-            await _pessoaContatoRepositories.AtualizarContatos(pessoaId, lista);
         }
 
         private async Task<ActionResult> AtualizarUsuarioIdentityAsync(

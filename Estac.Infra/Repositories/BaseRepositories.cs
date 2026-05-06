@@ -13,7 +13,7 @@ namespace Estac.Infra.Repository
         {
             _context = context;
         }
-        public async Task<bool> Excluir(long id)
+        public async Task<bool> Excluir(int id)
         {
             try
             {
@@ -34,7 +34,7 @@ namespace Estac.Infra.Repository
             }
         }
 
-        public async Task<bool> Existe(long id)
+        public async Task<bool> Existe(int id)
         {
             return await _context.Set<T>().AsNoTracking().AnyAsync(p => p.Id.Equals(id));
         }
@@ -60,7 +60,7 @@ namespace Estac.Infra.Repository
             return item;
         }
 
-        public async Task<T> Selecionar(long id)
+        public async Task<T> Selecionar(int id)
         {
             try
             {
@@ -140,17 +140,17 @@ namespace Estac.Infra.Repository
             }
         }
 
-        public async Task<long?> GetIdByDescricaoAsync(string descricao)
+        public async Task<int ?> GetIdByDescricaoAsync(string descricao)
         {
             return await _context.Set<T>().AsNoTracking()
                 .Where(p => descricao.ToLower().Trim().Contains(p.Descricao.ToLower()))
-                .Select(p => (long?)p.Id)
+                .Select(p => (int?)p.Id)
                 .FirstOrDefaultAsync();
         }
 
-        public long LastCodeTable()
+        public int LastCodeTable()
         {
-            long? codigo = _context.Set<T>().OrderByDescending(s => s.Id).FirstOrDefault()?.Id;
+            int? codigo = _context.Set<T>().OrderByDescending(s => s.Id).FirstOrDefault()?.Id;
 
             return codigo == null ? 1 : codigo.Value + 1;
         }
