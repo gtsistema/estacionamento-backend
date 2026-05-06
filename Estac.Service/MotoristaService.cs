@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using DocumentFormat.OpenXml.Office2010.Excel;
 using Estac.Domain.Input.Motorista;
 using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Interface.Services;
@@ -7,7 +6,6 @@ using Estac.Domain.Models;
 using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output;
 using Estac.Domain.Output.Motorista;
-using Estac.Infra.Repositories;
 using Estac.Service.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +18,7 @@ namespace Estac.Service
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPessoaContatoRepositories _contatoRepositories;
         private readonly IPessoaEnderecoRepositories _enderecoRepositories;
+        private readonly IPessoaRepositories _pessoaRepositories;
         private readonly IVeiculoRepositories _veiculoRepositories;
 
         public MotoristaService(IErrorServices _errorServices,
@@ -27,6 +26,7 @@ namespace Estac.Service
                                IUnitOfWork unitOfWork,
                                IPessoaContatoRepositories contatoRepositories,
                                IPessoaEnderecoRepositories enderecoRepositories,
+                               IPessoaRepositories pessoaRepositories,
                                IVeiculoRepositories veiculoRepositories) : base(_errorServices)
         {
             _repositories = repositories;
@@ -34,6 +34,7 @@ namespace Estac.Service
             _unitOfWork = unitOfWork;
             _contatoRepositories = contatoRepositories;
             _enderecoRepositories = enderecoRepositories;
+            _pessoaRepositories = pessoaRepositories;
             _veiculoRepositories = veiculoRepositories;
         }
 
@@ -53,48 +54,45 @@ namespace Estac.Service
 
         public async Task<ActionResult> Gravar(MotoristaPostInput input)
         {
+
+            await _unitOfWork.BeginTransactionAsync();
+
             try
             {
-
-                //var validations = MotoristaPostInput.Validar(input);
-
-                //if (!validations.IsValid)
-                //    return await RetornNo(false, validations.Errors);
-
                 var motorista = _mapper.Map<Motorista>(input);
 
-                
                 ValoresPadrao(motorista);
 
                 await _repositories.Gravar(motorista);
+
+                await _unitOfWork.CommitAsync();
 
                 return await RetornOk(motorista);
             }
             catch (Exception ex) 
             {
+                await _unitOfWork.RollbackAsync();
+
                 return await RetornNo(false, ex.Message);
             }
-          
         }
 
-        private static void ValoresPadrao(Motorista result)
+        private static void ValoresPadrao(Motorista motorista)
         {
-            result.Descricao = result.Pessoa.Descricao;
-            result.Pessoa.AdicionarTipoPessoa(TipoPessoa.Fisica);
-            result.Pessoa.AdicionarPapel(TipoPapel.Estacionamento);
-            result.Pessoa.Contatos = null;
-            result.Pessoa.Enderecos = null;
+            motorista.Descricao = motorista.Pessoa.Descricao;
+            motorista.PessoaId = motorista.Pessoa.Id;
+            motorista.Pessoa.AdicionarTipoPessoa(TipoPessoa.Fisica);
+            motorista.Pessoa.AdicionarPapel(TipoPapel.Motorista);
+            motorista.Pessoa.Contatos = null;
+            motorista.Pessoa.Enderecos = null;
         }
 
         public async Task<ActionResult> Alterar(MotoristaPutInput input)
         {
+            await _unitOfWork.BeginTransactionAsync();
+
             try
             {
-                //var validations = MotoristaPutInput.Validar(input);
-
-                //if (!validations.IsValid)
-                //    return await RetornNo(false, validations.Errors);
-
                 var motorista = _mapper.Map<Motorista>(input);
 
                 await _contatoRepositories.AtualizarContatos(motorista.Pessoa.Id, motorista.Pessoa.Contatos);
@@ -102,28 +100,48 @@ namespace Estac.Service
 
                 ValoresPadrao(motorista);
 
-                await _repositories.Alterar(motorista);
+                var motoristaAlterado = await _repositories.Alterar(motorista);
 
-                return await RetornOk(await _repositories.Alterar(motorista));
+                await _unitOfWork.CommitAsync();
+
+                return await RetornOk(motoristaAlterado);
             }
             catch (Exception ex) 
             {
+                await _unitOfWork.RollbackAsync();
+
                 return await RetornNo(false, ex.Message);
             }
         }
 
         public async Task<ActionResult> Excluir(int id)
         {
-            var result = await _repositories.Existe(id);
+            await _unitOfWork.BeginTransactionAsync();
 
-            if (!result)
-                return await RetornNo(false, "Produto não localizado na base de dados!");
+            try
+            {
+                var motorista = await _repositories.Selecionar(id);
 
-            var despesa = await _repositories.Selecionar(id);
+                if (motorista == null)
+                {
+                    await _unitOfWork.RollbackAsync();
+                    return await RetornNo(false, "Produto não localizado na base de dados!");
+                }
 
-            await _repositories.Excluir(id);
+                await _repositories.Excluir(id);
 
-            return await RetornOk(true);
+                await _pessoaRepositories.Excluir(motorista.PessoaId);
+
+                await _unitOfWork.CommitAsync();
+
+                return await RetornOk(true);
+            }
+            catch (Exception ex)
+            {
+                await _unitOfWork.RollbackAsync();
+
+                return await RetornNo(false, ex.Message);
+            }
         }
     }
 }
