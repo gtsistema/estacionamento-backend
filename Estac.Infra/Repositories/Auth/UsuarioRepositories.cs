@@ -25,9 +25,17 @@ namespace Estac.Infra.Repositories.Auth
                     u.FullName AS Nome,
                     u.EstacionamentoId,
                     r.Name AS Role,
-                    e.Descricao AS Estacionamento
+                    e.Descricao AS Estacionamento,
+                    t.Descricao AS Transportadora,
+                    t.Id AS TransportadoraId,
+                    CASE 
+                        WHEN LEN(REPLACE(REPLACE(REPLACE(u.FullName, '.', ''), '-', ''), '/', '')) = 11
+                        THEN STUFF(STUFF(STUFF(REPLACE(REPLACE(REPLACE(u.FullName, '.', ''), '-', ''), '/', ''), 4, 0, '.'), 8, 0, '.'), 12, 0, '-')
+                        ELSE u.FullName
+                    END AS Cpf
                 FROM dbo.[User] u
-                INNER JOIN gts.Estacionamento e ON e.Id = u.EstacionamentoId
+                LEFT JOIN gts.Estacionamento e ON e.Id = u.EstacionamentoId
+                LEFT JOIN gts.Transportadora t ON t.Id = u.TransportadoraId
                 OUTER APPLY (
                     SELECT TOP 1 r2.Name
                     FROM dbo.UserRole ur
