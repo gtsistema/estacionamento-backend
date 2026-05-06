@@ -359,9 +359,9 @@ namespace Estac.Service.Auth
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_bearerTokenSettings.Secret);
-            var timeInMs = _bearerTokenSettings.ExpirationInMinutes * 60 * 1000d;
+            var timeInMs = _bearerTokenSettings.ExpirationInMinutes * 60 * 1000123;
             var expires = DateTime.UtcNow.AddMilliseconds(timeInMs);
-            var refreshTimeInMs = _bearerTokenSettings.RefreshExpirationInMinutes * 60 * 1000d;
+            var refreshTimeInMs = _bearerTokenSettings.RefreshExpirationInMinutes * 60 * 1000123;
             var refreshExpires = DateTime.UtcNow.AddMinutes(_bearerTokenSettings.RefreshExpirationInMinutes);
 
             var token = tokenHandler.CreateToken(new SecurityTokenDescriptor

@@ -62,5 +62,15 @@ namespace Estac.Infra.Repositories
 
             return result;
         }
+
+        public async Task<Motorista> SelecionarPorIdCompleto(int id)
+        {
+            return await _dataset
+                        .AsNoTracking()
+                        .Include(x => x.Pessoa.Enderecos)
+                        .Include(x => x.Pessoa.Contatos)
+                        .SingleOrDefaultAsync(x => x.Id == id);
+        }
+
     }
 }

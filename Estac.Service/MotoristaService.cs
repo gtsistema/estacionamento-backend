@@ -40,7 +40,7 @@ namespace Estac.Service
 
         public async Task<ActionResult> ObterPorId(int id)
         {
-            var result = await _repositories.Selecionar(id);
+            var result = await _repositories.SelecionarPorIdCompleto(id);
 
             return await RetornOk(_mapper.Map<MotoristaOutput>(result));
         }

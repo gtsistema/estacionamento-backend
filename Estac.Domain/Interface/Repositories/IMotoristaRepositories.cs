@@ -8,5 +8,6 @@ namespace Estac.Domain.Interface.Repositories
     public interface IMotoristaRepositories : IBaseRepositoriesNone<Motorista>
     {
         Task<PagedResult<MotoristaSearchOutput>> Paginar(MotoristaFilterInput input);
+        Task<Motorista> SelecionarPorIdCompleto(int id);
     }
 }
