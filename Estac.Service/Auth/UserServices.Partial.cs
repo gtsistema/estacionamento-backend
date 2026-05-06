@@ -317,7 +317,7 @@ namespace Estac.Service.Auth
                     {
                         Id = pessoa.Id,
                         Nome = pessoa.Descricao,
-                        Documento = pessoa.Documento,
+                        Cpf = pessoa.Documento,
                         TipoPessoa = pessoa.TipoPessoa
                     };
                 }

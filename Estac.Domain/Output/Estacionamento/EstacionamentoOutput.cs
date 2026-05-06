@@ -20,7 +20,8 @@ namespace Estac.Domain.Output.Estacionamento
         public TipoCobranca TipoCobranca { get; set; }
         public byte? CobrancaPorcentagem { get; set; }
         public decimal? CobrancaValor { get; set; }
-        public PessoaOutput Pessoa { get; set; }
+        public byte[] Contrato { get; set; }
+        public PessoaEstacionamentoOutput PessoaJuridica { get; set; }
         public List<ContaBancariaOutput> ContaBancaria { get; set; } = new();
 
     }

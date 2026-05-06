@@ -1,4 +1,4 @@
-﻿using Estac.Domain.Models;
+using Estac.Domain.Models;
 using Estac.Domain.Models.Enuns;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -50,6 +50,10 @@ namespace Estac.Infra.EntityBuilders
 
             builder.Property(v => v.CobrancaValor)
               .HasColumnType("decimal(18,2)");
+
+            builder.Property(v => v.Contrato)
+              .HasColumnName("Contrato")
+              .HasColumnType("varbinary(max)");
 
             builder.Property(m => m.PessoaId)
                    .IsRequired();

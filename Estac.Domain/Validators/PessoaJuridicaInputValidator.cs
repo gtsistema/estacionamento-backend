@@ -25,7 +25,7 @@ namespace Estac.Domain.Validators
                 .NotEmpty().WithMessage("Nome fantasia é obrigatório.")
                 .MaximumLength(200);
 
-            RuleFor(x => x.Documento)
+            RuleFor(x => x.Cnpj)
                 .NotEmpty().WithMessage("CNPJ é obrigatório.")
                 .Must(DocumentoBrasil.CnpjValido).WithMessage("CNPJ inválido.");
 

@@ -2,7 +2,6 @@
 using Estac.Domain.Input.Endereco;
 using Estac.Domain.Input.Pessoa;
 using Estac.Domain.Input.PessoaContato;
-using Estac.Domain.Extensions;
 using Estac.Domain.Models;
 using Estac.Domain.Output.Pessoa;
 
@@ -13,17 +12,18 @@ namespace Estac.Domain.Mappers.Auth
         public PessoaProfile()
         {
             CreateMap<PessoaInput, Pessoa>()
+                .ForMember(dest => dest.Documento, opt => opt.MapFrom(src => src.Cnpj))
                 .ForMember(dest => dest.Enderecos, opt => opt.MapFrom(src => src.Enderecos))
                 .ForMember(dest => dest.Contatos, opt => opt.MapFrom(src => src.Contatos));
 
             CreateMap<Pessoa, PessoaOutput>()
                .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.Descricao))
-               .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.ObtemEmailPrincipal()))
+               .ForMember(dest => dest.Cpf, opt => opt.MapFrom(src => src.Documento))
                .ForMember(dest => dest.Enderecos, opt => opt.MapFrom(src => src.Enderecos))
                .ForMember(dest => dest.Contatos, opt => opt.MapFrom(src => src.Contatos));
 
             CreateMap<PessoaUsuarioImput, Pessoa>()
-               .ForMember(dest => dest.Documento, opt => opt.MapFrom(src => src.Documento))
+               .ForMember(dest => dest.Documento, opt => opt.MapFrom(src => src.Cpf))
                .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.Nome))
                .ForMember(dest => dest.NomeRazaoSocial, opt => opt.MapFrom(src => src.Nome));
 
@@ -52,13 +52,17 @@ namespace Estac.Domain.Mappers.Auth
                 .ForMember(dest => dest.Principal, opt => opt.MapFrom(src => src.Principal))
                 .ForMember(dest => dest.Observacao, opt => opt.MapFrom(src => src.Observacao));
 
-            CreateMap<Pessoa, PessoaTransportadoraOutput >()
-              .ForMember(dest => dest.Documento, opt => opt.MapFrom(src => src.Documento))
+            CreateMap<Pessoa, PessoaTransportadoraOutput>()
+              .ForMember(dest => dest.Cnpj, opt => opt.MapFrom(src => src.Documento))
               .ForMember(dest => dest.NomeFantasia, opt => opt.MapFrom(src => src.Descricao))
-              .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.ObtemEmailPrincipal()))
               .ForMember(dest => dest.Enderecos, opt => opt.MapFrom(src => src.Enderecos))
               .ForMember(dest => dest.Contatos, opt => opt.MapFrom(src => src.Contatos));
-            
+
+            CreateMap<Pessoa, PessoaEstacionamentoOutput>()
+              .ForMember(dest => dest.Cnpj, opt => opt.MapFrom(src => src.Documento))
+              .ForMember(dest => dest.NomeFantasia, opt => opt.MapFrom(src => src.Descricao))
+              .ForMember(dest => dest.Enderecos, opt => opt.MapFrom(src => src.Enderecos))
+              .ForMember(dest => dest.Contatos, opt => opt.MapFrom(src => src.Contatos));
         }
     }
 }

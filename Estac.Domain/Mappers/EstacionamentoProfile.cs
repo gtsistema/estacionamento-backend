@@ -4,6 +4,7 @@ using Estac.Domain.Input.Estacionamento;
 using Estac.Domain.Input.Pessoa;
 using Estac.Domain.Models;
 using Estac.Domain.Output.Estacionamento;
+using Estac.Domain.Output.Pessoa;
 using System.Collections.Generic;
 
 namespace Estac.Domain.Mappers
@@ -30,7 +31,8 @@ namespace Estac.Domain.Mappers
 
             CreateMap<Estacionamento, EstacionamentoOutput>()
               .ForMember(dest => dest.ContaBancaria, opt => opt.MapFrom(src => src.ContasBancarias))
-              .ForMember(dest => dest.Pessoa, opt => opt.MapFrom(src => src.Pessoa));
+              .ForMember(dest => dest.PessoaJuridica, opt => opt.MapFrom(src => src.Pessoa));
+
 
             CreateMap<ContaBancariaInput, ContaBancaria>();
 

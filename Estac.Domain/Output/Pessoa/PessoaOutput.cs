@@ -10,8 +10,7 @@ namespace Estac.Domain.Output.Pessoa
         public TipoPessoa TipoPessoa { get; set; }
         public string NomeRazaoSocial { get; set; }
         public string Descricao { get; set; }
-        public string Documento { get; set; }
-        public string Email { get; set; }
+        public string Cpf { get; set; }
         public bool Ativo { get; set; }
         public List<PessoaEnderecoOutput> Enderecos { get; set; } = new List<PessoaEnderecoOutput>();
         public List<PessoaContatoOutput> Contatos { get; set; } = new List<PessoaContatoOutput>();

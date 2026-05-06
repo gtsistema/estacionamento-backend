@@ -1,10 +1,4 @@
-﻿using Estac.Domain.Models.Base;
-using Estac.Domain.Models.Enuns;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Estac.Domain.Models.Enuns;
 
 namespace Estac.Domain.Input.Pessoa
 {
@@ -12,7 +6,7 @@ namespace Estac.Domain.Input.Pessoa
     {
         public int Id { get; set; }
         public string Nome { get; set; }    
-        public string Documento { get; set; }
+        public string Cpf { get; set; }
         public TipoPessoa TipoPessoa { get; set; }
     }
 }

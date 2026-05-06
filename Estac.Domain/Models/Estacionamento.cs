@@ -1,4 +1,4 @@
-﻿using Estac.Domain.Models.Base;
+using Estac.Domain.Models.Base;
 using Estac.Domain.Models.Enuns;
 
 namespace Estac.Domain.Models
@@ -17,6 +17,7 @@ namespace Estac.Domain.Models
         public TipoCobranca TipoCobranca { get; set; }
         public byte? CobrancaPorcentagem { get; set; }
         public decimal? CobrancaValor { get; set; }
+        public byte[] Contrato { get; set; }
         public Pessoa Pessoa { get; set; }
         public ICollection<ContaBancaria> ContasBancarias { get; set; }
         public ICollection<EstacionamentoFoto> Fotos { get; set; }

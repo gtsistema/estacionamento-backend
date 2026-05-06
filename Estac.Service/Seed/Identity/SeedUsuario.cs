@@ -65,7 +65,7 @@ namespace Estac.Service.Seed.Identity
                 Pessoa = new PessoaUsuarioImput
                 {
                     Nome = "Administrador",
-                    Documento = StringExtentions.GerarCpf(),
+                    Cpf = StringExtentions.GerarCpf(),
                     TipoPessoa = Domain.Models.Enuns.TipoPessoa.Fisica
                 },
                 Perfil = new ApplicationRole

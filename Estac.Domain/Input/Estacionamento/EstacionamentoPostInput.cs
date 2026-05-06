@@ -21,6 +21,7 @@ namespace Estac.Domain.Input.Estacionamento
         public TipoCobranca TipoCobranca { get; set; }
         public byte? CobrancaPorcentagem { get; set; }
         public decimal? CobrancaValor { get; set; }
+        public byte[] Contrato { get; set; }
         public bool Ativo { get; set; }
         public PessoaInput Pessoa { get; set; }
         public ContaBancariaInput ContaBancaria { get; set; }

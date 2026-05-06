@@ -112,18 +112,12 @@ namespace Estac.Infra.Repositories
                          .Select(x => new EstacionamentoSearchOutput
                          {
                              Id = x.Id,
-                             Descricao = x.Descricao,
+                             NomeFantasia = x.Descricao,
                              PessoaId = x.PessoaId,
-                             Documento = x.Pessoa.Documento,
+                             Cnpj = x.Pessoa.Documento,
                              Ativo = x.Pessoa.Ativo,
                              DescricaoPessoa = x.Pessoa.Descricao,
                              NomeRazaoSocial = x.Pessoa.NomeRazaoSocial,
-                             Email = x.Pessoa.Contatos
-                                 .Where(c => c.Email != null && c.Email != "")
-                                 .OrderByDescending(c => c.Principal)
-                                 .Select(c => c.Email)
-                                 .FirstOrDefault(),
-                             Tipo = x.Pessoa.TipoPessoa,
                              ResponsavelLegal = x.ResponsavelLegal,
                              ResponsavelCpf = x.ResponsavelCpf,
                              ResponsavelEmail = x.ResponsavelEmail,
