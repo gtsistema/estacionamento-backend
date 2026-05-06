@@ -6,6 +6,6 @@ namespace Estac.Domain.Interface.Repositories.Auth
     public interface IUsuarioRepositories
     {
         Task<IEnumerable<UsuarioOutput>> BuscarUsuariosGrid(int? usuarioId);
-        Task<UsuarioCadastroOutput> SelecionarUsuarioPessoaPorId(int id);
+        Task<UsuarioCadastroOutput> SelecionarUsuarioPorId(int id);
     }
 }

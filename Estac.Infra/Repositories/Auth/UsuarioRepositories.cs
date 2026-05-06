@@ -42,7 +42,7 @@ namespace Estac.Infra.Repositories.Auth
             return result;
         }
 
-        public async Task<UsuarioCadastroOutput> SelecionarUsuarioPessoaPorId(int id)
+        public async Task<UsuarioCadastroOutput> SelecionarUsuarioPorId(int id)
         {
             string query = $@"
 					 SELECT 
@@ -53,8 +53,10 @@ namespace Estac.Infra.Repositories.Auth
                             THEN STUFF(STUFF(STUFF(REPLACE(REPLACE(REPLACE(p.Documento, '.', ''), '-', ''), '/', ''), 4, 0, '.'), 8, 0, '.'), 12, 0, '-')
                             ELSE p.Documento
                         END AS Cpf,
-                        COALESCE(t.Id, e.Id) AS EmpresaId,
-                        COALESCE(t.Descricao, e.Descricao) AS Empresa,
+                        t.Id AS TransportadoraId,
+                        t.Descricao AS Transportadora,
+                        e.Id AS EstacionamentoId,
+                        e.Descricao AS Estacionamento,
                         u.Id AS UsuarioId,
                         u.Email,
                         u.UserName,

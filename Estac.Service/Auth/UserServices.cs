@@ -145,7 +145,7 @@ namespace Estac.Service.Auth
             if (id <= 0)
                 return await RetornNo(false, "Id de usuário inválido.");
         
-            var usuario = await _usuarioRepositories.SelecionarUsuarioPessoaPorId(id);
+            var usuario = await _usuarioRepositories.SelecionarUsuarioPorId(id);
 
             return await RetornOk(usuario);
         }
@@ -191,7 +191,7 @@ namespace Estac.Service.Auth
                 if (role != null)
                     return role;
 
-                return await RetornOk(await _usuarioRepositories.SelecionarUsuarioPessoaPorId(id));
+                return await RetornOk(await _usuarioRepositories.SelecionarUsuarioPorId(id));
             }
             catch (Exception ex)
             {
