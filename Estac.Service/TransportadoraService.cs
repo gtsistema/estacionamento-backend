@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Estac.Domain.Extensions;
 using Estac.Domain.Input.Transportadora;
 using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Interface.Services;
@@ -52,6 +53,28 @@ namespace Estac.Service
             try
             {
                 var result = await _repositories.Paginar(filter);
+
+                return await RetornOk(result);
+            }
+            catch (Exception ex)
+            {
+                return await RetornNo(false, ex.Message);
+            }
+        }
+
+        public async Task<ActionResult> BuscarPorCnpj(string cnpj)
+        {
+            try
+            {
+                var cnpjNormalizado = cnpj.SomenteDigitos();
+
+                if (string.IsNullOrWhiteSpace(cnpjNormalizado))
+                    return await RetornNo(false, "CNPJ inválido.");
+
+                var result = await _repositories.SelecionarPorCnpj(cnpjNormalizado);
+
+                if (result == null)
+                    return await RetornNo(false, "Transportadora não localizada na base de dados.", statusCode: 404);
 
                 return await RetornOk(result);
             }

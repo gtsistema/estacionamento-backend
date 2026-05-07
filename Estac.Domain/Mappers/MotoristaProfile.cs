@@ -42,6 +42,7 @@ namespace Estac.Domain.Mappers.Auth
                 .ForMember(d => d.Cpf, opt => opt.MapFrom(s => s.Documento.FormatarCpf()));
 
             CreateMap<Veiculo, VeiculoVinculoResumoOutput>()
+                .ForMember(d => d.MotoristaIds, opt => opt.MapFrom(s => s.VeiculoMotoristas.Select(vm => vm.MotoristaId)))
                 .ForMember(d => d.Placa, opt => opt.MapFrom(s => VeiculoPlacaHelper.FormatarExibicao(s.Placa)));
 
             CreateMap<PessoaEndereco, PessoaEnderecoInput>();

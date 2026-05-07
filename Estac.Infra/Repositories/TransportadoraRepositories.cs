@@ -125,5 +125,29 @@ namespace Estac.Infra.Repositories
                         .AsNoTracking()
                         .SingleOrDefaultAsync(x => x.Id == id);
         }
+
+        public async Task<TransportadoraPorCnpjOutput> SelecionarPorCnpj(string cnpj)
+        {
+            var cnpjNormalizado = cnpj.SomenteDigitos();
+            if (string.IsNullOrWhiteSpace(cnpjNormalizado))
+                return null;
+
+            return await _dataset
+                .AsNoTracking()
+                .Where(x => x.Pessoa != null
+                    && x.Pessoa.Documento != null
+                    && x.Pessoa.Documento == cnpjNormalizado)
+                .Select(x => new TransportadoraPorCnpjOutput
+                {
+                    Id = x.Id,
+                    Cnpj = x.Pessoa.Documento,
+                    RazaoSocial = x.Pessoa.NomeRazaoSocial,
+                    NomeFantasia = x.Pessoa.Descricao,
+                    NomeResponsavel = x.ResponsavelLegal,
+                    CpfResponsavel = x.ResponsavelCpf,
+                    TelefoneResponsavel = x.ResponsavelTelefone
+                })
+                .FirstOrDefaultAsync();
+        }
     }
 }

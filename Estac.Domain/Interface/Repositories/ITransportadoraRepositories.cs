@@ -12,5 +12,6 @@ namespace Estac.Domain.Interface.Repositories
         Task<Transportadora> SelecionarPorIdCompleto(int id);
         Task<PagedResult<TransportadoraSearchOutput>> Paginar(TransportadoraFilterInput input);
         Task<Transportadora> SelecionarIdSimplificado(int id);
+        Task<TransportadoraPorCnpjOutput> SelecionarPorCnpj(string cnpj);
     }
 }

@@ -16,8 +16,11 @@ namespace Estac.Domain.Mappers.Auth
         {
             CreateMap<VeiculoPostInput, Veiculo>()
                 .ForMember(dest => dest.Transportadora, opt => opt.Ignore())
-                .ForMember(dest => dest.Motorista, opt => opt.Ignore())
                 .ForMember(dest => dest.VeiculoModelo, opt => opt.Ignore())
+                .ForMember(dest => dest.VeiculoMotoristas, opt => opt.MapFrom(src =>
+                    (src.MotoristaIds ?? new List<int>())
+                        .Distinct()
+                        .Select(id => new VeiculoMotorista { MotoristaId = id })))
                 .ForMember(dest => dest.VeiculoDetalhe, opt => opt.MapFrom(src => src.VeiculoDetalhe));
 
             CreateMap<VeiculoPutInput, Veiculo>()
@@ -27,7 +30,8 @@ namespace Estac.Domain.Mappers.Auth
             CreateMap<Veiculo, VeiculoOutput>()
               .ForMember(dest => dest.Placa, opt => opt.MapFrom(src => VeiculoPlacaHelper.FormatarExibicao(src.Placa)))
               .ForMember(dest => dest.Detalhe, opt => opt.MapFrom(src => src.VeiculoDetalhe))
-              .ForMember(dest => dest.Motorista, opt => opt.MapFrom(src => src.Motorista))
+              .ForMember(dest => dest.Motoristas, opt => opt.MapFrom(src =>
+                    src.VeiculoMotoristas.Select(vm => vm.Motorista)))
               .ForMember(dest => dest.Modelo, opt => opt.MapFrom(src => src.VeiculoModelo));
 
 

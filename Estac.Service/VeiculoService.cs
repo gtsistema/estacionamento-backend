@@ -117,10 +117,8 @@ namespace Estac.Service
 
         private async Task<ActionResult> Validar(int? transportadoraId)
         {
-            if (!transportadoraId.HasValue)
-                return await RetornNo(false, "Transportadora é obrigatória.");
+            var existe = await _transportadoraRepositories.SelecionarIdSimplificado(transportadoraId ?? transportadoraId.Value);
 
-            var existe = await _transportadoraRepositories.SelecionarIdSimplificado(transportadoraId.Value);
             if (existe is null)
                 return await RetornNo(false, "Transportadora não localizada na base de dados.");
 

@@ -9,10 +9,7 @@ using Estac.Domain.Output.Veiculo;
 using Estac.Domain.Shared;
 using Estac.Infra.Context;
 using Estac.Infra.Repository;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System.Configuration;
-using System.Data;
 
 namespace Estac.Infra.Repositories
 {
@@ -54,8 +51,13 @@ namespace Estac.Infra.Repositories
                             Placa = x.Placa,
                             TipoCarga = x.TipoCarga,
                             ModeloMarca = x.VeiculoModelo != null ? x.VeiculoModelo.Descricao + " - " + x.VeiculoModelo.VeiculoMarca.Descricao : null,
-                            MotoristaId = x.MotoristaId,
-                            Motorista = x.Motorista != null ? x.Motorista.Descricao : null,
+                            MotoristaIds = x.VeiculoMotoristas
+                                .Select(vm => vm.MotoristaId)
+                                .ToList(),
+                            Motoristas = x.VeiculoMotoristas
+                                .Where(vm => vm.Motorista != null)
+                                .Select(vm => vm.Motorista.Descricao)
+                                .ToList(),
                         })
                         .GetPaged(input.NumeroPagina, input.TamanhoPagina);
 
@@ -72,20 +74,22 @@ namespace Estac.Infra.Repositories
                         .Include(x => x.VeiculoDetalhe)
                         .Include(x => x.VeiculoModelo)
                             .ThenInclude(m => m.VeiculoMarca)
-                        .Include(x => x.Motorista)
-                            .ThenInclude(m => m.Pessoa)
-                                .ThenInclude(p => p.Contatos)
-                        .Include(x => x.Motorista)
-                            .ThenInclude(m => m.Pessoa)
-                                .ThenInclude(p => p.Enderecos)
+                        .Include(x => x.VeiculoMotoristas)
+                            .ThenInclude(vm => vm.Motorista)
+                                .ThenInclude(m => m.Pessoa)
+                                    .ThenInclude(p => p.Contatos)
+                        .Include(x => x.VeiculoMotoristas)
+                            .ThenInclude(vm => vm.Motorista)
+                                .ThenInclude(m => m.Pessoa)
+                                    .ThenInclude(p => p.Enderecos)
                         .SingleOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<Veiculo> GravarCompleto(Veiculo veiculo)
         {
             veiculo.Transportadora = null;
-            veiculo.Motorista = null;
             veiculo.VeiculoModelo = null;
+            veiculo.VeiculoMotoristas ??= new List<VeiculoMotorista>();
 
             veiculo.Placa = VeiculoPlacaHelper.Normalizar(veiculo.Placa);
 
@@ -103,6 +107,13 @@ namespace Estac.Infra.Repositories
                     veiculo.VeiculoDetalhe.Descricao = veiculo.Descricao;
             }
 
+            foreach (var vinculo in veiculo.VeiculoMotoristas)
+            {
+                vinculo.Id = 0;
+                vinculo.VeiculoId = 0;
+                vinculo.Motorista = null;
+            }
+
             await _context.AddAsync(veiculo);
             await _context.SaveChangesAsync();
 
@@ -113,6 +124,7 @@ namespace Estac.Infra.Repositories
         {
             var entity = await _dataset
                 .Include(v => v.VeiculoDetalhe)
+                .Include(v => v.VeiculoMotoristas)
                 .FirstOrDefaultAsync(v => v.Id == dados.Id);
 
             if (entity == null)
@@ -127,8 +139,8 @@ namespace Estac.Infra.Repositories
                 ? entity.Placa ?? entity.Descricao
                 : dados.Descricao;
             entity.TransportadoraId = dados.TransportadoraId;
-            entity.MotoristaId = dados.MotoristaId;
             entity.VeiculoModeloId = dados.VeiculoModeloId;
+            AtualizarVinculosMotorista(entity, dados);
 
             if (dados.VeiculoDetalhe != null)
             {
@@ -170,6 +182,36 @@ namespace Estac.Infra.Repositories
                 : origem.Descricao;
         }
 
+        private static void AtualizarVinculosMotorista(Veiculo entity, Veiculo dados)
+        {
+            var idsDesejados = (dados.VeiculoMotoristas ?? new List<VeiculoMotorista>())
+                .Select(x => x.MotoristaId)
+                .Distinct()
+                .ToHashSet();
+
+            var remover = entity.VeiculoMotoristas
+                .Where(x => !idsDesejados.Contains(x.MotoristaId))
+                .ToList();
+
+            foreach (var item in remover)
+                entity.VeiculoMotoristas.Remove(item);
+
+            var existentes = entity.VeiculoMotoristas
+                .Select(x => x.MotoristaId)
+                .ToHashSet();
+
+            var incluir = idsDesejados
+                .Where(id => !existentes.Contains(id))
+                .Select(id => new VeiculoMotorista
+                {
+                    MotoristaId = id,
+                    VeiculoId = entity.Id
+                });
+
+            foreach (var item in incluir)
+                entity.VeiculoMotoristas.Add(item);
+        }
+
         /// <summary>
         /// Exclui <see cref="VeiculoDetalhe"/> pelo <c>VeiculoId</c> e em seguida o <see cref="Veiculo"/>.
         /// </summary>
@@ -200,7 +242,9 @@ namespace Estac.Infra.Repositories
 
             var veiculo = await _context.Veiculo
                 .AsNoTracking()
-                .Include(v => v.Motorista)!.ThenInclude(m => m.Pessoa)
+                .Include(v => v.VeiculoMotoristas)
+                    .ThenInclude(vm => vm.Motorista)
+                        .ThenInclude(m => m.Pessoa)
                 .Include(v => v.Transportadora)!.ThenInclude(t => t.Pessoa)
                 .FirstOrDefaultAsync(v => v.Placa != null && v.Placa == placaNorm);
 
@@ -232,7 +276,10 @@ namespace Estac.Infra.Repositories
 
             return new MotoristaVinculosPorPlacaOutput
             {
-                Motorista = veiculo.Motorista != null ? _mapper.Map<MotoristaOutput>(veiculo.Motorista) : null,
+                Motoristas = veiculo.VeiculoMotoristas
+                    .Where(vm => vm.Motorista != null)
+                    .Select(vm => _mapper.Map<MotoristaOutput>(vm.Motorista))
+                    .ToList(),
                 Veiculo = _mapper.Map<VeiculoVinculoResumoOutput>(veiculo),
                 Transportadora = veiculo.Transportadora != null ? _mapper.Map<TransportadoraOutput>(veiculo.Transportadora) : null,
                 VinculosTransportadoraVeiculo = vinculos

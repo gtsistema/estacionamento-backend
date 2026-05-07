@@ -1,8 +1,8 @@
-﻿using Estac.Domain.Models.Base;
+using Estac.Domain.Models.Base;
 
 namespace Estac.Domain.Models
 {
-    public class MotoristaVeiculo : BaseIntDataNull
+    public class VeiculoMotorista : BaseIntDataNull
     {
         public int MotoristaId { get; set; }
         public int VeiculoId { get; set; }

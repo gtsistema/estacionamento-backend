@@ -6,7 +6,7 @@ namespace Estac.Domain.Output.Motorista
 {
     public class MotoristaVinculosPorPlacaOutput
     {
-        public MotoristaOutput Motorista { get; set; }
+        public IReadOnlyList<MotoristaOutput> Motoristas { get; set; }
         public VeiculoVinculoResumoOutput Veiculo { get; set; }
         public TransportadoraOutput Transportadora { get; set; }
         public IReadOnlyList<TransportadoraVeiculoVinculoOutput> VinculosTransportadoraVeiculo { get; set; }
@@ -19,7 +19,7 @@ namespace Estac.Domain.Output.Motorista
         public string Cor { get; set; }
         public TipoCarga? TipoCarga { get; set; }
         public int? TransportadoraId { get; set; }
-        public int? MotoristaId { get; set; }
+        public IReadOnlyList<int> MotoristaIds { get; set; }
     }
 
     public class TransportadoraVeiculoVinculoOutput

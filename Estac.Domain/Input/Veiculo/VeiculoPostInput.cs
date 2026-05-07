@@ -14,7 +14,7 @@ namespace Estac.Domain.Input.Veiculo
         public string Cor { get; set; }
         public TipoCarga? TipoCarga { get; set; }
         public int? TransportadoraId { get; set; }
-        public int? MotoristaId { get; set; }
+        public List<int> MotoristaIds { get; set; } = new();
         public int? VeiculoModeloId { get; set; }
         public VeiculoDetalheInput VeiculoDetalhe { get; set; }
     }

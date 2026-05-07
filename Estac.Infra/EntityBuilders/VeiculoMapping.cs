@@ -54,9 +54,6 @@ namespace Estac.Infra.EntityBuilders
             builder.Property(v => v.TransportadoraId)
                 .IsRequired(false);
 
-            builder.Property(v => v.MotoristaId)
-                .IsRequired(false);
-
             builder.HasOne(v => v.VeiculoModelo)
                 .WithMany()
                 .HasForeignKey(v => v.VeiculoModeloId)
@@ -72,13 +69,6 @@ namespace Estac.Infra.EntityBuilders
                 .HasForeignKey(v => v.TransportadoraId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(v => v.Motorista)
-                .WithOne(m => m.Veiculo)
-                .HasForeignKey<Veiculo>(v => v.MotoristaId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasIndex(v => v.MotoristaId)
-                .IsUnique();
         }
     }
 }

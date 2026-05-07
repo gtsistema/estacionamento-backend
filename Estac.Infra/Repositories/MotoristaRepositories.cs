@@ -36,7 +36,8 @@ namespace Estac.Infra.Repositories
                         .AsNoTracking()
                         .Where(x =>
                             (!input.TransportadoraId.HasValue
-                                || (x.Veiculo != null && x.Veiculo.TransportadoraId == input.TransportadoraId.Value))
+                                || x.VeiculoMotoristas.Any(vm => vm.Veiculo != null
+                                    && vm.Veiculo.TransportadoraId == input.TransportadoraId.Value))
                             && (termoBusca == null
                                 || (x.Descricao != null && x.Descricao.ToLower().Contains(termoBusca))
                                 || (x.Pessoa.NomeRazaoSocial != null && x.Pessoa.NomeRazaoSocial.ToLower().Contains(termoBusca))

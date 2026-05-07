@@ -26,6 +26,13 @@ namespace Estac.Api.Controllers
         }
 
         [PermissionAuthorize(PermissionAcess.Transportadora.Visualizar)]
+        [HttpGet("cnpj/{cnpj}")]
+        public async Task<ActionResult> BuscarPorCnpj(string cnpj)
+        {
+            return await _services.BuscarPorCnpj(cnpj);
+        }
+
+        [PermissionAuthorize(PermissionAcess.Transportadora.Visualizar)]
         [HttpGet("{id}")]
         public async Task<ActionResult> ObterPorId(int id)
         {

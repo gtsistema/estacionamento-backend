@@ -14,7 +14,7 @@ namespace Estac.Domain.Output.Veiculo
         public TipoCarga? TipoCarga { get; set; }
         public VeiculoDetalheOutput Detalhe { get; set; }
         public VeiculoModeloOutput Modelo { get; set; }
-        public MotoristaOutput Motorista { get; set; }
+        public IReadOnlyList<MotoristaOutput> Motoristas { get; set; }
     }
 
     public class VeiculoDetalheOutput()

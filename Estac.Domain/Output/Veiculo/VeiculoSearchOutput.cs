@@ -11,7 +11,7 @@ namespace Estac.Domain.Output.Veiculo
         public bool Ativo { get; set; }
         public string Cor { get; set; }
         public TipoCarga? TipoCarga { get; set; }
-        public int? MotoristaId { get; set; }
-        public string Motorista {  get; set; }
+        public IReadOnlyList<int> MotoristaIds { get; set; }
+        public IReadOnlyList<string> Motoristas { get; set; }
     }
 }
