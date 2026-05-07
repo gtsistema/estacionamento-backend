@@ -1,4 +1,5 @@
-﻿using Estac.Domain.Input.EntradaSaida;
+﻿using Estac.Domain.Input.Movimento.Entrada;
+using Estac.Domain.Input.Movimento.EntradaSaida;
 using Estac.Domain.Interface.Services;
 using Estac.Domain.Permission;
 using Microsoft.AspNetCore.Authorization;
@@ -41,16 +42,16 @@ namespace Estac.Api.Controllers.Movimento
 
         [PermissionAuthorize(PermissionAcess.EntradaSaida.Gravar)]
         [HttpPost]
-        public async Task<ActionResult> Gravar([FromBody] EntradaSaidaPostInput input)
+        public async Task<ActionResult> Gravar([FromBody] EntradaPostInput input)
         {
             return await _services.Gravar(input);
         }
 
         [PermissionAuthorize(PermissionAcess.EntradaSaida.Alterar)]
-        [HttpPut]
-        public async Task<ActionResult> Alterar([FromBody] EntradaSaidaPutInput input)
+        [HttpPost("saida")]
+        public async Task<ActionResult> Saida([FromBody] EntradaSaidaPlacaInput input)
         {
-            return await _services.Alterar(input);
+            return await _services.Saida(input);
         }
 
         [PermissionAuthorize(PermissionAcess.EntradaSaida.Alterar)]

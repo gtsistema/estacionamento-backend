@@ -1,4 +1,4 @@
-namespace Estac.Domain.Input.EntradaSaida
+namespace Estac.Domain.Input.Movimento.EntradaSaida
 {
     public class EntradaSaidaFilterInput : FilterInput
     {

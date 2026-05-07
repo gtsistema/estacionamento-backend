@@ -1,5 +1,6 @@
 using AutoMapper;
-using Estac.Domain.Input.EntradaSaida;
+using Estac.Domain.Extensions;
+using Estac.Domain.Input.Movimento.Entrada;
 using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Interface.Services;
 using Estac.Domain.Models;
@@ -7,24 +8,42 @@ using Estac.Domain.Models.Auth;
 using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output;
 using Estac.Domain.Output.EntradaSaida;
+using Estac.Domain.Shared;
 using Estac.Service.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Estac.Domain.Input.Movimento.EntradaSaida;
 
 namespace Estac.Service
 {
     public class EntradaSaidaService : ServiceResult<EntradaSaidaOutput>, IEntradaSaidaService
     {
         private readonly IEntradaSaidaRepositories _repositories;
+        private readonly IMotoristaRepositories _motoristaRepositories;
+        private readonly ITransportadoraRepositories _transportadoraRepositories;
+        private readonly IVeiculoRepositories _veiculoRepositories;
+        private readonly IVeiculoMotoristaRepositories _veiculoMotoristaRepositories;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ICurrentUser _currentUser;
 
         public EntradaSaidaService(
             IErrorServices errorServices,
             IEntradaSaidaRepositories repositories,
+            IMotoristaRepositories motoristaRepositories,
+            ITransportadoraRepositories transportadoraRepositories,
+            IVeiculoRepositories veiculoRepositories,
+            IVeiculoMotoristaRepositories veiculoMotoristaRepositories,
+            IUnitOfWork unitOfWork,
             IMapper mapper,
             ICurrentUser currentUser) : base(errorServices)
         {
             _repositories = repositories;
+            _motoristaRepositories = motoristaRepositories;
+            _transportadoraRepositories = transportadoraRepositories;
+            _veiculoRepositories = veiculoRepositories;
+            _veiculoMotoristaRepositories = veiculoMotoristaRepositories;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
             _currentUser = currentUser;
         }
@@ -79,15 +98,40 @@ namespace Estac.Service
             }
         }
 
-        public async Task<ActionResult> Gravar(EntradaSaidaPostInput input)
+        public async Task<ActionResult> Saida(EntradaSaidaPlacaInput input)
         {
+            if (input is null || string.IsNullOrWhiteSpace(input.Placa))
+                return await RetornNo(false, "Placa é obrigatória.");
+
+            var entradaEmAberto = await _repositories.SelecionarEmAbertoPorPlaca(input.Placa);
+            if (entradaEmAberto is null)
+                return await RetornNo(false, "Nenhuma entrada em aberto encontrada para a placa informada.");
+
+            return await FinalizarPermanencia(entradaEmAberto.Id, DateTime.Now);
+        }
+
+        public async Task<ActionResult> Gravar(EntradaPostInput input)
+        {
+            if (input is null)
+                return await RetornNo(false, "Dados de entrada são obrigatórios.");
+
+            if (input.Motorista is null || input.Transportadora is null || input.Veiculo is null)
+                return await RetornNo(false, "Motorista, transportadora e veículo são obrigatórios.");
+
+            await _unitOfWork.BeginTransactionAsync();
+
             try
             {
-                var validacaoHorarios = ValidarDatas(input.DataHoraEntrada, input.DataHoraSaida);
-                if (validacaoHorarios is not null)
-                    return await RetornNo(false, validacaoHorarios);
-
                 var result = _mapper.Map<EntradaSaida>(input);
+
+                var transportadoraId = await ResolverTransportadoraId(input.Transportadora);
+                var motoristaId = await ResolverMotoristaId(input.Motorista);
+                var veiculoId = await ResolverVeiculoId(input.Veiculo, transportadoraId);
+
+                result.TransportadoraId = transportadoraId;
+                result.MotoristaId = motoristaId;
+                result.VeiculoId = veiculoId;
+                result.DataHoraEntrada = input.DataHoraEntrada ?? DateTime.Now;
                 result.DataHoraUltimaEntradaPatio = result.DataHoraEntrada;
                 result.PermanenciaSuspensa = false;
                 result.Finalizado = false;
@@ -95,36 +139,20 @@ namespace Estac.Service
                 result.TempoTotalSuspensaoMinutos = 0;
                 result.UsuarioRegistroEntradaId = _currentUser.Id;
                 result.UsuarioRegistroEntradaNome = _currentUser.Name;
-                result.Descricao = input.Veiculo?.Placa + " - " + input.Motorista?.PessoaFisica?.Nome;
-                result.Status = Enum.IsDefined(typeof(EntradaSaidaStatus), input.Status)
-                    ? input.Status
+                result.Descricao = $"{input.Veiculo?.Placa} - {input.Motorista?.Nome}";
+                result.Status = input.DataHoraEntrada.HasValue
+                    ? EntradaSaidaStatus.Agendado
                     : EntradaSaidaStatus.EmAberto;
 
                 await _repositories.Gravar(result);
+                await _veiculoMotoristaRepositories.VincularAsync(veiculoId, motoristaId);
+                await _unitOfWork.CommitAsync();
 
                 return await RetornOk(_mapper.Map<EntradaSaidaOutput>(result));
             }
             catch (Exception ex)
             {
-                return await RetornNo(false, ex.Message);
-            }
-        }
-
-        public async Task<ActionResult> Alterar(EntradaSaidaPutInput input)
-        {
-            try
-            {
-                var validacaoHorarios = ValidarDatas(input.DataHoraEntrada, input.DataHoraSaida);
-                if (validacaoHorarios is not null)
-                    return await RetornNo(false, validacaoHorarios);
-
-                var result = _mapper.Map<EntradaSaida>(input);
-                await _repositories.Alterar(result);
-
-                return await RetornOk(_mapper.Map<EntradaSaidaOutput>(result));
-            }
-            catch (Exception ex)
-            {
+                await _unitOfWork.RollbackAsync();
                 return await RetornNo(false, ex.Message);
             }
         }
@@ -226,15 +254,140 @@ namespace Estac.Service
             }
         }
 
-        private static string ValidarDatas(DateTime dataHoraEntrada, DateTime? dataHoraSaida)
+        private async Task<int> ResolverMotoristaId(EntradaMotoristaInput motoristaInput)
         {
-            if (dataHoraEntrada == default)
-                return "A data/hora de entrada é obrigatória.";
+            if (motoristaInput.Id.HasValue && motoristaInput.Id.Value > 0)
+                return motoristaInput.Id.Value;
 
-            if (dataHoraSaida.HasValue && dataHoraSaida.Value < dataHoraEntrada)
-                return "A data/hora de saída não pode ser menor que a data/hora de entrada.";
+            var cpf = motoristaInput.Cpf.SomenteDigitos();
+            if (string.IsNullOrWhiteSpace(cpf))
+                throw new ArgumentException("CPF do motorista é obrigatório para novo cadastro.");
 
-            return null;
+            var nome = string.IsNullOrWhiteSpace(motoristaInput.Nome) ? "Motorista" : motoristaInput.Nome.Trim();
+
+            var motoristaExistente = await _motoristaRepositories.SelectAllAsync();
+            var existente = await motoristaExistente
+                .AsNoTracking()
+                .Where(x => x.Pessoa != null && x.Pessoa.Documento == cpf)
+                .Select(x => x.Id)
+                .FirstOrDefaultAsync();
+
+            if (existente > 0)
+                return existente;
+
+            var novo = new Motorista
+            {
+                Descricao = nome,
+                CNH = cpf,
+                Pessoa = new Pessoa
+                {
+                    Documento = cpf,
+                    NomeRazaoSocial = nome,
+                    Descricao = nome,
+                    Ativo = true,
+                    TipoPessoa = TipoPessoa.Fisica,
+                    Papeis = new List<PessoaPapel> { new() { TipoPapel = TipoPapel.Motorista } }
+                }
+            };
+
+            await _motoristaRepositories.Gravar(novo);
+            return novo.Id;
+        }
+
+        private async Task<int> ResolverTransportadoraId(EntradaTransportadoraInput transportadoraInput)
+        {
+            if (transportadoraInput.Id.HasValue && transportadoraInput.Id.Value > 0)
+                return transportadoraInput.Id.Value;
+
+            var cnpj = transportadoraInput.Cnpj.SomenteDigitos();
+            if (string.IsNullOrWhiteSpace(cnpj))
+                throw new ArgumentException("CNPJ da transportadora é obrigatório para novo cadastro.");
+
+            var razaoSocial = string.IsNullOrWhiteSpace(transportadoraInput.RazaoSocial)
+                ? "Transportadora"
+                : transportadoraInput.RazaoSocial.Trim();
+
+            var transportadoras = await _transportadoraRepositories.SelectAllAsync();
+            var existente = await transportadoras
+                .AsNoTracking()
+                .Where(x => x.Pessoa != null && x.Pessoa.Documento == cnpj)
+                .Select(x => x.Id)
+                .FirstOrDefaultAsync();
+
+            if (existente > 0)
+                return existente;
+
+            var nova = new Transportadora
+            {
+                Descricao = razaoSocial,
+                ResponsavelLegal = transportadoraInput.ResponsavelLegal,
+                ResponsavelCpf = transportadoraInput.ResponsavelCpf.SomenteDigitos(),
+                ResponsavelEmail = transportadoraInput.ResponsavelEmail,
+                ResponsavelTelefone = transportadoraInput.ResponsavelTelefone.SomenteDigitos(),
+                Pessoa = new Pessoa
+                {
+                    Documento = cnpj,
+                    NomeRazaoSocial = razaoSocial,
+                    Descricao = razaoSocial,
+                    Ativo = true,
+                    TipoPessoa = TipoPessoa.Juridica,
+                    Papeis = new List<PessoaPapel> { new() { TipoPapel = TipoPapel.Tranportadora } }
+                }
+            };
+
+            await _transportadoraRepositories.Gravar(nova);
+            return nova.Id;
+        }
+
+        private async Task<int> ResolverVeiculoId(EntradaVeiculoInput veiculoInput, int transportadoraId)
+        {
+            if (veiculoInput.Id.HasValue && veiculoInput.Id.Value > 0)
+            {
+                await VincularTransportadoraAoVeiculo(veiculoInput.Id.Value, transportadoraId);
+                return veiculoInput.Id.Value;
+            }
+
+            var placa = VeiculoPlacaHelper.Normalizar(veiculoInput.Placa);
+            if (string.IsNullOrWhiteSpace(placa))
+                throw new ArgumentException("Placa do veículo é obrigatória para novo cadastro.");
+
+            var veiculos = await _veiculoRepositories.SelectAllAsync();
+            var existente = await veiculos
+                .AsNoTracking()
+                .Where(x => x.Placa == placa)
+                .Select(x => x.Id)
+                .FirstOrDefaultAsync();
+
+            if (existente > 0)
+            {
+                await VincularTransportadoraAoVeiculo(existente, transportadoraId);
+                return existente;
+            }
+
+            var novo = new Veiculo
+            {
+                Placa = placa,
+                Descricao = placa,
+                TipoCarga = veiculoInput.TipoCarga,
+                Ativo = true,
+                TransportadoraId = transportadoraId
+            };
+
+            await _veiculoRepositories.Gravar(novo);
+            return novo.Id;
+        }
+
+        private async Task VincularTransportadoraAoVeiculo(int veiculoId, int transportadoraId)
+        {
+            var veiculo = await _veiculoRepositories.Selecionar(veiculoId);
+            if (veiculo == null)
+                throw new ArgumentException("Veículo informado não foi encontrado.");
+
+            if (veiculo.TransportadoraId == transportadoraId)
+                return;
+
+            veiculo.TransportadoraId = transportadoraId;
+            await _veiculoRepositories.Alterar(veiculo);
         }
 
         private async Task<ActionResult> SuspenderSaidaTemporaria(EntradaSaida result, DateTime dataEvento)

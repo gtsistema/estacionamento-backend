@@ -1,5 +1,5 @@
 using Estac.Domain.Extensions;
-using Estac.Domain.Input.EntradaSaida;
+using Estac.Domain.Input.Movimento.EntradaSaida;
 using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Models;
 using Estac.Domain.Output.EntradaSaida;
@@ -50,6 +50,19 @@ namespace Estac.Infra.Repositories
                 .Include(x => x.Veiculo).ThenInclude(x => x.VeiculoModelo).ThenInclude(x => x.VeiculoMarca)
                 .Include(x => x.Suspensoes)
                 .Where(x => x.Veiculo.Placa == placaNormalizada)
+                .OrderByDescending(x => x.DataHoraEntrada)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<EntradaSaida> SelecionarEmAbertoPorPlaca(string placa)
+        {
+            var placaNormalizada = VeiculoPlacaHelper.Normalizar(placa);
+
+            return await _dataset
+                .Include(x => x.Suspensoes)
+                .Include(x => x.Veiculo)
+                .Where(x => x.Veiculo.Placa == placaNormalizada
+                    && x.Status == Domain.Models.Enuns.EntradaSaidaStatus.EmAberto)
                 .OrderByDescending(x => x.DataHoraEntrada)
                 .FirstOrDefaultAsync();
         }
