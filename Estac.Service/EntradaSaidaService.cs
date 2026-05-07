@@ -115,8 +115,8 @@ namespace Estac.Service
             if (input is null)
                 return await RetornNo(false, "Dados de entrada são obrigatórios.");
 
-            if (input.Motorista is null || input.Transportadora is null || input.Veiculo is null)
-                return await RetornNo(false, "Motorista, transportadora e veículo são obrigatórios.");
+            if (input.Motorista is null || input.Veiculo is null)
+                return await RetornNo(false, "Motorista e veículo são obrigatórios.");
 
             await _unitOfWork.BeginTransactionAsync();
 
@@ -127,8 +127,12 @@ namespace Estac.Service
                 var transportadoraId = await ResolverTransportadoraId(input.Transportadora);
                 var motoristaId = await ResolverMotoristaId(input.Motorista);
                 var veiculoId = await ResolverVeiculoId(input.Veiculo, transportadoraId);
+                transportadoraId ??= await ObterTransportadoraDoVeiculo(veiculoId);
 
-                result.TransportadoraId = transportadoraId;
+                if (!transportadoraId.HasValue)
+                    throw new ArgumentException("Transportadora não informada e não encontrada no veículo.");
+
+                result.TransportadoraId = transportadoraId.Value;
                 result.MotoristaId = motoristaId;
                 result.VeiculoId = veiculoId;
                 result.DataHoraEntrada = input.DataHoraEntrada ?? DateTime.Now;
@@ -294,8 +298,11 @@ namespace Estac.Service
             return novo.Id;
         }
 
-        private async Task<int> ResolverTransportadoraId(EntradaTransportadoraInput transportadoraInput)
+        private async Task<int?> ResolverTransportadoraId(EntradaTransportadoraInput transportadoraInput)
         {
+            if (transportadoraInput is null)
+                return null;
+
             if (transportadoraInput.Id.HasValue && transportadoraInput.Id.Value > 0)
                 return transportadoraInput.Id.Value;
 
@@ -339,11 +346,12 @@ namespace Estac.Service
             return nova.Id;
         }
 
-        private async Task<int> ResolverVeiculoId(EntradaVeiculoInput veiculoInput, int transportadoraId)
+        private async Task<int> ResolverVeiculoId(EntradaVeiculoInput veiculoInput, int? transportadoraId)
         {
             if (veiculoInput.Id.HasValue && veiculoInput.Id.Value > 0)
             {
-                await VincularTransportadoraAoVeiculo(veiculoInput.Id.Value, transportadoraId);
+                if (transportadoraId.HasValue)
+                    await VincularTransportadoraAoVeiculo(veiculoInput.Id.Value, transportadoraId.Value);
                 return veiculoInput.Id.Value;
             }
 
@@ -360,7 +368,8 @@ namespace Estac.Service
 
             if (existente > 0)
             {
-                await VincularTransportadoraAoVeiculo(existente, transportadoraId);
+                if (transportadoraId.HasValue)
+                    await VincularTransportadoraAoVeiculo(existente, transportadoraId.Value);
                 return existente;
             }
 
@@ -388,6 +397,12 @@ namespace Estac.Service
 
             veiculo.TransportadoraId = transportadoraId;
             await _veiculoRepositories.Alterar(veiculo);
+        }
+
+        private async Task<int?> ObterTransportadoraDoVeiculo(int veiculoId)
+        {
+            var veiculo = await _veiculoRepositories.Selecionar(veiculoId);
+            return veiculo?.TransportadoraId;
         }
 
         private async Task<ActionResult> SuspenderSaidaTemporaria(EntradaSaida result, DateTime dataEvento)
