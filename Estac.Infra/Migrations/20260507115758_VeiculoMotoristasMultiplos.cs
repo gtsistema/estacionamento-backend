@@ -48,6 +48,16 @@ namespace Estac.Infra.Migrations
                 schema: "gts",
                 table: "Veiculo");
 
+            migrationBuilder.DropIndex(
+                name: "IX_MotoristaVeiculo_VeiculoId",
+                schema: "gts",
+                table: "MotoristaVeiculo");
+
+            migrationBuilder.DropIndex(
+                name: "IX_MotoristaVeiculo_MotoristaId_VeiculoId",
+                schema: "gts",
+                table: "MotoristaVeiculo");
+
             migrationBuilder.DropPrimaryKey(
                 name: "PK_MotoristaVeiculo",
                 schema: "gts",
@@ -56,25 +66,27 @@ namespace Estac.Infra.Migrations
             migrationBuilder.RenameTable(
                 name: "MotoristaVeiculo",
                 schema: "gts",
-                newName: "VeiculoMotoristas");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_MotoristaVeiculo_VeiculoId",
-                schema: "gts",
-                table: "VeiculoMotoristas",
-                newName: "IX_VeiculoMotoristas_VeiculoId");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_MotoristaVeiculo_MotoristaId_VeiculoId",
-                schema: "gts",
-                table: "VeiculoMotoristas",
-                newName: "IX_VeiculoMotoristas_MotoristaId_VeiculoId");
+                newName: "VeiculoMotoristas",
+                newSchema: "gts");
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_VeiculoMotoristas",
                 schema: "gts",
                 table: "VeiculoMotoristas",
                 column: "Id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VeiculoMotoristas_VeiculoId",
+                schema: "gts",
+                table: "VeiculoMotoristas",
+                column: "VeiculoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VeiculoMotoristas_MotoristaId_VeiculoId",
+                schema: "gts",
+                table: "VeiculoMotoristas",
+                columns: new[] { "MotoristaId", "VeiculoId" },
+                unique: true);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_VeiculoMotoristas_Motorista",
@@ -115,28 +127,40 @@ namespace Estac.Infra.Migrations
                 schema: "gts",
                 table: "VeiculoMotoristas");
 
-            migrationBuilder.RenameIndex(
+            migrationBuilder.DropIndex(
                 name: "IX_VeiculoMotoristas_VeiculoId",
                 schema: "gts",
-                table: "VeiculoMotoristas",
-                newName: "IX_MotoristaVeiculo_VeiculoId");
+                table: "VeiculoMotoristas");
 
-            migrationBuilder.RenameIndex(
+            migrationBuilder.DropIndex(
                 name: "IX_VeiculoMotoristas_MotoristaId_VeiculoId",
                 schema: "gts",
-                table: "VeiculoMotoristas",
-                newName: "IX_MotoristaVeiculo_MotoristaId_VeiculoId");
+                table: "VeiculoMotoristas");
 
             migrationBuilder.RenameTable(
                 name: "VeiculoMotoristas",
                 schema: "gts",
-                newName: "MotoristaVeiculo");
+                newName: "MotoristaVeiculo",
+                newSchema: "gts");
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_MotoristaVeiculo",
                 schema: "gts",
                 table: "MotoristaVeiculo",
                 column: "Id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MotoristaVeiculo_VeiculoId",
+                schema: "gts",
+                table: "MotoristaVeiculo",
+                column: "VeiculoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MotoristaVeiculo_MotoristaId_VeiculoId",
+                schema: "gts",
+                table: "MotoristaVeiculo",
+                columns: new[] { "MotoristaId", "VeiculoId" },
+                unique: true);
 
             migrationBuilder.AddColumn<int>(
                 name: "MotoristaId",
