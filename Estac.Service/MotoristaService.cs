@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Estac.Domain.Extensions;
 using Estac.Domain.Input.Motorista;
 using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Interface.Services;
@@ -50,6 +51,19 @@ namespace Estac.Service
         public async Task<ActionResult> Buscar(MotoristaFilterInput filter)
         {
             var result = await _repositories.Paginar(filter);
+
+            return await RetornOk(result);
+        }
+
+        public async Task<ActionResult> BuscarPorCpf(string cpf)
+        {
+            var cpfNormalizado = cpf.SomenteDigitos();
+            if (string.IsNullOrWhiteSpace(cpfNormalizado))
+                return await RetornNo(false, "CPF inválido.");
+
+            var result = await _repositories.SelecionarPorCpf(cpfNormalizado);
+            if (result == null)
+                return await RetornNo(false, "Motorista não localizado na base de dados.", statusCode: 404);
 
             return await RetornOk(result);
         }

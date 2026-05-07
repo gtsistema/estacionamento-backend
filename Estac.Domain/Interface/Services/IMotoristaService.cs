@@ -8,6 +8,7 @@ namespace Estac.Domain.Interface.Services
     {
         Task<ActionResult> ObterPorId(int id);
         Task<ActionResult> Buscar(MotoristaFilterInput filter);
+        Task<ActionResult> BuscarPorCpf(string cpf);
         Task<ActionResult> Gravar(MotoristaPostInput input);
         Task<ActionResult> Alterar(MotoristaPutInput input);
         Task<ActionResult> Excluir(int id);

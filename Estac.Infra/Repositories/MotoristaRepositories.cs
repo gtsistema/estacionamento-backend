@@ -73,5 +73,24 @@ namespace Estac.Infra.Repositories
                         .SingleOrDefaultAsync(x => x.Id == id);
         }
 
+        public async Task<MotoristaPorCpfOutput> SelecionarPorCpf(string cpf)
+        {
+            var cpfNormalizado = cpf.SomenteDigitos();
+            if (string.IsNullOrWhiteSpace(cpfNormalizado))
+                return null;
+
+            return await _dataset
+                .AsNoTracking()
+                .Where(x => x.Pessoa != null
+                    && x.Pessoa.Documento != null
+                    && x.Pessoa.Documento == cpfNormalizado)
+                .Select(x => new MotoristaPorCpfOutput
+                {
+                    Cpf = x.Pessoa.Documento.FormatarCpf(),
+                    Nome = x.Pessoa.NomeRazaoSocial
+                })
+                .FirstOrDefaultAsync();
+        }
+
     }
 }

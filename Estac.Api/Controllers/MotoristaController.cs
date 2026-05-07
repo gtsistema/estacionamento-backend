@@ -26,6 +26,13 @@ namespace Estac.Api.Controllers
         }
        
         [PermissionAuthorize(PermissionAcess.Motorista.Visualizar)]
+        [HttpGet("cpf/{cpf}")]
+        public async Task<ActionResult> BuscarPorCpf(string cpf)
+        {
+            return await _services.BuscarPorCpf(cpf);
+        }
+
+        [PermissionAuthorize(PermissionAcess.Motorista.Visualizar)]
 
         [HttpGet("{id}")]
         public async Task<ActionResult> ObterPorId(int id)
