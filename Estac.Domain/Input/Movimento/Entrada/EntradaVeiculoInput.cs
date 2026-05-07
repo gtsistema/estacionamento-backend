@@ -6,6 +6,6 @@ namespace Estac.Domain.Input.Movimento.Entrada
     {
         public int? Id { get; set; }
         public string Placa { get; set; }
-        public TipoCarga TipoCarga { get; set; }
+        public TipoCarga? TipoCarga { get; set; }
     }
 }
