@@ -257,11 +257,11 @@ namespace Estac.Infra.Repositories
                 TipoCarga = veiculo.TipoCarga,
                 TransportadoraId = veiculo.TransportadoraId,
                 RazaoSocial = veiculo.Transportadora?.Pessoa?.NomeRazaoSocial,
-                Cnpj = veiculo.Transportadora?.Pessoa?.Documento,
+                Cnpj = veiculo.Transportadora?.Pessoa?.Documento.FormatarCnpj(),
                 ResponsavelLegal = veiculo.Transportadora?.ResponsavelLegal,
-                ResponsavelCpf = veiculo.Transportadora?.ResponsavelCpf,
+                ResponsavelCpf = veiculo.Transportadora?.ResponsavelCpf?.FormatarCpf(),
                 ResponsavelEmail = veiculo.Transportadora?.ResponsavelEmail,
-                ResponsavelTelefone = veiculo.Transportadora?.ResponsavelTelefone,
+                ResponsavelTelefone = veiculo.Transportadora?.ResponsavelTelefone.FormatarTelefone(),
                 Motorista = veiculo.VeiculoMotoristas
                     .Where(vm => vm.Motorista != null)
                     .OrderByDescending(vm => vm.Id)
@@ -269,7 +269,7 @@ namespace Estac.Infra.Repositories
                     {
                         Id = vm.Motorista.Id,
                         Nome = vm.Motorista.Pessoa != null ? vm.Motorista.Pessoa.NomeRazaoSocial : vm.Motorista.Descricao,
-                        Cpf = vm.Motorista.Pessoa != null ? vm.Motorista.Pessoa.Documento : null
+                        Cpf = vm.Motorista.Pessoa != null ? vm.Motorista.Pessoa.Documento.FormatarCpf() : null
                     })
                     .FirstOrDefault()
             };
