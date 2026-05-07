@@ -1,7 +1,7 @@
 using Estac.Domain.Models.Enuns;
 using Newtonsoft.Json;
 
-namespace Estac.Domain.Output.EntradaSaida
+namespace Estac.Domain.Output.Movimento.EntradaSaida
 {
     public class EntradaSaidaSearchOutput
     {

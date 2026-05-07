@@ -7,14 +7,14 @@ using Estac.Domain.Models;
 using Estac.Domain.Models.Auth;
 using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output;
-using Estac.Domain.Output.EntradaSaida;
 using Estac.Domain.Shared;
 using Estac.Service.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Estac.Domain.Input.Movimento.EntradaSaida;
+using Estac.Domain.Output.Movimento.EntradaSaida;
 
-namespace Estac.Service
+namespace Estac.Service.Movimento
 {
     public class EntradaSaidaService : ServiceResult<EntradaSaidaOutput>, IEntradaSaidaService
     {
@@ -70,14 +70,32 @@ namespace Estac.Service
             try
             {
                 if (string.IsNullOrWhiteSpace(placa))
-                    return await RetornNo(false, "dados não encontrado");
+                    return await RetornNo(false, "Placa não informada.");
 
-                var result = await _repositories.SelecionarPorPlaca(placa);
+                var result = await _veiculoRepositories.ObterVinculosPorPlaca(placa);
 
                 if (result is null)
-                    return await RetornNo(false, "dados não encontrado");
+                    return await RetornNo(false, "Veículo não localizado na base de dados.", 404);
 
-                return await RetornOk(_mapper.Map<EntradaSaidaOutput>(result));
+                var entradaEmAberto = await _repositories.SelecionarEmAbertoPorPlaca(placa);
+                if (entradaEmAberto != null)
+                {
+                    result.ExisteEntradaEmAberto = true;
+                    result.Id = entradaEmAberto.Id;
+                    result.DataHoraEntrada = entradaEmAberto.DataHoraEntrada;
+                    result.Observacao = entradaEmAberto.Observacao;
+                    result.Status = entradaEmAberto.Status;
+                }
+                else
+                {
+                    result.ExisteEntradaEmAberto = false;
+                    result.Id = null;
+                    result.DataHoraEntrada = null;
+                    result.Observacao = null;
+                    result.Status = null;
+                }
+
+                return await RetornOk(result);
             }
             catch (Exception ex)
             {

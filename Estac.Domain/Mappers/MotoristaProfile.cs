@@ -32,18 +32,12 @@ namespace Estac.Domain.Mappers.Auth
                .ForMember(dest => dest.NomeRazaoSocial, opt => opt.MapFrom(src => src.NomeRazaoSocial))
                .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.NomeFantasia));
 
-            CreateMap<Motorista, MotoristaOutput>()
-                .ForMember(d => d.PessoaFisica, opt => opt.MapFrom(s => s.Pessoa));
+            CreateMap<Motorista, MotoristaOutput>();
 
-            CreateMap<MotoristaSearchOutput, MotoristaOutput>()
-                .ForMember(d => d.PessoaFisica, opt => opt.Ignore());
+            CreateMap<MotoristaSearchOutput, MotoristaOutput>();
 
             CreateMap<Pessoa, PessoaMotoristaInput>()
                 .ForMember(d => d.Cpf, opt => opt.MapFrom(s => s.Documento.FormatarCpf()));
-
-            CreateMap<Veiculo, VeiculoVinculoResumoOutput>()
-                .ForMember(d => d.MotoristaIds, opt => opt.MapFrom(s => s.VeiculoMotoristas.Select(vm => vm.MotoristaId)))
-                .ForMember(d => d.Placa, opt => opt.MapFrom(s => VeiculoPlacaHelper.FormatarExibicao(s.Placa)));
 
             CreateMap<PessoaEndereco, PessoaEnderecoInput>();
 

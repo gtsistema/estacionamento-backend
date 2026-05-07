@@ -1,4 +1,4 @@
-namespace Estac.Domain.Output.EntradaSaida
+namespace Estac.Domain.Output.Movimento.EntradaSaida
 {
     public class EntradaSaidaSuspensaoOutput
     {

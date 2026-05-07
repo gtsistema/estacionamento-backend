@@ -18,6 +18,7 @@ using Estac.Service.Identity.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Estac.Service.Movimento;
 
 namespace Estac.CrossCutting.Dependencies
 {

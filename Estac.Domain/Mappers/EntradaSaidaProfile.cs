@@ -2,7 +2,7 @@ using AutoMapper;
 using Estac.Domain.Extensions;
 using Estac.Domain.Input.Movimento.Entrada;
 using Estac.Domain.Models;
-using Estac.Domain.Output.EntradaSaida;
+using Estac.Domain.Output.Movimento.EntradaSaida;
 
 namespace Estac.Domain.Mappers
 {

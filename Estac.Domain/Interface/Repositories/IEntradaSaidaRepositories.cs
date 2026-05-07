@@ -1,6 +1,6 @@
 using Estac.Domain.Input.Movimento.EntradaSaida;
 using Estac.Domain.Models;
-using Estac.Domain.Output.EntradaSaida;
+using Estac.Domain.Output.Movimento.EntradaSaida;
 using Estac.Domain.Shared;
 
 namespace Estac.Domain.Interface.Repositories

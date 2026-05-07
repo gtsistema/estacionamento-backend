@@ -14,6 +14,6 @@ namespace Estac.Domain.Interface.Repositories
         Task<Veiculo> GravarCompleto(Veiculo veiculo);
         Task<Veiculo?> AlterarCompleto(Veiculo dados);
         Task<bool> ExcluirCompleto(int id);
-        Task<MotoristaVinculosPorPlacaOutput> ObterVinculosPorPlaca(string placa);
+        Task<EntradaSaidaVinculoOutput> ObterVinculosPorPlaca(string placa);
     }
 }

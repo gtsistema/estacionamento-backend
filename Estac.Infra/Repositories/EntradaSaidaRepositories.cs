@@ -2,7 +2,7 @@ using Estac.Domain.Extensions;
 using Estac.Domain.Input.Movimento.EntradaSaida;
 using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Models;
-using Estac.Domain.Output.EntradaSaida;
+using Estac.Domain.Output.Movimento.EntradaSaida;
 using Estac.Domain.Shared;
 using Estac.Infra.Context;
 using Estac.Infra.Repository;

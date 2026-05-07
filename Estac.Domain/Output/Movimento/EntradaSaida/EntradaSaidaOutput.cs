@@ -3,9 +3,9 @@ using Estac.Domain.Output.Motorista;
 using Estac.Domain.Output.Transportadora;
 using Estac.Domain.Output.Veiculo;
 
-namespace Estac.Domain.Output.EntradaSaida
+namespace Estac.Domain.Output.Movimento.EntradaSaida
 {
-    public class EntradaSaidaOutput : BaseOutput
+    public class EntradaSaidaOutput
     {
         public string Descricao { get; set; }
         public string Status { get; set; }

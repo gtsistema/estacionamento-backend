@@ -7,6 +7,5 @@ namespace Estac.Domain.Output.Motorista
     {
         public string CNH { get; set; }
         public DateTime? ValidadeCNH { get; set; }
-        public PessoaMotoristaOutput PessoaFisica { get; set; }
     }
 }

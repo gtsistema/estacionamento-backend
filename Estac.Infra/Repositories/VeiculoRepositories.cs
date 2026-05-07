@@ -4,7 +4,6 @@ using Estac.Domain.Input.Veiculo;
 using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Models;
 using Estac.Domain.Output.Motorista;
-using Estac.Domain.Output.Transportadora;
 using Estac.Domain.Output.Veiculo;
 using Estac.Domain.Shared;
 using Estac.Infra.Context;
@@ -234,7 +233,7 @@ namespace Estac.Infra.Repositories
             return true;
         }
 
-        public async Task<MotoristaVinculosPorPlacaOutput> ObterVinculosPorPlaca(string placa)
+        public async Task<EntradaSaidaVinculoOutput> ObterVinculosPorPlaca(string placa)
         {
             var placaNorm = VeiculoPlacaHelper.Normalizar(placa);
             if (string.IsNullOrEmpty(placaNorm))
@@ -251,38 +250,28 @@ namespace Estac.Infra.Repositories
             if (veiculo == null)
                 return null;
 
-            IReadOnlyList<TransportadoraVeiculoVinculoOutput> vinculos;
-            if (veiculo.TransportadoraId.HasValue)
+            return new EntradaSaidaVinculoOutput
             {
-                var tid = veiculo.TransportadoraId.Value;
-                vinculos = await _context.Veiculo.AsNoTracking()
-                    .Where(v => v.TransportadoraId == tid)
-                    .OrderBy(v => v.Placa)
-                    .Select(v => new TransportadoraVeiculoVinculoOutput
-                    {
-                        TransportadoraId = tid,
-                        VeiculoId = v.Id,
-                        Placa = v.Placa
-                    })
-                    .ToListAsync();
-
-                foreach (var v in vinculos)
-                    v.Placa = VeiculoPlacaHelper.FormatarExibicao(v.Placa);
-            }
-            else
-            {
-                vinculos = Array.Empty<TransportadoraVeiculoVinculoOutput>();
-            }
-
-            return new MotoristaVinculosPorPlacaOutput
-            {
-                Motoristas = veiculo.VeiculoMotoristas
+                VeiculoId = veiculo.Id,
+                Placa = VeiculoPlacaHelper.FormatarExibicao(veiculo.Placa),
+                TipoCarga = veiculo.TipoCarga,
+                TransportadoraId = veiculo.TransportadoraId,
+                RazaoSocial = veiculo.Transportadora?.Pessoa?.NomeRazaoSocial,
+                Cnpj = veiculo.Transportadora?.Pessoa?.Documento,
+                ResponsavelLegal = veiculo.Transportadora?.ResponsavelLegal,
+                ResponsavelCpf = veiculo.Transportadora?.ResponsavelCpf,
+                ResponsavelEmail = veiculo.Transportadora?.ResponsavelEmail,
+                ResponsavelTelefone = veiculo.Transportadora?.ResponsavelTelefone,
+                Motorista = veiculo.VeiculoMotoristas
                     .Where(vm => vm.Motorista != null)
-                    .Select(vm => _mapper.Map<MotoristaOutput>(vm.Motorista))
-                    .ToList(),
-                Veiculo = _mapper.Map<VeiculoVinculoResumoOutput>(veiculo),
-                Transportadora = veiculo.Transportadora != null ? _mapper.Map<TransportadoraOutput>(veiculo.Transportadora) : null,
-                VinculosTransportadoraVeiculo = vinculos
+                    .OrderByDescending(vm => vm.Id)
+                    .Select(vm => new EntradaSaidaMotoristaVinculoOutput
+                    {
+                        Id = vm.Motorista.Id,
+                        Nome = vm.Motorista.Pessoa != null ? vm.Motorista.Pessoa.NomeRazaoSocial : vm.Motorista.Descricao,
+                        Cpf = vm.Motorista.Pessoa != null ? vm.Motorista.Pessoa.Documento : null
+                    })
+                    .FirstOrDefault()
             };
         }
     }
