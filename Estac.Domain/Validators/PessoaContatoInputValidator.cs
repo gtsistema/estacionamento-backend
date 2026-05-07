@@ -1,4 +1,5 @@
 using Estac.Domain.Input.PessoaContato;
+using Estac.Domain.Extensions;
 using FluentValidation;
 
 namespace Estac.Domain.Validators
@@ -15,6 +16,10 @@ namespace Estac.Domain.Validators
 
             RuleFor(x => x.Telefone)
                 .MaximumLength(20);
+
+            RuleFor(x => x.Telefone)
+                .Must(x => string.IsNullOrWhiteSpace(x) || x.TelefoneComDddValido())
+                .WithMessage("Contato: telefone deve conter DDD válido (10 ou 11 dígitos).");
 
             RuleFor(x => x.Email)
                 .EmailAddress().WithMessage("Contato: e-mail inválido.")

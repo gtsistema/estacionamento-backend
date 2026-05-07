@@ -48,6 +48,44 @@ namespace Estac.Domain.Extensions
             return Convert.ToUInt64(cpf).ToString(@"000\.000\.000\-00");
         }
 
+        /// <summary>
+        /// Formata telefone fixo/celular com DDD.
+        /// 11: (DD) 9XXXX-XXXX | 10: (DD) XXXX-XXXX.
+        /// </summary>
+        public static string FormatarTelefone(this string telefone)
+        {
+            if (string.IsNullOrWhiteSpace(telefone))
+                return string.Empty;
+
+            var d = telefone.SomenteDigitos();
+            if (string.IsNullOrWhiteSpace(d))
+                return string.Empty;
+
+            if (d.Length == 11)
+                return $"({d[..2]}) {d[2..7]}-{d[7..11]}";
+
+            if (d.Length == 10)
+                return $"({d[..2]}) {d[2..6]}-{d[6..10]}";
+
+            return telefone.Trim();
+        }
+
+        /// <summary>
+        /// Telefone válido precisa ter DDD e comprimento de fixo/celular brasileiro.
+        /// </summary>
+        public static bool TelefoneComDddValido(this string telefone)
+        {
+            if (string.IsNullOrWhiteSpace(telefone))
+                return false;
+
+            var d = telefone.SomenteDigitos();
+            if (d.Length is not (10 or 11))
+                return false;
+
+            var ddd = int.Parse(d[..2]);
+            return ddd is >= 11 and <= 99;
+        }
+
         public static string GerarCpf()
         {
             var random = new Random();

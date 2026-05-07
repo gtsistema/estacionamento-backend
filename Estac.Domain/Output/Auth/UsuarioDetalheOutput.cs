@@ -9,7 +9,7 @@ namespace Estac.Domain.Output.Auth
         public string UserName { get; set; }
         public string Email { get; set; }
         public int EstacionamentoId { get; set; }
-        public PessoaUsuarioImput Pessoa { get; set; }
+        public PessoaUsuarioInput Pessoa { get; set; }
         public ApplicationRole Perfil { get; set; }
     }
 }

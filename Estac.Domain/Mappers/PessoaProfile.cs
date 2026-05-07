@@ -23,13 +23,15 @@ namespace Estac.Domain.Mappers.Auth
                .ForMember(dest => dest.Enderecos, opt => opt.MapFrom(src => src.Enderecos))
                .ForMember(dest => dest.Contatos, opt => opt.MapFrom(src => src.Contatos));
 
-            CreateMap<PessoaUsuarioImput, Pessoa>()
+            CreateMap<PessoaUsuarioInput, Pessoa>()
                .ForMember(dest => dest.Documento, opt => opt.MapFrom(src => src.Cpf.SomenteDigitos()))
                .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.Nome))
                .ForMember(dest => dest.NomeRazaoSocial, opt => opt.MapFrom(src => src.Nome));
 
 
-            CreateMap<PessoaEnderecoInput, PessoaEndereco>();
+            CreateMap<PessoaEnderecoInput, PessoaEndereco>()
+               .ForMember(dest => dest.Cep, opt => opt.MapFrom(src => src.Cep.SomenteDigitos()));
+
             CreateMap<PessoaEndereco, PessoaEnderecoOutput>();
 
             CreateMap<PessoaContatoInput, PessoaContato>()
@@ -37,7 +39,7 @@ namespace Estac.Domain.Mappers.Auth
                 .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.Descricao))
                 .ForMember(dest => dest.PessoaId, opt => opt.MapFrom(src => src.PessoaId))
                 .ForMember(dest => dest.Cpf, opt => opt.MapFrom(src => src.Cpf.SomenteDigitos()))
-                .ForMember(dest => dest.Telefone, opt => opt.MapFrom(src => src.Telefone))
+                .ForMember(dest => dest.Telefone, opt => opt.MapFrom(src => src.Telefone.SomenteDigitos()))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
                 .ForMember(dest => dest.Principal, opt => opt.MapFrom(src => src.Principal))
                 .ForMember(dest => dest.Observacao, opt => opt.MapFrom(src => src.Observacao))
@@ -48,7 +50,7 @@ namespace Estac.Domain.Mappers.Auth
                 .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.Descricao))
                 .ForMember(dest => dest.PessoaId, opt => opt.MapFrom(src => src.PessoaId))
                 .ForMember(dest => dest.Cpf, opt => opt.MapFrom(src => src.Cpf.FormatarCpf()))
-                .ForMember(dest => dest.Telefone, opt => opt.MapFrom(src => src.Telefone))
+                .ForMember(dest => dest.Telefone, opt => opt.MapFrom(src => src.Telefone.FormatarTelefone()))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
                 .ForMember(dest => dest.Principal, opt => opt.MapFrom(src => src.Principal))
                 .ForMember(dest => dest.Observacao, opt => opt.MapFrom(src => src.Observacao));

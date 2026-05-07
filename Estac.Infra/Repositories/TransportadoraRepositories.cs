@@ -144,8 +144,8 @@ namespace Estac.Infra.Repositories
                     RazaoSocial = x.Pessoa.NomeRazaoSocial,
                     NomeFantasia = x.Pessoa.Descricao,
                     NomeResponsavel = x.ResponsavelLegal,
-                    CpfResponsavel = x.ResponsavelCpf,
-                    TelefoneResponsavel = x.ResponsavelTelefone
+                    CpfResponsavel = x.ResponsavelCpf.FormatarCpf(),
+                    TelefoneResponsavel = x.ResponsavelTelefone.FormatarTelefone()
                 })
                 .FirstOrDefaultAsync();
         }

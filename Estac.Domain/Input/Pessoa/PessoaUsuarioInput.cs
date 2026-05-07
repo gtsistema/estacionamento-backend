@@ -1,8 +1,7 @@
-﻿using Estac.Domain.Models.Enuns;
-
+﻿
 namespace Estac.Domain.Input.Pessoa
 {
-    public class PessoaUsuarioImput
+    public class PessoaUsuarioInput
     {
         public int Id { get; set; }
         public string Nome { get; set; }    

@@ -6,7 +6,9 @@ using Estac.Domain.Models;
 using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output;
 using Estac.Domain.Output.Motorista;
+using Estac.Domain.Validators;
 using Estac.Service.Extensions;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Estac.Service
@@ -54,6 +56,9 @@ namespace Estac.Service
 
         public async Task<ActionResult> Gravar(MotoristaPostInput input)
         {
+            var contatosInvalidos = ValidarContatos(input?.PessoaFisica?.Contatos);
+            if (contatosInvalidos.Count > 0)
+                return await RetornNo(new { }, contatosInvalidos);
 
             await _unitOfWork.BeginTransactionAsync();
 
@@ -89,6 +94,10 @@ namespace Estac.Service
 
         public async Task<ActionResult> Alterar(MotoristaPutInput input)
         {
+            var contatosInvalidos = ValidarContatos(input?.PessoaFisica?.Contatos);
+            if (contatosInvalidos.Count > 0)
+                return await RetornNo(new { }, contatosInvalidos);
+
             await _unitOfWork.BeginTransactionAsync();
 
             try
@@ -142,6 +151,24 @@ namespace Estac.Service
 
                 return await RetornNo(false, ex.Message);
             }
+        }
+
+        private static List<ValidationFailure> ValidarContatos(IEnumerable<Domain.Input.PessoaContato.PessoaContatoInput> contatos)
+        {
+            if (contatos == null)
+                return new List<ValidationFailure>();
+
+            var validator = new PessoaContatoInputValidator();
+            var erros = new List<ValidationFailure>();
+
+            foreach (var contato in contatos)
+            {
+                var result = validator.Validate(contato);
+                if (!result.IsValid)
+                    erros.AddRange(result.Errors);
+            }
+
+            return erros;
         }
     }
 }

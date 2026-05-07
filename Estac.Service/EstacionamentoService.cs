@@ -7,7 +7,9 @@ using Estac.Domain.Models;
 using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output;
 using Estac.Domain.Output.Estacionamento;
+using Estac.Domain.Validators;
 using Estac.Service.Extensions;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Estac.Service
@@ -59,6 +61,10 @@ namespace Estac.Service
         {
             try
             {
+                var contatosInvalidos = ValidarContatos(input?.PessoaJuridica?.Contatos);
+                if (contatosInvalidos.Count > 0)
+                    return await RetornNo(new { }, contatosInvalidos);
+
                 var estacionamento = await _repositories.SelecionarPorDescricao(input.Descricao);
 
                 if(estacionamento is not null)
@@ -116,6 +122,10 @@ namespace Estac.Service
         {
             try
             {
+                var contatosInvalidos = ValidarContatos(input?.PessoaJuridica?.Contatos);
+                if (contatosInvalidos.Count > 0)
+                    return await RetornNo(new { }, contatosInvalidos);
+
                 //var validations = EstacionamentoPutInput.Validar(input);
 
                 //if (!validations.IsValid)
@@ -181,6 +191,24 @@ namespace Estac.Service
             result.Pessoa.AdicionarTipoPessoa(TipoPessoa.Juridica);
             result.Pessoa.AdicionarPapel(TipoPapel.Estacionamento);
             result.Descricao = result.Pessoa.Descricao;
+        }
+
+        private static List<ValidationFailure> ValidarContatos(IEnumerable<Domain.Input.PessoaContato.PessoaContatoInput> contatos)
+        {
+            if (contatos == null)
+                return new List<ValidationFailure>();
+
+            var validator = new PessoaContatoInputValidator();
+            var erros = new List<ValidationFailure>();
+
+            foreach (var contato in contatos)
+            {
+                var result = validator.Validate(contato);
+                if (!result.IsValid)
+                    erros.AddRange(result.Errors);
+            }
+
+            return erros;
         }
     }
 }

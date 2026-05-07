@@ -62,7 +62,7 @@ namespace Estac.Service.Seed.Identity
                 ConfirmPassword = "@Admin2134",
                 Email = $"{userName}@email.com",
                 EstacionamentoId = 1,
-                Pessoa = new PessoaUsuarioImput
+                Pessoa = new PessoaUsuarioInput
                 {
                     Nome = "Administrador",
                     Cpf = StringExtentions.GerarCpf(),
