@@ -6,7 +6,7 @@ namespace Estac.Domain.Models
     public class EntradaSaida : BaseInt
     {
         public int MotoristaId { get; set; }
-        public int TransportadoraId { get; set; }
+        public int? TransportadoraId { get; set; }
         public int VeiculoId { get; set; }
         public DateTime DataHoraEntrada { get; set; }
         public DateTime? DataHoraSaida { get; set; }

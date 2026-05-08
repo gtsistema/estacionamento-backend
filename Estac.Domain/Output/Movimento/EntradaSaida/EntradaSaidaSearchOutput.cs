@@ -9,7 +9,7 @@ namespace Estac.Domain.Output.Movimento.EntradaSaida
         public string Descricao { get; set; }
         public int MotoristaId { get; set; }
         public string NomeMotorista { get; set; }
-        public int TransportadoraId { get; set; }
+        public int? TransportadoraId { get; set; }
         public string NomeTransportadora { get; set; }
         public int VeiculoId { get; set; }
         public string PlacaVeiculo { get; set; }

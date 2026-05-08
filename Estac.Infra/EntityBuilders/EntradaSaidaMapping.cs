@@ -23,7 +23,7 @@ namespace Estac.Infra.EntityBuilders
 
             builder.Property(x => x.TransportadoraId)
                 .HasColumnType("int")
-                .IsRequired();
+                .IsRequired(false);
 
             builder.Property(x => x.VeiculoId)
                 .HasColumnType("int")

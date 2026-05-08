@@ -12,11 +12,6 @@ namespace Estac.Domain.Validators
     {
         public PessoaJuridicaInputValidator()
         {
-            RuleFor(x => x.TipoPessoa)
-                .Equal(TipoPessoa.Juridica)
-                .When(x => x.TipoPessoa != default)
-                .WithMessage("Tipo de pessoa deve ser jurídica.");
-
             RuleFor(x => x.NomeRazaoSocial)
                 .NotEmpty().WithMessage("Razão social é obrigatória.")
                 .MaximumLength(200);

@@ -99,7 +99,9 @@ namespace Estac.Infra.Repositories
                     MotoristaId = x.MotoristaId,
                     NomeMotorista = x.Motorista.Pessoa.Descricao,
                     TransportadoraId = x.TransportadoraId,
-                    NomeTransportadora = x.Transportadora.Pessoa.Descricao,
+                    NomeTransportadora = x.Transportadora != null
+                        ? x.Transportadora.Pessoa.Descricao
+                        : string.Empty,
                     VeiculoId = x.VeiculoId,
                     PlacaVeiculo = x.Veiculo.Placa,
                     DataHoraEntrada = x.DataHoraEntrada,

@@ -10,7 +10,7 @@ namespace Estac.Domain.Output.Movimento.EntradaSaida
         public string Descricao { get; set; }
         public string Status { get; set; }
         public int MotoristaId { get; set; }
-        public int TransportadoraId { get; set; }
+        public int? TransportadoraId { get; set; }
         public int VeiculoId { get; set; }
         public DateTime DataHoraEntrada { get; set; }
         public DateTime? DataHoraSaida { get; set; }

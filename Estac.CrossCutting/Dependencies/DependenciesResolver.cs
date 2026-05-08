@@ -19,6 +19,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Estac.Service.Movimento;
+using Estac.Domain.Integration.Workers;
+using Estac.Domain.Interface.Integration;
+using Estac.Infra.Integration.Workers;
+using Microsoft.Extensions.Options;
 
 namespace Estac.CrossCutting.Dependencies
 {
@@ -27,6 +31,17 @@ namespace Estac.CrossCutting.Dependencies
         public static IServiceCollection ResolveInjectDependencies(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<SmtpSettings>(configuration.GetSection("Smtp"));
+            services.Configure<EstacionamentoWorkersOptions>(configuration.GetSection(EstacionamentoWorkersOptions.SectionName));
+            services.AddHttpClient<IEstacionamentoWorkersClient, EstacionamentoWorkersClient>()
+                .ConfigureHttpClient((sp, client) =>
+                {
+                    var opt = sp.GetRequiredService<IOptions<EstacionamentoWorkersOptions>>().Value;
+                    var baseUrl = (opt.BaseUrl ?? string.Empty).TrimEnd('/');
+                    if (!string.IsNullOrEmpty(baseUrl))
+                        client.BaseAddress = new Uri(baseUrl + "/");
+                    var seconds = opt.TimeoutSeconds < 5 ? 5 : (opt.TimeoutSeconds > 120 ? 120 : opt.TimeoutSeconds);
+                    client.Timeout = TimeSpan.FromSeconds(seconds);
+                });
             services.AddScoped<IEmailSenderService, SmtpEmailSenderService>();
 
             services.AddScoped<INotifier, Notifier>();

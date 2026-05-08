@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Estac.Domain.Input.Movimento.EntradaSaida;
 using Estac.Domain.Output.Movimento.EntradaSaida;
+using Estac.Domain.Integration.Workers;
+using Estac.Domain.Interface.Integration;
 
 namespace Estac.Service.Movimento
 {
@@ -26,6 +28,7 @@ namespace Estac.Service.Movimento
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ICurrentUser _currentUser;
+        private readonly IEstacionamentoWorkersClient _estacionamentoWorkers;
 
         public EntradaSaidaService(
             IErrorServices errorServices,
@@ -36,7 +39,8 @@ namespace Estac.Service.Movimento
             IVeiculoMotoristaRepositories veiculoMotoristaRepositories,
             IUnitOfWork unitOfWork,
             IMapper mapper,
-            ICurrentUser currentUser) : base(errorServices)
+            ICurrentUser currentUser,
+            IEstacionamentoWorkersClient estacionamentoWorkers) : base(errorServices)
         {
             _repositories = repositories;
             _motoristaRepositories = motoristaRepositories;
@@ -46,6 +50,7 @@ namespace Estac.Service.Movimento
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _currentUser = currentUser;
+            _estacionamentoWorkers = estacionamentoWorkers;
         }
 
         public async Task<ActionResult> ObterPorId(int id)
@@ -147,10 +152,7 @@ namespace Estac.Service.Movimento
                 var veiculoId = await ResolverVeiculoId(input.Veiculo, transportadoraId);
                 transportadoraId ??= await ObterTransportadoraDoVeiculo(veiculoId);
 
-                if (!transportadoraId.HasValue)
-                    throw new ArgumentException("Transportadora não informada e não encontrada no veículo.");
-
-                result.TransportadoraId = transportadoraId.Value;
+                result.TransportadoraId = transportadoraId;
                 result.MotoristaId = motoristaId;
                 result.VeiculoId = veiculoId;
                 result.DataHoraEntrada = input.DataHoraEntrada ?? DateTime.Now;
@@ -169,6 +171,8 @@ namespace Estac.Service.Movimento
                 await _repositories.Gravar(result);
                 await _veiculoMotoristaRepositories.VincularAsync(veiculoId, motoristaId);
                 await _unitOfWork.CommitAsync();
+
+                await NotificarWorkersMovimentacaoEntradaAsync(input, result);
 
                 return await RetornOk(_mapper.Map<EntradaSaidaOutput>(result));
             }
@@ -487,6 +491,46 @@ namespace Estac.Service.Movimento
         {
             var minutos = (int)Math.Max(0, (fim - inicio).TotalMinutes);
             result.TempoPermanenciaMinutos += minutos;
+        }
+
+        private async Task NotificarWorkersMovimentacaoEntradaAsync(EntradaPostInput input, EntradaSaida result)
+        {
+            var placa = VeiculoPlacaHelper.Normalizar(input.Veiculo?.Placa ?? string.Empty);
+            var motoristaNome = string.IsNullOrWhiteSpace(input.Motorista?.Nome)
+                ? "Motorista"
+                : input.Motorista.Nome.Trim();
+
+            var tipoCarga = input.Veiculo?.TipoCarga.HasValue == true
+                ? input.Veiculo.TipoCarga.Value.GetDescription()
+                : string.Empty;
+
+            var transportadoraNome = input.Transportadora?.RazaoSocial?.Trim();
+            if (string.IsNullOrWhiteSpace(transportadoraNome) && result.TransportadoraId.HasValue && result.TransportadoraId.Value > 0)
+            {
+                var transportadora = await _transportadoraRepositories.SelecionarPorIdCompleto(result.TransportadoraId.Value);
+                transportadoraNome =
+                    transportadora?.Pessoa?.NomeRazaoSocial?.Trim()
+                    ?? transportadora?.Pessoa?.Descricao?.Trim()
+                    ?? string.Empty;
+            }
+
+            var payload = new MovimentacaoTempoRealRequest
+            {
+                Id = Guid.NewGuid(),
+                Placa = placa,
+                Motorista = motoristaNome,
+                CPF = input.Motorista?.Cpf.SomenteDigitos() ?? string.Empty,
+                Transportadora = transportadoraNome ?? string.Empty,
+                TipoCarga = tipoCarga,
+                StatusMovimentacao = result.Status.GetDescription(),
+                DataHoraEntrada = result.DataHoraEntrada,
+                DataHoraSaida = null,
+                TempoPermanencia = "0 min",
+                Patio = string.Empty,
+                Observacao = !string.IsNullOrWhiteSpace(input.Observacao) ? input.Observacao : (result.Descricao ?? string.Empty)
+            };
+
+            await _estacionamentoWorkers.RegistrarMovimentacaoTempoRealAsync(payload);
         }
     }
 }
