@@ -17,13 +17,15 @@ namespace Estac.Infra.Repositories
     {
         private DbSet<Transportadora> _dataset;
         private readonly IMapper _mapper;
-       
+        private readonly IVeiculoRepositories _veiculoRepositories;
 
         public TransportadoraRepositories(
             GtsContext context,
-            IMapper _mapper ) : base(context)
+            IMapper _mapper,
+            IVeiculoRepositories veiculoRepositories) : base(context)
         {
             this._mapper = _mapper;
+            _veiculoRepositories = veiculoRepositories;
             _dataset = context.Set<Transportadora>();
         }
 
@@ -121,8 +123,7 @@ namespace Estac.Infra.Repositories
         }
         public async Task<Transportadora> SelecionarIdSimplificado(int id)
         {
-            return await _dataset
-                        .AsNoTracking()
+            return await _dataset.Include(x => x.Pessoa)
                         .SingleOrDefaultAsync(x => x.Id == id);
         }
 
@@ -148,6 +149,43 @@ namespace Estac.Infra.Repositories
                     TelefoneResponsavel = x.ResponsavelTelefone.FormatarTelefone()
                 })
                 .FirstOrDefaultAsync();
+        }
+
+        public Task<bool> PossuiVeiculoVinculadoAsync(int transportadoraId) =>
+            _context.Set<Veiculo>().AsNoTracking().AnyAsync(v => v.TransportadoraId == transportadoraId);
+
+        public Task<bool> PossuiEntradaSaidaVinculadaAsync(int transportadoraId) =>
+            _context.Set<EntradaSaida>().AsNoTracking().AnyAsync(e => e.TransportadoraId == transportadoraId);
+
+        /// <summary>
+        /// Exclui transportadora e a <see cref="Pessoa"/> associada.
+        /// Contatos, endereços e papéis da pessoa somem em cascata ao apagar <see cref="Pessoa"/> (configuração EF).
+        /// A FK Transportadora → Pessoa é <c>Restrict</c>: não basta remover só a transportadora; a pessoa é removida em seguida.
+        /// Chamador deve garantir que não existam <see cref="Veiculo"/> nem <see cref="EntradaSaida"/> com FK para esta transportadora (Restrict).
+        /// Também falha se existir <see cref="VeiculoMotorista"/> ligando motorista a veículo desta transportadora.
+        /// </summary>
+        public async Task Remove(int id)
+        {
+            try
+            {
+                
+
+                var transportadora = await _dataset
+                    .Include(x => x.Pessoa)
+                    .FirstOrDefaultAsync(x => x.Id == id);
+
+                if (transportadora is null)
+                    return;
+
+                _context.Remove(transportadora);
+
+                if (transportadora.Pessoa is not null)
+                    _context.Remove(transportadora.Pessoa);
+            }
+            catch (DbUpdateException)
+            {
+                throw;
+            }
         }
     }
 }

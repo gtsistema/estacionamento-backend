@@ -1,4 +1,4 @@
-﻿
+
 using Estac.Domain.Input.Transportadora;
 using Estac.Domain.Models;
 using Estac.Domain.Models.Enuns;
@@ -13,5 +13,8 @@ namespace Estac.Domain.Interface.Repositories
         Task<PagedResult<TransportadoraSearchOutput>> Paginar(TransportadoraFilterInput input);
         Task<Transportadora> SelecionarIdSimplificado(int id);
         Task<TransportadoraPorCnpjOutput> SelecionarPorCnpj(string cnpj);
+        Task<bool> PossuiVeiculoVinculadoAsync(int transportadoraId);
+        Task<bool> PossuiEntradaSaidaVinculadaAsync(int transportadoraId);
+        Task Remove(int id);
     }
 }

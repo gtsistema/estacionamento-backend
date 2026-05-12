@@ -92,5 +92,30 @@ namespace Estac.Infra.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        public Task<bool> PossuiEntradaSaidaVinculadaAsync(int motoristaId) =>
+            _context.Set<EntradaSaida>().AsNoTracking().AnyAsync(e => e.MotoristaId == motoristaId);
+
+        public async Task Remove(int id)
+        {
+            try
+            {
+                var motorista = await _dataset
+                    .Include(x => x.Pessoa)
+                    .FirstOrDefaultAsync(x => x.Id == id);
+
+                if (motorista is null)
+                    return;
+
+                _context.Remove(motorista);
+
+                if (motorista.Pessoa is not null)
+                    _context.Remove(motorista.Pessoa);
+            }
+            catch (DbUpdateException)
+            {
+                throw;
+            }
+        }
+
     }
 }

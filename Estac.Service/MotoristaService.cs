@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Estac.Domain.Extensions;
 using Estac.Domain.Input.Motorista;
 using Estac.Domain.Interface.Repositories;
@@ -143,17 +143,18 @@ namespace Estac.Service
 
             try
             {
-                var motorista = await _repositories.Selecionar(id);
 
-                if (motorista == null)
-                {
-                    await _unitOfWork.RollbackAsync();
-                    return await RetornNo(false, "Produto não localizado na base de dados!");
-                }
+                if (!await _repositories.Existe(id))
+                    return await RetornNo(false, "Motorista não localizado na base de dados.", statusCode: 404);
 
-                await _repositories.Excluir(id);
+                if (await _veiculoRepositories.PossuiVeiculoMotoristaNaTransportadoraAsync(id))
+                    throw new InvalidOperationException(
+                        "Não é possível excluir: existem motoristas vinculados a veículos desta transportadora.");
 
-                await _pessoaRepositories.Excluir(motorista.PessoaId);
+                if (await _repositories.PossuiEntradaSaidaVinculadaAsync(id))
+                    return await RetornNo(false, "Não é possível excluir: existem registros de entrada/saída vinculados a este motorista.");
+
+                await _repositories.Remove(id);
 
                 await _unitOfWork.CommitAsync();
 

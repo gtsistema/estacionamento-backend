@@ -10,5 +10,8 @@ namespace Estac.Domain.Interface.Repositories
         Task<PagedResult<MotoristaSearchOutput>> Paginar(MotoristaFilterInput input);
         Task<Motorista> SelecionarPorIdCompleto(int id);
         Task<MotoristaPorCpfOutput> SelecionarPorCpf(string cpf);
+        Task<bool> PossuiEntradaSaidaVinculadaAsync(int motoristaId);
+
+        Task Remove(int id);
     }
 }

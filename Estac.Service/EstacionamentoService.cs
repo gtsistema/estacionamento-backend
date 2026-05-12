@@ -149,7 +149,7 @@ namespace Estac.Service
             var result = await _repositories.Existe(id);
 
             if (!result)
-                return await RetornNo(false, "Produto não localizado na base de dados!");
+                return await RetornNo(false, "Estacionamento não localizado na base de dados!");
 
             var estacionamento = await _repositories.Selecionar(id);
 

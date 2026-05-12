@@ -99,12 +99,18 @@ namespace Estac.Service
 
         public async Task<ActionResult> Excluir(int id)
         {
+            if (!await _repositories.Existe(id))
+                return await RetornNo(false, "Veículo não localizado na base de dados.", statusCode: 404);
+
+            if (await _repositories.PossuiMotoristaVinculadoAsync(id))
+                return await RetornNo(false, "Não é possível excluir: existem motoristas vinculados a este veículo.");
+
             try
             {
-                var transportadora = await _repositories.ExcluirCompleto(id);
+                var excluido = await _repositories.ExcluirCompleto(id);
 
-                if (!transportadora)
-                    return await RetornNo(false, "Veículo não localizado na base de dados.");
+                if (!excluido)
+                    return await RetornNo(false, "Veículo não localizado na base de dados.", statusCode: 404);
 
                 return await RetornOk(true);
             }

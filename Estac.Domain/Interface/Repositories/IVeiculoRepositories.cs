@@ -13,6 +13,11 @@ namespace Estac.Domain.Interface.Repositories
         Task<Veiculo> SelecionarPorIdCompleto(int id);
         Task<Veiculo> GravarCompleto(Veiculo veiculo);
         Task<Veiculo?> AlterarCompleto(Veiculo dados);
+        Task<bool> PossuiMotoristaVinculadoAsync(int veiculoId);
+        /// <summary>Indica se existe vínculo em <c>VeiculoMotorista</c> para algum veículo desta transportadora.</summary>
+        Task<bool> PossuiVeiculoMotoristaNaTransportadoraAsync(int transportadoraId);
+        /// <summary>Indica se o motorista possui algum registro em <c>VeiculoMotorista</c>.</summary>
+        Task<bool> PossuiVeiculoMotoristaParaMotoristaAsync(int motoristaId);
         Task<bool> ExcluirCompleto(int id);
         Task<EntradaSaidaVinculoOutput> ObterVinculosPorPlaca(string placa);
     }

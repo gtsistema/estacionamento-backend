@@ -211,6 +211,13 @@ namespace Estac.Infra.Repositories
                 entity.VeiculoMotoristas.Add(item);
         }
 
+        public Task<bool> PossuiMotoristaVinculadoAsync(int veiculoId) =>
+            _context.Set<VeiculoMotorista>().AsNoTracking().AnyAsync(vm => vm.VeiculoId == veiculoId);
+
+        public Task<bool> PossuiVeiculoMotoristaNaTransportadoraAsync(int transportadoraId) =>
+            _context.Set<VeiculoMotorista>().AsNoTracking()
+                .AnyAsync(vm => vm.Veiculo != null && vm.Veiculo.TransportadoraId == transportadoraId);
+
         /// <summary>
         /// Exclui <see cref="VeiculoDetalhe"/> pelo <c>VeiculoId</c> e em seguida o <see cref="Veiculo"/>.
         /// </summary>
