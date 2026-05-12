@@ -218,6 +218,9 @@ namespace Estac.Infra.Repositories
             _context.Set<VeiculoMotorista>().AsNoTracking()
                 .AnyAsync(vm => vm.Veiculo != null && vm.Veiculo.TransportadoraId == transportadoraId);
 
+        public Task<bool> PossuiVeiculoMotoristaParaMotoristaAsync(int motoristaId) =>
+            _context.Set<VeiculoMotorista>().AsNoTracking().AnyAsync(vm => vm.MotoristaId == motoristaId);
+
         /// <summary>
         /// Exclui <see cref="VeiculoDetalhe"/> pelo <c>VeiculoId</c> e em seguida o <see cref="Veiculo"/>.
         /// </summary>

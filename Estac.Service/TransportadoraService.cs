@@ -164,9 +164,6 @@ namespace Estac.Service
                 if (await _repositories.PossuiEntradaSaidaVinculadaAsync(id))
                     return await RetornNo(false, "Não é possível excluir: existem registros de entrada/saída vinculados a esta transportadora.");
 
-                if (await _veiculoRepositories.PossuiVeiculoMotoristaNaTransportadoraAsync(id))
-                    return await RetornNo(false, "Não é possível excluir: existem motoristas vinculados a veículos desta transportadora.");
-
                 await _unitOfWork.BeginTransactionAsync();
 
                 await _repositories.Remove(id);

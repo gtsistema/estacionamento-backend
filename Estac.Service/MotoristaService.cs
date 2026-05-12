@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using Estac.Domain.Extensions;
 using Estac.Domain.Input.Motorista;
 using Estac.Domain.Interface.Repositories;
@@ -139,20 +139,18 @@ namespace Estac.Service
 
         public async Task<ActionResult> Excluir(int id)
         {
-            await _unitOfWork.BeginTransactionAsync();
+            if (!await _repositories.Existe(id))
+                return await RetornNo(false, "Motorista não localizado na base de dados.", statusCode: 404);
+
+            if (await _veiculoRepositories.PossuiVeiculoMotoristaParaMotoristaAsync(id))
+                return await RetornNo(false, "Não é possível excluir: o motorista está vinculado a um ou mais veículos.");
+
+            if (await _repositories.PossuiEntradaSaidaVinculadaAsync(id))
+                return await RetornNo(false, "Não é possível excluir: existem registros de entrada/saída vinculados a este motorista.");
 
             try
             {
-
-                if (!await _repositories.Existe(id))
-                    return await RetornNo(false, "Motorista não localizado na base de dados.", statusCode: 404);
-
-                if (await _veiculoRepositories.PossuiVeiculoMotoristaNaTransportadoraAsync(id))
-                    throw new InvalidOperationException(
-                        "Não é possível excluir: existem motoristas vinculados a veículos desta transportadora.");
-
-                if (await _repositories.PossuiEntradaSaidaVinculadaAsync(id))
-                    return await RetornNo(false, "Não é possível excluir: existem registros de entrada/saída vinculados a este motorista.");
+                await _unitOfWork.BeginTransactionAsync();
 
                 await _repositories.Remove(id);
 
