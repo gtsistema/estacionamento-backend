@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Estac.Domain.Input.Motorista;
 using Estac.Domain.Input.Veiculo;
 using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Interface.Services;
@@ -16,17 +17,23 @@ namespace Estac.Service
     {
         private readonly IVeiculoRepositories _repositories;
         private readonly ITransportadoraRepositories _transportadoraRepositories;
+        private readonly IVeiculoModeloRepositories _veiculoModeloRepositories;
+        private readonly IMotoristaRepositories _motoristaRepositories;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
         public VeiculoService(IErrorServices _errorServices,
                                IVeiculoRepositories repositories,
                                ITransportadoraRepositories transportadoraRepositories,
+                               IVeiculoModeloRepositories veiculoModeloRepositories,
+                               IMotoristaRepositories motoristaRepositories,
                                IMapper mapper,
                                IUnitOfWork unitOfWork) : base(_errorServices)
         {
             _repositories = repositories;
             _transportadoraRepositories = transportadoraRepositories;
+            _veiculoModeloRepositories = veiculoModeloRepositories;
+            _motoristaRepositories = motoristaRepositories;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -49,10 +56,10 @@ namespace Estac.Service
         {
             try
             {
-                var transportadoraInvalida = await Validar(input.TransportadoraId);
+                var referenciasInvalidas = await ValidarReferenciasAsync(input);
 
-                if (transportadoraInvalida != null)
-                    return transportadoraInvalida;
+                if (referenciasInvalidas != null)
+                    return referenciasInvalidas;
 
                 var veiculo = _mapper.Map<Veiculo>(input);
                 var salvo = await _repositories.GravarCompleto(veiculo);
@@ -67,9 +74,9 @@ namespace Estac.Service
 
         public async Task<ActionResult> Alterar(VeiculoPutInput input)
         {
-            var transportadoraInvalida = await Validar(input.TransportadoraId);
-            if (transportadoraInvalida != null)
-                return transportadoraInvalida;
+            var referenciasInvalidas = await ValidarReferenciasAsync(input);
+            if (referenciasInvalidas != null)
+                return referenciasInvalidas;
 
             await _unitOfWork.BeginTransactionAsync();
 
@@ -121,12 +128,43 @@ namespace Estac.Service
             }
         }
 
-        private async Task<ActionResult> Validar(int? transportadoraId)
+        private async Task<ActionResult> ValidarReferenciasAsync(VeiculoPostInput input)
         {
-            var existe = await _transportadoraRepositories.SelecionarIdSimplificado(transportadoraId ?? transportadoraId.Value);
+            if (input.TransportadoraId.HasValue)
+            {
+                var transportadora = await _transportadoraRepositories.SelecionarIdSimplificado(input.TransportadoraId.Value);
+                if (transportadora is null)
+                    return await RetornNo(false, "Transportadora não localizada na base de dados.");
+            }
 
-            if (existe is null)
-                return await RetornNo(false, "Transportadora não localizada na base de dados.");
+            var modeloId = input.Modelo?.Id > 0 ? input.Modelo.Id : 0;
+            if (modeloId > 0)
+            {
+                if (!await _veiculoModeloRepositories.Existe(modeloId))
+                    return await RetornNo(false, "Modelo de veículo não localizado na base de dados.");
+
+                var marcaInformada = input.Marca?.Id > 0
+                    ? input.Marca.Id
+                    : (input.Modelo.Marca?.Id > 0 ? input.Modelo.Marca.Id : 0);
+
+                if (marcaInformada > 0)
+                {
+                    var modelo = await _veiculoModeloRepositories.Selecionar(modeloId);
+                    if (modelo != null && modelo.VeiculoMarcaId != marcaInformada)
+                        return await RetornNo(false, "Marca informada não corresponde ao modelo de veículo.");
+                }
+            }
+
+            var motoristaIds = (input.Motoristas ?? new List<MotoristaVinculoInput>())
+                .Where(m => m != null && m.Id > 0)
+                .Select(m => m.Id)
+                .Distinct();
+
+            foreach (var motoristaId in motoristaIds)
+            {
+                if (!await _motoristaRepositories.Existe(motoristaId))
+                    return await RetornNo(false, "Motorista não localizado na base de dados.");
+            }
 
             return null;
         }

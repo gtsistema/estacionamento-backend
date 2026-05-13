@@ -47,9 +47,10 @@ namespace Estac.Infra.Repositories
                             Ativo = x.Ativo,
                             Cor = x.Cor,
                             Id = x.Id,
-                            Placa = x.Placa,
+                            Placa = VeiculoPlacaHelper.FormatarExibicao(x.Placa),
                             TipoCarga = x.TipoCarga,
-                            ModeloMarca = x.VeiculoModelo != null ? x.VeiculoModelo.Descricao + " - " + x.VeiculoModelo.VeiculoMarca.Descricao : null,
+                            Modelo = x.VeiculoModelo != null ? x.VeiculoModelo.Descricao : null,
+                            Marca = x.VeiculoModelo != null && x.VeiculoModelo.VeiculoMarca != null ? x.VeiculoModelo.VeiculoMarca.Descricao : null,
                             MotoristaIds = x.VeiculoMotoristas
                                 .Select(vm => vm.MotoristaId)
                                 .ToList(),
@@ -59,9 +60,6 @@ namespace Estac.Infra.Repositories
                                 .ToList(),
                         })
                         .GetPaged(input.NumeroPagina, input.TamanhoPagina);
-
-            foreach (var item in result.Results)
-                item.Placa = VeiculoPlacaHelper.FormatarExibicao(item.Placa);
 
             return result;
         }

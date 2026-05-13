@@ -1,11 +1,9 @@
 ﻿using Estac.Domain.Input.Base;
+using Estac.Domain.Input.Motorista;
 using Estac.Domain.Models.Enuns;
 
 namespace Estac.Domain.Input.Veiculo
 {
-    /// <summary>
-    /// Payload de criação: modelo e motorista por Id (dropdown); transportadora só Id; detalhes opcionais em <see cref="VeiculoDetalheInput"/>.
-    /// </summary>
     public class VeiculoPostInput : BaseIntInput
     {
         public string Placa { get; set; }
@@ -14,9 +12,10 @@ namespace Estac.Domain.Input.Veiculo
         public string Cor { get; set; }
         public TipoCarga? TipoCarga { get; set; }
         public int? TransportadoraId { get; set; }
-        public List<int> MotoristaIds { get; set; } = new();
-        public int? VeiculoModeloId { get; set; }
         public VeiculoDetalheInput VeiculoDetalhe { get; set; }
+        public VeiculoModeloInput Modelo { get; set; }
+        public VeiculoMarcaInput Marca { get; set; }
+        public List<MotoristaVinculoInput> Motoristas { get; set; } = new();
     }
 
     public class VeiculoDetalheInput()
@@ -37,8 +36,8 @@ namespace Estac.Domain.Input.Veiculo
 
     public class VeiculoModeloInput : BaseIntDataNullInput
     {
-        public int? VeiculoMarcaId { get; set; }
-        public VeiculoMarcaInput VeiculoMarca { get; set; }
+        /// <summary>Marca esperada do modelo (opcional; usada para conferência com o cadastro de modelo).</summary>
+        public VeiculoMarcaInput Marca { get; set; }
     }
 
 

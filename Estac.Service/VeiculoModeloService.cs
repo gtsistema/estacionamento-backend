@@ -44,11 +44,6 @@ namespace Estac.Service
         {
             try
             {
-                //var validations = VeiculoModeloPostInput.Validar(input);
-
-                //if (!validations.IsValid)
-                //    return await RetornNo(false, validations.Errors);
-
                 var result = _mapper.Map<VeiculoModelo>(input);
 
                 await _repositories.Gravar(result);
@@ -66,11 +61,6 @@ namespace Estac.Service
         {
             try
             {
-                //var validations = VeiculoModeloPutInput.Validar(input);
-
-                //if (!validations.IsValid)
-                //    return await RetornNo(false, validations.Errors);
-
                 var result = _mapper.Map<VeiculoModelo>(input);
                 await _repositories.Alterar(result);
 

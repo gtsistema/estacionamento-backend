@@ -7,7 +7,8 @@ namespace Estac.Domain.Output.Veiculo
         public int Id { get; set; }
         public string Placa { get; set; }
         public int? Ano { get; set; }
-        public string ModeloMarca { get; set; }
+        public string Modelo { get; set; }
+        public string Marca { get; set; }
         public bool Ativo { get; set; }
         public string Cor { get; set; }
         public TipoCarga? TipoCarga { get; set; }
