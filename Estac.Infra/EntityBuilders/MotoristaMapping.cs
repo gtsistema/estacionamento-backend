@@ -31,6 +31,14 @@ namespace Estac.Infra.EntityBuilders
                    .WithMany() // ou .WithMany(p => p.Motoristas) se existir coleção
                    .HasForeignKey(m => m.PessoaId)
                    .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Property(m => m.TransportadoraId)
+                  .IsRequired(false);
+
+            builder.HasOne(m => m.Transportadora)
+                   .WithMany() 
+                   .HasForeignKey(m => m.TransportadoraId)
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

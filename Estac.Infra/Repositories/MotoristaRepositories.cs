@@ -36,8 +36,7 @@ namespace Estac.Infra.Repositories
                         .AsNoTracking()
                         .Where(x =>
                             (!input.TransportadoraId.HasValue
-                                || x.VeiculoMotoristas.Any(vm => vm.Veiculo != null
-                                    && vm.Veiculo.TransportadoraId == input.TransportadoraId.Value))
+                                || x.TransportadoraId == input.TransportadoraId.Value)
                             && (termoBusca == null
                                 || (x.Descricao != null && x.Descricao.ToLower().Contains(termoBusca))
                                 || (x.Pessoa.NomeRazaoSocial != null && x.Pessoa.NomeRazaoSocial.ToLower().Contains(termoBusca))
@@ -49,6 +48,7 @@ namespace Estac.Infra.Repositories
                         {
                             Id = x.Id,  
                             PessoaId = x.PessoaId,
+                            TransportadoraId = x.TransportadoraId,
                             Descricao = x.Descricao ?? x.Pessoa.Descricao,
                             CNH = x.CNH,
                             ValidadeCNH = x.ValidadeCNH,
@@ -87,7 +87,8 @@ namespace Estac.Infra.Repositories
                 .Select(x => new MotoristaPorCpfOutput
                 {
                     Cpf = x.Pessoa.Documento.FormatarCpf(),
-                    Nome = x.Pessoa.NomeRazaoSocial
+                    Nome = x.Pessoa.NomeRazaoSocial,
+                    TransportadoraId = x.TransportadoraId
                 })
                 .FirstOrDefaultAsync();
         }
