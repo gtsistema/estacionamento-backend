@@ -42,7 +42,6 @@ namespace Estac.Infra.Integration.Workers
 
             var teste = JsonSerializer.Serialize(request);
 
-
             try
             {
                 using var response = await _httpClient.PostAsJsonAsync(MovimentacaoTempoRealPath, request, JsonOptions, cancellationToken);

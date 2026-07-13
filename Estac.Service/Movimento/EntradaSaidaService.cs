@@ -147,29 +147,10 @@ namespace Estac.Service.Movimento
             {
                 var result = _mapper.Map<EntradaSaida>(input);
 
-                var transportadoraId = await ResolverTransportadoraId(input.Transportadora);
-                var motoristaId = await ResolverMotoristaId(input.Motorista);
-                var veiculoId = await ResolverVeiculoId(input.Veiculo, transportadoraId);
-                transportadoraId ??= await ObterTransportadoraDoVeiculo(veiculoId);
-
-                result.TransportadoraId = transportadoraId;
-                result.MotoristaId = motoristaId;
-                result.VeiculoId = veiculoId;
-                result.DataHoraEntrada = input.DataHoraEntrada ?? DateTime.Now;
-                result.DataHoraUltimaEntradaPatio = result.DataHoraEntrada;
-                result.PermanenciaSuspensa = false;
-                result.Finalizado = false;
-                result.TempoPermanenciaMinutos = 0;
-                result.TempoTotalSuspensaoMinutos = 0;
-                result.UsuarioRegistroEntradaId = _currentUser.Id;
-                result.UsuarioRegistroEntradaNome = _currentUser.Name;
-                result.Descricao = $"{input.Veiculo?.Placa} - {input.Motorista?.Nome}";
-                result.Status = input.DataHoraEntrada.HasValue
-                    ? EntradaSaidaStatus.Agendado
-                    : EntradaSaidaStatus.EmAberto;
+                await TratamentoEntradaSaida(input, result);
 
                 await _repositories.Gravar(result);
-                await _veiculoMotoristaRepositories.VincularAsync(veiculoId, motoristaId);
+                await _veiculoMotoristaRepositories.VincularAsync(result.VeiculoId, result.MotoristaId);
                 await _unitOfWork.CommitAsync();
 
                 await NotificarWorkersMovimentacaoEntradaAsync(input, result);
@@ -181,6 +162,28 @@ namespace Estac.Service.Movimento
                 await _unitOfWork.RollbackAsync();
                 return await RetornNo(false, ex.Message);
             }
+        }
+
+        private async Task TratamentoEntradaSaida(EntradaPostInput input, EntradaSaida result)
+        {
+            var transportadoraId = await ResolverTransportadoraId(input.Transportadora);
+            var motoristaId = await ResolverMotoristaId(input.Motorista);
+            var veiculoId = await ResolverVeiculoId(input.Veiculo, transportadoraId);
+            transportadoraId ??= await ObterTransportadoraDoVeiculo(veiculoId);
+
+            result.TransportadoraId = transportadoraId;
+            result.MotoristaId = motoristaId;
+            result.VeiculoId = veiculoId;
+            result.DataHoraEntrada = input.DataHoraEntrada ?? DateTime.Now;
+            result.DataHoraUltimaEntradaPatio = result.DataHoraEntrada;
+            result.PermanenciaSuspensa = false;
+            result.Finalizado = false;
+            result.TempoPermanenciaMinutos = 0;
+            result.TempoTotalSuspensaoMinutos = 0;
+            result.UsuarioRegistroEntradaId = _currentUser.Id;
+            result.UsuarioRegistroEntradaNome = _currentUser.Name;
+            result.Descricao = $"{input.Veiculo?.Placa} - {input.Motorista?.Nome}";
+            result.Status = input.DataHoraEntrada.HasValue? EntradaSaidaStatus.Agendado : EntradaSaidaStatus.EmAberto;
         }
 
         public async Task<ActionResult> SuspenderPermanencia(int id, EntradaSaidaPermanenciaInput input)
@@ -322,7 +325,7 @@ namespace Estac.Service.Movimento
 
         private async Task<int?> ResolverTransportadoraId(EntradaTransportadoraInput transportadoraInput)
         {
-            if (transportadoraInput is null)
+            if (transportadoraInput is null || string.IsNullOrEmpty(transportadoraInput.Cnpj))
                 return null;
 
             if (transportadoraInput.Id.HasValue && transportadoraInput.Id.Value > 0)
@@ -514,7 +517,14 @@ namespace Estac.Service.Movimento
                     ?? string.Empty;
             }
 
-            var payload = new MovimentacaoTempoRealRequest
+            MovimentacaoTempoRealRequest payload = TratamentoSignalR(input, result, placa, motoristaNome, tipoCarga, transportadoraNome);
+
+            await _estacionamentoWorkers.RegistrarMovimentacaoTempoRealAsync(payload);
+        }
+
+        private static MovimentacaoTempoRealRequest TratamentoSignalR(EntradaPostInput input, EntradaSaida result, string placa, string motoristaNome, string tipoCarga, string transportadoraNome)
+        {
+            return new MovimentacaoTempoRealRequest
             {
                 Id = Guid.NewGuid(),
                 Placa = placa,
@@ -529,8 +539,6 @@ namespace Estac.Service.Movimento
                 Patio = string.Empty,
                 Observacao = !string.IsNullOrWhiteSpace(input.Observacao) ? input.Observacao : (result.Descricao ?? string.Empty)
             };
-
-            await _estacionamentoWorkers.RegistrarMovimentacaoTempoRealAsync(payload);
         }
     }
 }
