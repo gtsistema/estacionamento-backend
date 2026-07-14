@@ -12,7 +12,7 @@ namespace Estac.Domain.Interface.Services
         Task<ActionResult> Gravar(EntradaPostInput input);
         Task<ActionResult> Saida(EntradaSaidaPlacaInput input);
         Task<ActionResult> SuspenderPermanencia(int id, EntradaSaidaPermanenciaInput input);
-        Task<ActionResult> FinalizarPermanencia(int id, DateTime? dataHoraSaida);
         Task<ActionResult> Excluir(int id);
+        Task<ActionResult> FinalizarPermanencia(int id, DateTime? dataHoraEvento);
     }
 }

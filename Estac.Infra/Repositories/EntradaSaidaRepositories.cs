@@ -62,7 +62,9 @@ namespace Estac.Infra.Repositories
                 .Include(x => x.Suspensoes)
                 .Include(x => x.Veiculo)
                 .Where(x => x.Veiculo.Placa == placaNormalizada
-                    && x.Status == Domain.Models.Enuns.EntradaSaidaStatus.EmAberto)
+                    && !x.Finalizado
+                    && x.Status != Domain.Models.Enuns.EntradaSaidaStatus.Saida
+                    && x.Status != Domain.Models.Enuns.EntradaSaidaStatus.Cancelado)
                 .OrderByDescending(x => x.DataHoraEntrada)
                 .FirstOrDefaultAsync();
         }

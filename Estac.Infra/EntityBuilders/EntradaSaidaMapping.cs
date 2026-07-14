@@ -83,7 +83,7 @@ namespace Estac.Infra.EntityBuilders
                 .HasConversion<byte>()
                 .HasColumnType("tinyint")
                 .IsRequired()
-                .HasDefaultValue(EntradaSaidaStatus.EmAberto);
+                .HasDefaultValue(EntradaSaidaStatus.Entrada);
 
             builder.Property(x => x.DataHoraFinalizacao)
                 .HasColumnType("datetime")

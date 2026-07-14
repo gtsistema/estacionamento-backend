@@ -4,11 +4,11 @@ namespace Estac.Domain.Models.Enuns
 {
     public enum EntradaSaidaStatus : byte
     {
-        [Description("Em Aberto")]
-        EmAberto = 0,
+        [Description("Entrada")]
+        Entrada = 0,
 
-        [Description("Finalizado")]
-        Finalizado = 1,
+        [Description("Saida")]
+        Saida = 1,
 
         [Description("Suspenso")]
         Suspenso = 2,

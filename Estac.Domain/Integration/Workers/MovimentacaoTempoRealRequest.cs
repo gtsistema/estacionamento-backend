@@ -15,5 +15,6 @@ namespace Estac.Domain.Integration.Workers
         public string TempoPermanencia { get; set; } = string.Empty;
         public string Patio { get; set; } = string.Empty;
         public string Observacao { get; set; } = string.Empty;
+        public bool FinalizarSuspensao { get; set; }
     }
 }
