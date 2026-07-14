@@ -119,5 +119,13 @@ namespace Estac.Infra.Repositories
 
             return result;
         }
+
+        public async Task AtualizarObservacaoAsync(int id, string observacao)
+        {
+            await _dataset
+                .Where(x => x.Id == id)
+                .ExecuteUpdateAsync(b =>
+                    b.SetProperty(x => x.Observacao, _ => observacao));
+        }
     }
 }

@@ -12,6 +12,7 @@ namespace Estac.Infra.Integration.Workers
         private static readonly JsonSerializerOptions JsonOptions = new()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            PropertyNameCaseInsensitive = true,
             DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
         };
 
@@ -31,16 +32,16 @@ namespace Estac.Infra.Integration.Workers
             _logger = logger;
         }
 
-        public async Task RegistrarMovimentacaoTempoRealAsync(MovimentacaoTempoRealRequest request, CancellationToken cancellationToken = default)
+        public async Task<MovimentacaoTempoRealResponse?> RegistrarMovimentacaoTempoRealAsync(
+            MovimentacaoTempoRealRequest request,
+            CancellationToken cancellationToken = default)
         {
             var opts = _options.Value;
             if (!opts.Enabled || string.IsNullOrWhiteSpace(opts.BaseUrl))
-                return;
+                return null;
 
             if (request is null)
-                return;
-
-            var teste = JsonSerializer.Serialize(request);
+                return null;
 
             try
             {
@@ -52,7 +53,10 @@ namespace Estac.Infra.Integration.Workers
                         "estacionamento-workers respondeu {StatusCode} ao registrar movimentação. Corpo: {Body}",
                         (int)response.StatusCode,
                         body.Length > 500 ? body[..500] : body);
+                    return null;
                 }
+
+                return await response.Content.ReadFromJsonAsync<MovimentacaoTempoRealResponse>(JsonOptions, cancellationToken);
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
             {
@@ -61,6 +65,7 @@ namespace Estac.Infra.Integration.Workers
             catch (Exception ex)
             {
                 _logger.LogWarning(ex, "Falha ao chamar estacionamento-workers (movimentação em tempo real). A entrada já foi gravada.");
+                return null;
             }
         }
     }

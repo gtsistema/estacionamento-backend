@@ -502,7 +502,11 @@ namespace Estac.Service.Movimento
             if (completo is null)
                 return;
 
-            await _estacionamentoWorkers.RegistrarMovimentacaoTempoRealAsync(MontarMovimentacaoTempoReal(completo));
+            var response = await _estacionamentoWorkers.RegistrarMovimentacaoTempoRealAsync(
+                MontarMovimentacaoTempoReal(completo));
+
+            if (!string.IsNullOrWhiteSpace(response?.Hub))
+                await _repositories.AtualizarObservacaoAsync(entradaSaidaId, response.Hub);
         }
 
         private static MovimentacaoTempoRealRequest MontarMovimentacaoTempoReal(EntradaSaida result)
