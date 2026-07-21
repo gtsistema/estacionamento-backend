@@ -7,9 +7,12 @@ services:
     ports:
       - "5000:8080"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
       - AutomaticRunDbMigrations=true
       - ConnectionStrings__DefaultConnection=Server=db;Database=gts-desenvolvimento;User=sa;Password=@Admin2134;TrustServerCertificate=True;
+      - EstacionamentoWorkers__Enabled=true
+      - EstacionamentoWorkers__BaseUrl=http://108.174.145.123:8081
+      - EstacionamentoWorkers__TimeoutSeconds=15
     depends_on:
       - db
     networks:
