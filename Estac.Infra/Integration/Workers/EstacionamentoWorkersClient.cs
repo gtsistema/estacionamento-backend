@@ -36,7 +36,13 @@ namespace Estac.Infra.Integration.Workers
             MovimentacaoTempoRealRequest request,
             CancellationToken cancellationToken = default)
         {
+
+
             var opts = _options.Value;
+
+            _logger.LogWarning(@$"base: {opts.BaseUrl}");
+            _logger.LogWarning(@$"opts: {opts}");
+
             if (!opts.Enabled || string.IsNullOrWhiteSpace(opts.BaseUrl))
                 return null;
 
