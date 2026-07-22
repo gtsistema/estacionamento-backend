@@ -32,13 +32,21 @@ namespace Estac.Infra.Repositories
         /// <summary>
         /// O <see cref="BaseRepositoriesNone{T}.Alterar(T)"/> só aplica <c>SetValues</c> em <c>Transportadora</c>;
         /// a tabela <c>Pessoa</c> não é atualizada sem incluir e copiar os escalares explicitamente.
+        /// Contas em <c>ContaBancaria</c> precisam ser atualizadas ou inseridas explicitamente.
         /// </summary>
+
+        /// 
+
         public override async Task<Transportadora> Alterar(Transportadora item)
         {
             try
             {
+                var incomingContas = item.ContasBancarias?.Where(c => c != null).ToList();
+                item.ContasBancarias = null;
+
                 var result = await _dataset
                     .Include(x => x.Pessoa)
+                    .Include(x => x.ContasBancarias)
                     .SingleOrDefaultAsync(p => p.Id.Equals(item.Id));
 
                 if (result == null)
@@ -61,6 +69,35 @@ namespace Estac.Infra.Repositories
                     destino.DataCriacao = dataCriacao;
                     destino.DataAtualizacao = DateTime.Now;
                 }
+
+                if (incomingContas != null && incomingContas.Count > 0)
+                {
+                    var incoming = incomingContas[0];
+                    incoming.TransportadoraId = result.Id;
+
+                    var existentes = result.ContasBancarias?.ToList() ?? new List<ContaBancaria>();
+
+                    ContaBancaria alvo = null;
+                    if (incoming.Id > 0)
+                        alvo = existentes.FirstOrDefault(c => c.Id == incoming.Id);
+                    else if (existentes.Count > 0)
+                        alvo = existentes[0];
+
+                    if (alvo != null)
+                    {
+                        var dataCriacao = alvo.DataCriacao;
+                        incoming.Id = alvo.Id;
+                        incoming.TransportadoraId = result.Id;
+                        incoming.DataCriacao = dataCriacao;
+                        _context.Entry(alvo).CurrentValues.SetValues(incoming);
+                    }
+                    else
+                    {
+                        incoming.Id = 0;
+                        incoming.TransportadoraId = result.Id;
+                        await _context.ContaBancaria.AddAsync(incoming);
+                    }
+                }
             }
             catch (DbUpdateException)
             {
@@ -76,12 +113,13 @@ namespace Estac.Infra.Repositories
                         .AsNoTracking()
                         .Include(x => x.Pessoa.Enderecos)
                         .Include(x => x.Pessoa.Contatos)
+                        .Include(x => x.ContasBancarias)
                         .SingleOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<PagedResult<TransportadoraSearchOutput>> Paginar(TransportadoraFilterInput input)
         {
-            var cnpjFiltro = string.IsNullOrWhiteSpace(input.Cnpj) ? null : input.Cnpj.SomenteDigitos().ToLower();
+            var cnpjFiltro = string.IsNullOrWhiteSpace(input.Cnpj) ? null : input.Cnpj.SomenteAlfanumericos().ToLower();
 
             var result = await _dataset
                         .AsNoTracking()
@@ -129,7 +167,7 @@ namespace Estac.Infra.Repositories
 
         public async Task<TransportadoraPorCnpjOutput> SelecionarPorCnpj(string cnpj)
         {
-            var cnpjNormalizado = cnpj.SomenteDigitos();
+            var cnpjNormalizado = cnpj.SomenteAlfanumericos();
             if (string.IsNullOrWhiteSpace(cnpjNormalizado))
                 return null;
 

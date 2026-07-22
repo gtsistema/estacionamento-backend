@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using Estac.Domain.Input.ContaBancaria;
 using Estac.Domain.Input.Estacionamento;
 using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Interface.Services;
@@ -65,6 +66,10 @@ namespace Estac.Service
                 if (contatosInvalidos.Count > 0)
                     return await RetornNo(new { }, contatosInvalidos);
 
+                var contaBancariaInvalida = ValidarContaBancaria(input?.ContaBancaria);
+                if (contaBancariaInvalida.Count > 0)
+                    return await RetornNo(new { }, contaBancariaInvalida);
+
                 var estacionamento = await _repositories.SelecionarPorDescricao(input.Descricao);
 
                 if(estacionamento is not null)
@@ -125,6 +130,10 @@ namespace Estac.Service
                 var contatosInvalidos = ValidarContatos(input?.PessoaJuridica?.Contatos);
                 if (contatosInvalidos.Count > 0)
                     return await RetornNo(new { }, contatosInvalidos);
+
+                var contaBancariaInvalida = ValidarContaBancaria(input?.ContaBancaria);
+                if (contaBancariaInvalida.Count > 0)
+                    return await RetornNo(new { }, contaBancariaInvalida);
 
                 //var validations = EstacionamentoPutInput.Validar(input);
 
@@ -209,6 +218,15 @@ namespace Estac.Service
             }
 
             return erros;
+        }
+
+        private static List<ValidationFailure> ValidarContaBancaria(ContaBancariaInput contaBancaria)
+        {
+            if (contaBancaria == null)
+                return new List<ValidationFailure>();
+
+            var result = ContaBancariaInput.Validar(contaBancaria);
+            return result.IsValid ? new List<ValidationFailure>() : result.Errors;
         }
     }
 }

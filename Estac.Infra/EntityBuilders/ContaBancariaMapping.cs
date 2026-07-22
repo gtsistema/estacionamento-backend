@@ -1,11 +1,6 @@
 ﻿using Estac.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Estac.Infra.EntityBuilders
 {
@@ -19,6 +14,9 @@ namespace Estac.Infra.EntityBuilders
 
             builder.Property(x => x.EstacionamentoId)
                    .IsRequired();
+
+            builder.Property(x => x.TransportadoraId)
+                   .IsRequired(false);
 
             builder.Property(x => x.Banco)
                    .HasMaxLength(150)
@@ -46,6 +44,11 @@ namespace Estac.Infra.EntityBuilders
             builder.Property(x => x.ChavePix)
                    .HasMaxLength(150);
 
+            builder.Property(x => x.TipoChave)
+                   .HasConversion<byte?>()
+                   .HasColumnType("tinyint")
+                   .IsRequired(false);
+
             builder.Property(x => x.Titular)
                    .HasMaxLength(150)
                    .IsRequired();
@@ -62,15 +65,13 @@ namespace Estac.Infra.EntityBuilders
                    .HasDefaultValueSql("GETDATE()")
                    .IsRequired();
 
-            //// 🔗 Relacionamento 1:N
-            //builder.HasOne(x => x.Estacionamento)
-            //       .WithMany(x => x.ContasBancarias)
-            //       .HasForeignKey(x => x.EstacionamentoId)
+            builder.HasOne(x => x.Transportadora)
+                   .WithMany(x => x.ContasBancarias)
+                   .HasForeignKey(x => x.TransportadoraId)
+                   .OnDelete(DeleteBehavior.SetNull);
 
-            // 📌 Índices importantes
             builder.HasIndex(x => x.EstacionamentoId);
-
-            //builder.HasIndex(x => new { x.EstacionamentoId, x.Ativa });
+            builder.HasIndex(x => x.TransportadoraId);
         }
     }
 }

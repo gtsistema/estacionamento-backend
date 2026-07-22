@@ -13,6 +13,10 @@ namespace Estac.Domain.Validators
             RuleFor(x => x.PessoaJuridica)
                 .SetValidator(new PessoaJuridicaInputValidator())
                 .When(x => x.PessoaJuridica != null);
+
+            RuleFor(x => x.ContaBancaria)
+                .SetValidator(new ContaBancariaInputValidator())
+                .When(x => x.ContaBancaria != null);
         }
     }
 }

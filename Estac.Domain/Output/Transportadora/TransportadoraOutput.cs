@@ -1,4 +1,5 @@
-﻿using Estac.Domain.Output.Base;
+using Estac.Domain.Input.ContaBancaria;
+using Estac.Domain.Output.Base;
 using Estac.Domain.Output.Pessoa;
 
 namespace Estac.Domain.Output.Transportadora
@@ -11,5 +12,6 @@ namespace Estac.Domain.Output.Transportadora
         public string ResponsavelTelefone { get; set; }
 
         public PessoaTransportadoraOutput Pessoa { get; set; }
+        public List<ContaBancariaOutput> ContaBancaria { get; set; } = new();
     }
 }

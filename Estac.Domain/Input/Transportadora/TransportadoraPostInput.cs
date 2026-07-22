@@ -1,4 +1,5 @@
-﻿using Estac.Domain.Input.Pessoa;
+using Estac.Domain.Input.ContaBancaria;
+using Estac.Domain.Input.Pessoa;
 using Estac.Domain.Validators;
 using FluentValidation.Results;
 
@@ -12,6 +13,7 @@ namespace Estac.Domain.Input.Transportadora
         public string ResponsavelEmail { get; set; }
         public string ResponsavelTelefone { get; set; }
         public PessoaInput PessoaJuridica { get; set; } = new PessoaInput();
+        public ContaBancariaInput ContaBancaria { get; set; }
         public static ValidationResult Validar(TransportadoraPostInput input) =>
             new TransportadoraPostInputValidator().Validate(input);
     }

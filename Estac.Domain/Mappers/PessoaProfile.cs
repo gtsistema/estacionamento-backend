@@ -13,7 +13,7 @@ namespace Estac.Domain.Mappers.Auth
         public PessoaProfile()
         {
             CreateMap<PessoaInput, Pessoa>()
-                .ForMember(dest => dest.Documento, opt => opt.MapFrom(src => src.Cnpj.SomenteDigitos()))
+                .ForMember(dest => dest.Documento, opt => opt.MapFrom(src => src.Cnpj.SomenteAlfanumericos()))
                 .ForMember(dest => dest.Enderecos, opt => opt.MapFrom(src => src.Enderecos))
                 .ForMember(dest => dest.Contatos, opt => opt.MapFrom(src => src.Contatos));
 

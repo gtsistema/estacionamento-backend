@@ -3,7 +3,7 @@ namespace Estac.Domain.Extensions
 {
     public static class StringExtentions
     {
-        /// <summary>Remove pontuação; único formato persistido em banco para CPF/CNPJ.</summary>
+        /// <summary>Remove pontuação; formato persistido para CPF e campos somente numéricos.</summary>
         public static string SomenteDigitos(this string valor)
         {
             if (valor == null)
@@ -11,27 +11,74 @@ namespace Estac.Domain.Extensions
             return new string(valor.Where(char.IsDigit).ToArray());
         }
 
-        /// <summary>Máscara de CNPJ (99.999.999/9999-99) quando há 14 dígitos.</summary>
+        /// <summary>
+        /// Remove pontuação e mantém letras/números em maiúsculo.
+        /// Formato persistido para CNPJ (numérico ou alfanumérico, 14 posições).
+        /// </summary>
+        public static string SomenteAlfanumericos(this string valor)
+        {
+            if (valor == null)
+                return null;
+
+            return new string(valor
+                .Where(char.IsLetterOrDigit)
+                .Select(char.ToUpperInvariant)
+                .ToArray());
+        }
+
+        /// <summary>
+        /// Normaliza CPF (11 dígitos) ou CNPJ (14 alfanuméricos) para persistência sem máscara.
+        /// </summary>
+        public static string NormalizarCpfOuCnpj(this string valor)
+        {
+            if (valor == null)
+                return null;
+
+            var alfanumerico = valor.SomenteAlfanumericos();
+            if (string.IsNullOrEmpty(alfanumerico))
+                return alfanumerico;
+
+            if (alfanumerico.Length == 11 && alfanumerico.All(char.IsDigit))
+                return alfanumerico;
+
+            if (alfanumerico.Length == 14)
+                return alfanumerico;
+
+            return alfanumerico;
+        }
+
+        /// <summary>
+        /// Máscara de CNPJ (AA.AAA.AAA/AAAA-DV) quando há 14 caracteres alfanuméricos.
+        /// Compatível com CNPJ numérico e alfanumérico (Receita Federal, a partir de jul/2026).
+        /// </summary>
         public static string FormatarCnpj(this string valor)
         {
             if (string.IsNullOrWhiteSpace(valor))
                 return string.Empty;
-            var d = valor.SomenteDigitos();
+
+            var d = valor.SomenteAlfanumericos();
             if (d.Length != 14)
                 return valor.Trim();
+
             return $"{d[..2]}.{d[2..5]}.{d[5..8]}/{d[8..12]}-{d[12..14]}";
         }
 
-        /// <summary>Aplica máscara de CPF ou CNPJ conforme quantidade de dígitos.</summary>
+        /// <summary>
+        /// Aplica máscara de CPF (somente numérico, 11 dígitos) ou CNPJ (14 alfanuméricos).
+        /// </summary>
         public static string FormatarCpfOuCnpj(this string valor)
         {
             if (string.IsNullOrWhiteSpace(valor))
                 return valor;
-            var d = valor.SomenteDigitos();
-            if (d.Length == 11)
-                return d.FormatarCpf();
-            if (d.Length == 14)
-                return d.FormatarCnpj();
+
+            var alfanumerico = valor.SomenteAlfanumericos();
+
+            if (alfanumerico.Length == 11 && alfanumerico.All(char.IsDigit))
+                return alfanumerico.FormatarCpf();
+
+            if (alfanumerico.Length == 14)
+                return alfanumerico.FormatarCnpj();
+
             return valor.Trim();
         }
 

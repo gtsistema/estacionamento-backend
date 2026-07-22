@@ -4,6 +4,7 @@ using Estac.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Estac.Infra.Migrations
 {
     [DbContext(typeof(GtsContext))]
-    partial class GtsContextModelSnapshot : ModelSnapshot
+    [Migration("20260722025456_estacionamentoVinculadoConta")]
+    partial class estacionamentoVinculadoConta
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,9 +84,6 @@ namespace Estac.Infra.Migrations
 
                     b.Property<int>("EstacionamentoId")
                         .HasColumnType("int");
-
-                    b.Property<byte?>("TipoChave")
-                        .HasColumnType("tinyint");
 
                     b.Property<string>("TipoConta")
                         .IsRequired()

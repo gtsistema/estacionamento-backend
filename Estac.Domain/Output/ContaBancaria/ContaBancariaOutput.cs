@@ -1,4 +1,4 @@
-﻿using Estac.Domain.Input.Base;
+﻿using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output.Base;
 
 namespace Estac.Domain.Input.ContaBancaria
@@ -6,6 +6,7 @@ namespace Estac.Domain.Input.ContaBancaria
     public class ContaBancariaOutput : BaseOutput
     {
         public int EstacionamentoId { get; set; }
+        public int? TransportadoraId { get; set; }
         public string Titular { get; private set; }
         public string CpfCnpj { get; private set; }
         public string Banco { get; private set; }
@@ -16,5 +17,6 @@ namespace Estac.Domain.Input.ContaBancaria
         public string TipoConta { get; private set; }
         public bool Ativa { get; private set; }
         public string ChavePix { get; private set; }
+        public TipoChave? TipoChave { get; private set; }
     }
 }

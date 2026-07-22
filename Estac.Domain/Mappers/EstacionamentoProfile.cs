@@ -39,7 +39,7 @@ namespace Estac.Domain.Mappers
 
 
             CreateMap<ContaBancariaInput, ContaBancaria>()
-                .ForMember(dest => dest.CpfCnpj, opt => opt.MapFrom(src => src.CpfCnpj.SomenteDigitos()));
+                .ForMember(dest => dest.CpfCnpj, opt => opt.MapFrom(src => src.CpfCnpj.NormalizarCpfOuCnpj()));
 
             CreateMap<ContaBancaria, ContaBancariaOutput>()
                 .ForMember(dest => dest.CpfCnpj, opt => opt.MapFrom(src => src.CpfCnpj.FormatarCpfOuCnpj()));

@@ -1,4 +1,4 @@
-﻿using Estac.Domain.Models.Base;
+using Estac.Domain.Models.Base;
 namespace Estac.Domain.Models
 {
     public class Transportadora : BaseIntDataNull
@@ -11,5 +11,6 @@ namespace Estac.Domain.Models
         public int PessoaId { get; set; }
         public Pessoa Pessoa { get; set; }
         public ICollection<Veiculo> Veiculos { get; set; }
+        public ICollection<ContaBancaria> ContasBancarias { get; set; }
     }
 }

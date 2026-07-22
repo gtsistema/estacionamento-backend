@@ -49,7 +49,7 @@ namespace Estac.Domain.Mappers.Auth
             CreateMap<VeiculoMarca, VeiculoMarcaOutput>();
 
             CreateMap<VeiculoDetalheInput, VeiculoDetalhe>()
-                .ForMember(dest => dest.CpfCnpjProprietario, opt => opt.MapFrom(src => src.CpfCnpjProprietario.SomenteDigitos()));
+                .ForMember(dest => dest.CpfCnpjProprietario, opt => opt.MapFrom(src => src.CpfCnpjProprietario.NormalizarCpfOuCnpj()));
             CreateMap<VeiculoMarcaInput, VeiculoMarca>();
 
             CreateMap<VeiculoModeloPostInput, VeiculoModelo>()
