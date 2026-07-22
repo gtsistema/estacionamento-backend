@@ -49,6 +49,11 @@ namespace Estac.Infra.Context
             modelBuilder.Entity<EstacionamentoFoto>(new EstacionamentoFotoMapping().Configure);
             modelBuilder.Entity<ContaBancaria>(new ContaBancariaMapping().Configure);
 
+            // FINANCEIRO
+            modelBuilder.Entity<ConfiguracaoCobranca>(new ConfiguracaoCobrancaMapping().Configure);
+            modelBuilder.Entity<ConfiguracaoCobrancaRegra>(new ConfiguracaoCobrancaRegraMapping().Configure);
+            modelBuilder.Entity<Fatura>(new FaturaMapping().Configure);
+
         }
 
         public DbSet<VeiculoMotorista> VeiculoMotoristas { get; set; }
@@ -76,6 +81,11 @@ namespace Estac.Infra.Context
         public DbSet<EstacionamentoFoto> EstacionamentoFoto { get; set; }
         public DbSet<ContaBancaria> ContaBancaria { get; set; }
         public DbSet<Transportadora> Transportadora { get; set; }
+
+        // FINANCEIRO
+        public DbSet<ConfiguracaoCobranca> ConfiguracaoCobranca { get; set; }
+        public DbSet<ConfiguracaoCobrancaRegra> ConfiguracaoCobrancaRegra { get; set; }
+        public DbSet<Fatura> Fatura { get; set; }
 
     }
 }

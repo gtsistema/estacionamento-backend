@@ -150,6 +150,8 @@ namespace Estac.Api
                 cfg.AddProfile<MenuProfile>();
                 cfg.AddProfile<EntradaSaidaProfile>();
                 cfg.AddProfile<TransportadoraProfile>();
+                cfg.AddProfile<ConfiguracaoCobrancaProfile>();
+                cfg.AddProfile<FaturaProfile>();
             });
         }
 

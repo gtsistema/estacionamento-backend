@@ -1,4 +1,4 @@
-﻿using Estac.Domain.Interface.Repositories;
+using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Models.Base;
 using Estac.Infra.Context;
 using Microsoft.EntityFrameworkCore;
@@ -84,7 +84,7 @@ namespace Estac.Infra.Repository
             }
         }
 
-        public async Task<T> Alterar(T item)
+        public virtual async Task<T> Alterar(T item)
         {
             try
             {

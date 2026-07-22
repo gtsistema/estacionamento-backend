@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using Estac.Domain.Input.ContaBancaria;
 using Estac.Domain.Input.Estacionamento;

@@ -65,5 +65,21 @@
             public const string Alterar = "veiculo.alterar";
             public const string Excluir = "veiculo.excluir";
         }
+
+        public static class ConfiguracaoCobranca
+        {
+            public const string Visualizar = "configuracaocobranca.visualizar";
+            public const string Gravar = "configuracaocobranca.gravar";
+            public const string Alterar = "configuracaocobranca.alterar";
+            public const string Excluir = "configuracaocobranca.excluir";
+        }
+
+        public static class Fatura
+        {
+            public const string Visualizar = "fatura.visualizar";
+            public const string Gravar = "fatura.gravar";
+            public const string Alterar = "fatura.alterar";
+            public const string Excluir = "fatura.excluir";
+        }
     }
 }

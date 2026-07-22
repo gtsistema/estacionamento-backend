@@ -22,6 +22,210 @@ namespace Estac.Infra.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Estac.Domain.Models.ConfiguracaoCobranca", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("AgruparPorPeriodo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("AgruparPorPlaca")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("AgruparPorTransportadora")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("AplicarAcrescimoFixo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("AplicarDescontoFixo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("AplicarJuros")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("AplicarMulta")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime?>("DataAtualizacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<string>("Descricao")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<byte?>("DiaFechamento")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("EmailFinanceiro")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool>("EnvioAutomaticoEmail")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<int>("EstacionamentoId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("GerarFaturaAutomaticamente")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<decimal>("JurosPercentual")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
+                    b.Property<byte>("ModalidadeCobranca")
+                        .HasColumnType("tinyint");
+
+                    b.Property<decimal>("MultaPercentual")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
+                    b.Property<bool>("PermitirPagamentoParcial")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<int>("PrazoVencimentoDias")
+                        .HasColumnType("int");
+
+                    b.Property<byte>("RegraFechamento")
+                        .HasColumnType("tinyint");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
+
+                    b.Property<int>("TransportadoraId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("ValorAcrescimoFixo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
+                    b.Property<decimal>("ValorDescontoFixo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EstacionamentoId");
+
+                    b.HasIndex("TransportadoraId", "EstacionamentoId")
+                        .IsUnique()
+                        .HasDatabaseName("IX_ConfiguracaoCobranca_Transportadora_Estacionamento");
+
+                    b.ToTable("ConfiguracaoCobranca", "gts");
+                });
+
+            modelBuilder.Entity("Estac.Domain.Models.ConfiguracaoCobrancaRegra", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("CobrarDataPersonalizada")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("CobrarDiaria")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("CobrarLavagem")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("CobrarMensal")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("CobrarPernoite")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("CobrarQuinzenal")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("CobrarSemanal")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("CobrarServicosExtras")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<int>("ConfiguracaoCobrancaId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("ConsiderarBeneficioAbastecimento")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime?>("DataAtualizacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<string>("Descricao")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConfiguracaoCobrancaId")
+                        .IsUnique()
+                        .HasDatabaseName("IX_ConfiguracaoCobrancaRegra_ConfiguracaoCobrancaId");
+
+                    b.ToTable("ConfiguracaoCobrancaRegra", "gts");
+                });
+
             modelBuilder.Entity("Estac.Domain.Models.ContaBancaria", b =>
                 {
                     b.Property<int>("Id")
@@ -353,6 +557,118 @@ namespace Estac.Infra.Migrations
                     b.HasIndex("EstacionamentoId");
 
                     b.ToTable("EstacionamentoFoto", "gts");
+                });
+
+            modelBuilder.Entity("Estac.Domain.Models.Fatura", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("ConfiguracaoCobrancaId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DataAtualizacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<DateTime>("DataEmissao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DataPagamento")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataVencimento")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Descricao")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("EmailEnvio")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("EstacionamentoId")
+                        .HasColumnType("int");
+
+                    b.Property<byte?>("ModalidadeRecebimento")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("Numero")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Observacao")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("PeriodoFim")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("PeriodoInicio")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
+
+                    b.Property<int>("TransportadoraId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("ValorAcrescimo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
+                    b.Property<decimal>("ValorDesconto")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
+                    b.Property<decimal>("ValorJuros")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
+                    b.Property<decimal>("ValorMulta")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
+                    b.Property<decimal>("ValorRecebido")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
+                    b.Property<decimal>("ValorTotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConfiguracaoCobrancaId");
+
+                    b.HasIndex("DataEmissao");
+
+                    b.HasIndex("DataVencimento");
+
+                    b.HasIndex("EstacionamentoId");
+
+                    b.HasIndex("Numero")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Fatura_Numero");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("TransportadoraId");
+
+                    b.ToTable("Fatura", "gts");
                 });
 
             modelBuilder.Entity("Estac.Domain.Models.Motorista", b =>
@@ -909,6 +1225,36 @@ namespace Estac.Infra.Migrations
                     b.ToTable("VeiculoPlaca", "gts");
                 });
 
+            modelBuilder.Entity("Estac.Domain.Models.ConfiguracaoCobranca", b =>
+                {
+                    b.HasOne("Estac.Domain.Models.Estacionamento", "Estacionamento")
+                        .WithMany()
+                        .HasForeignKey("EstacionamentoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Estac.Domain.Models.Transportadora", "Transportadora")
+                        .WithMany()
+                        .HasForeignKey("TransportadoraId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Estacionamento");
+
+                    b.Navigation("Transportadora");
+                });
+
+            modelBuilder.Entity("Estac.Domain.Models.ConfiguracaoCobrancaRegra", b =>
+                {
+                    b.HasOne("Estac.Domain.Models.ConfiguracaoCobranca", "ConfiguracaoCobranca")
+                        .WithOne("Regra")
+                        .HasForeignKey("Estac.Domain.Models.ConfiguracaoCobrancaRegra", "ConfiguracaoCobrancaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ConfiguracaoCobranca");
+                });
+
             modelBuilder.Entity("Estac.Domain.Models.ContaBancaria", b =>
                 {
                     b.HasOne("Estac.Domain.Models.Estacionamento", "Estacionamento")
@@ -984,6 +1330,32 @@ namespace Estac.Infra.Migrations
                         .IsRequired();
 
                     b.Navigation("Estacionamento");
+                });
+
+            modelBuilder.Entity("Estac.Domain.Models.Fatura", b =>
+                {
+                    b.HasOne("Estac.Domain.Models.ConfiguracaoCobranca", "ConfiguracaoCobranca")
+                        .WithMany()
+                        .HasForeignKey("ConfiguracaoCobrancaId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Estac.Domain.Models.Estacionamento", "Estacionamento")
+                        .WithMany()
+                        .HasForeignKey("EstacionamentoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Estac.Domain.Models.Transportadora", "Transportadora")
+                        .WithMany()
+                        .HasForeignKey("TransportadoraId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ConfiguracaoCobranca");
+
+                    b.Navigation("Estacionamento");
+
+                    b.Navigation("Transportadora");
                 });
 
             modelBuilder.Entity("Estac.Domain.Models.Motorista", b =>
@@ -1137,6 +1509,11 @@ namespace Estac.Infra.Migrations
                         .IsRequired();
 
                     b.Navigation("Veiculo");
+                });
+
+            modelBuilder.Entity("Estac.Domain.Models.ConfiguracaoCobranca", b =>
+                {
+                    b.Navigation("Regra");
                 });
 
             modelBuilder.Entity("Estac.Domain.Models.EntradaSaida", b =>
