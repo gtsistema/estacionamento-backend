@@ -68,18 +68,18 @@
 
         public static class ConfiguracaoCobranca
         {
-            public const string Visualizar = "configuracaocobranca.visualizar";
-            public const string Gravar = "configuracaocobranca.gravar";
-            public const string Alterar = "configuracaocobranca.alterar";
-            public const string Excluir = "configuracaocobranca.excluir";
+            public const string Visualizar = "faturamento.configuracaocobranca.visualizar";
+            public const string Gravar = "faturamento.configuracaocobranca.gravar";
+            public const string Alterar = "faturamento.configuracaocobranca.alterar";
+            public const string Excluir = "faturamento.configuracaocobranca.excluir";
         }
 
         public static class Fatura
         {
-            public const string Visualizar = "fatura.visualizar";
-            public const string Gravar = "fatura.gravar";
-            public const string Alterar = "fatura.alterar";
-            public const string Excluir = "fatura.excluir";
+            public const string Visualizar = "faturamento.visualizar";
+            public const string Gravar = "faturamento.gravar";
+            public const string Alterar = "faturamento.alterar";
+            public const string Excluir = "faturamento.excluir";
         }
     }
 }
