@@ -32,7 +32,7 @@ using System.Threading.Tasks;
               //.WriteTo.Map("Name", "Other", (name, wt) => wt.File("c:/Temp" + $"/{name}/log-{name}.txt", rollingInterval: RollingInterval.Day))
               //.CreateLogger();
 
-              //Log.Information("{Name} - Serviços inicializados...", "System");
+              //Log.Information("{Name} - Serviï¿½os inicializados...", "System");
           })
           .Build();
 
@@ -42,10 +42,10 @@ using System.Threading.Tasks;
 }
     catch (Exception)
     {
-//        Log.Error("{Name} - Falha inesperada durante a execução: " + e.Message, "System");
-//Log.Information("{Name} - Serviço parado, verifique o erro e reinicie o serviço", "System");
+//        Log.Error("{Name} - Falha inesperada durante a execuï¿½ï¿½o: " + e.Message, "System");
+//Log.Information("{Name} - Serviï¿½o parado, verifique o erro e reinicie o serviï¿½o", "System");
 //    }
 //    finally
 //    {
-//    Log.Information("{Name} - Serviço finalizado...", "System");
+//    Log.Information("{Name} - Serviï¿½o finalizado...", "System");
 }

@@ -16,6 +16,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Estac.Service.Auth
@@ -266,6 +267,19 @@ namespace Estac.Service.Auth
                 </body></html>";
         }
 
+        private bool SecretApiValido(string secretInformado)
+        {
+            if (string.IsNullOrEmpty(secretInformado) || string.IsNullOrEmpty(_bearerTokenSettings.Secret))
+                return false;
+
+            var informado = Encoding.UTF8.GetBytes(secretInformado);
+            var configurado = Encoding.UTF8.GetBytes(_bearerTokenSettings.Secret);
+            if (informado.Length != configurado.Length)
+                return false;
+
+            return CryptographicOperations.FixedTimeEquals(informado, configurado);
+        }
+
         private async Task<UsuarioAcessOutput> MontarLoginResponseAsync(ApplicationUser user)
         {
             var permissoes = await _perfilRepositories.BuscarPerfilPorUsuarioToken(user.Id);
@@ -274,7 +288,13 @@ namespace Estac.Service.Auth
             return new UsuarioAcessOutput { Jwt = jwt, Menus = menus };
         }
 
-        private async Task<TokenResponse> GenerateJwtAsync(ApplicationUser user)
+        private async Task<TokenResponse> GenerateJwtAsync(ApplicationUser user) =>
+            MontarTokenResponse(await CriarClaimsAsync(user.Id));
+
+        private TokenResponse GenerateJwtParaApiInterna() =>
+            MontarTokenResponse(CriarClaimsApiInterna());
+
+        private TokenResponse MontarTokenResponse(IEnumerable<Claim> claims)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_bearerTokenSettings.Secret);
@@ -291,7 +311,7 @@ namespace Estac.Service.Auth
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256),
-                Subject = new ClaimsIdentity(await CriarClaimsAsync(user.Id))
+                Subject = new ClaimsIdentity(claims)
             });
 
             return new TokenResponse
@@ -307,6 +327,15 @@ namespace Estac.Service.Auth
                 }
             };
         }
+
+        private static List<Claim> CriarClaimsApiInterna() =>
+            new()
+            {
+                new Claim(ClaimTypes.NameIdentifier, "0"),
+                new Claim(ClaimTypes.Name, "ApiInterna"),
+                new Claim(ClaimTypes.Role, "Api"),
+                new Claim("token_use", "api_interna")
+            };
 
         private async Task<List<Claim>> CriarClaimsAsync(int usuarioId)
         {

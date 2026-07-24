@@ -6,6 +6,7 @@ namespace Estac.Domain.Interface.Services.Auth
     public interface IUserServices
     {
         Task<ActionResult> LoginAsync(LoginInput dto);
+        Task<ActionResult> ObterTokenAsync(ObterTokenInput dto);
         Task<ActionResult> RegisterAsync(RegisterInput dto);
         Task<ActionResult> Buscar();
         Task<ActionResult> ObterPorId(int id);

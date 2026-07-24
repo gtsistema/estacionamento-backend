@@ -93,6 +93,40 @@ namespace Estac.Service.Auth
             }
         }
 
+        public async Task<ActionResult> ObterTokenAsync(ObterTokenInput dto)
+        {
+            try
+            {
+                if (dto is null)
+                    return await RetornNo(false, "Informe UserName/Password ou Secret.");
+
+                if (SecretApiValido(dto.Secret))
+                {
+                    var jwtApi = GenerateJwtParaApiInterna();
+                    return await RetornOk(jwtApi, Resources.Resources.MSG_OperacaoRealizadaSucesso);
+                }
+
+                var temUsuario = !string.IsNullOrWhiteSpace(dto.UserName) && !string.IsNullOrWhiteSpace(dto.Password);
+                if (!temUsuario)
+                    return await RetornNo(false, "Informe UserName/Password válidos ou um Secret igual ao configurado.");
+
+                var signIn = await _signManager.PasswordSignInAsync(dto.UserName, dto.Password);
+                if (!signIn.Succeeded)
+                    return await RespostaLoginFalhouAsync(dto.UserName, signIn);
+
+                var user = await _identityUserManager.FindByNameAsync(dto.UserName);
+                if (user is null || user.IsDeleted == true)
+                    return await RetornNo(false, Resources.Resources.MSG_Usuario_Ou_Senha_Invalida);
+
+                var jwt = await GenerateJwtAsync(user);
+                return await RetornOk(jwt, Resources.Resources.MSG_OperacaoRealizadaSucesso);
+            }
+            catch (Exception ex)
+            {
+                return await RetornNo(ex, ex.Message);
+            }
+        }
+
         public async Task<ActionResult> RegisterAsync(RegisterInput dto)
         {
             if (string.IsNullOrWhiteSpace(dto.Password))

@@ -27,6 +27,17 @@ namespace Estac.Api.Controllers.Auth
             return await _services.LoginAsync(login);
         }
 
+        /// <summary>
+        /// Obtém apenas o token JWT para APIs internas.
+        /// Aceita UserName+Password <b>ou</b> Secret igual a BearerTokenSettings.Secret.
+        /// </summary>
+        [AllowAnonymous]
+        [HttpPost("obterToken")]
+        public async Task<ActionResult> ObterToken([FromBody] ObterTokenInput input)
+        {
+            return await _services.ObterTokenAsync(input);
+        }
+
         /// <summary>Chamado pelo front após o usuário abrir o link com userId e token (query do SPA).</summary>
         [AllowAnonymous]
         [HttpPost("confirmar-email")]
