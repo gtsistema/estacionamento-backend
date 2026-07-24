@@ -91,6 +91,9 @@ namespace Estac.Infra.EntityBuilders
                    .HasDefaultValue(0m)
                    .IsRequired();
 
+            builder.Property(x => x.ValorEstadia)
+                   .HasColumnType("decimal(18,2)");
+
             builder.Property(x => x.AgruparPorPlaca)
                    .HasDefaultValue(false)
                    .IsRequired();

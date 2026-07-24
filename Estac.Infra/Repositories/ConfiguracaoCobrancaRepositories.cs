@@ -73,6 +73,7 @@ namespace Estac.Infra.Repositories
                     EstacionamentoNome = x.Estacionamento.Descricao,
                     Status = x.Status,
                     ModalidadeCobranca = x.ModalidadeCobranca,
+                    ValorEstadia = x.ValorEstadia,
                     EmailFinanceiro = x.EmailFinanceiro,
                     DataCriacao = x.DataCriacao
                 })

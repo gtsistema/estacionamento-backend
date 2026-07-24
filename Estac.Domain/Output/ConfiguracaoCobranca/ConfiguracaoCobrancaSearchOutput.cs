@@ -11,6 +11,7 @@ namespace Estac.Domain.Output.ConfiguracaoCobranca
         public string EstacionamentoNome { get; set; }
         public StatusConfiguracaoCobranca Status { get; set; }
         public ModalidadeCobranca ModalidadeCobranca { get; set; }
+        public decimal? ValorEstadia { get; set; }
         public string EmailFinanceiro { get; set; }
         public DateTime DataCriacao { get; set; }
     }

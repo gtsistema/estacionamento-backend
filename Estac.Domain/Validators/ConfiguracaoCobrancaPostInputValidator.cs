@@ -71,6 +71,11 @@ namespace Estac.Domain.Validators
                 .GreaterThanOrEqualTo(0)
                 .WithMessage("Valor do acréscimo fixo não pode ser negativo.");
 
+            RuleFor(x => x.ValorEstadia)
+                .GreaterThanOrEqualTo(0)
+                .When(x => x.ValorEstadia.HasValue)
+                .WithMessage("Valor da estadia não pode ser negativo.");
+
             RuleFor(x => x.Regra)
                 .NotNull().WithMessage("Regra de cobrança é obrigatória.");
 
