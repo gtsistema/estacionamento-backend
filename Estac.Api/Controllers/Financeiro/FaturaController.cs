@@ -8,7 +8,7 @@ namespace Estac.Api.Controllers.Financeiro
 {
     [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/financeiro/[controller]")]
     public class FaturaController : ControllerBase
     {
         private readonly IFaturaService _services;
