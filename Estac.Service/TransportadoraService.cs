@@ -7,7 +7,6 @@ using Estac.Domain.Models;
 using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output;
 using Estac.Domain.Output.Transportadora;
-using Estac.Infra.Repositories;
 using Estac.Service.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -88,25 +87,38 @@ namespace Estac.Service
 
         public async Task<ActionResult> Gravar(TransportadoraPostInput input)
         {
+            var validations = TransportadoraPostInput.Validar(input);
+
+            if (!validations.IsValid)
+                return await RetornNo(new { }, validations.Errors);
+
+            var cnpj = input.PessoaJuridica?.Cnpj.SomenteAlfanumericos();
+            if (string.IsNullOrWhiteSpace(cnpj))
+                return await RetornNo(false, "CNPJ inválido.");
+
+            if (await _repositories.ExistePorCnpjAsync(cnpj))
+                return await RetornNo(false, "Já existe um cadastro com este CNPJ.");
+
+            await _unitOfWork.BeginTransactionAsync();
+
             try
             {
-                var validations = TransportadoraPostInput.Validar(input);
-
-                if (!validations.IsValid)
-                    return await RetornNo(new { }, validations.Errors);
-
                 var result = _mapper.Map<Transportadora>(input);
+
                 ValoresPadrao(result);
 
-                await _repositories.Gravar(result);
+                await _repositories.GravarCompleto(result);
 
-                return await RetornOk(_repositories.SelecionarPorIdCompleto(result.Id));
+                await _unitOfWork.CommitAsync();
+
+                return await RetornOk(await _repositories.SelecionarPorIdCompleto(result.Id));
             }
             catch (Exception ex)
             {
+                await _unitOfWork.RollbackAsync();
+
                 return await RetornNo(false, ex.Message);
             }
-
         }
 
         public async Task<ActionResult> Alterar(TransportadoraPutInput input)
@@ -140,7 +152,7 @@ namespace Estac.Service
 
                 await _unitOfWork.CommitAsync();
 
-                return await RetornOk(_repositories.SelecionarPorIdCompleto(transportadora.Id));
+                return await RetornOk(await _repositories.SelecionarPorIdCompleto(transportadora.Id));
             }
             catch (Exception ex)
             {

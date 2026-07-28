@@ -30,13 +30,41 @@ namespace Estac.Infra.Repositories
         }
 
         /// <summary>
+        /// Insere transportadora, pessoa e conta bancária (quando informada).
+        /// Não chama <c>SaveChanges</c> — o <see cref="IUnitOfWork"/> do service persiste no Commit.
+        /// </summary>
+        public async Task<Transportadora> GravarCompleto(Transportadora item)
+        {
+            try
+            {
+                item.Id = 0;
+                item.Veiculos = null;
+
+                if (item.ContasBancarias != null)
+                {
+                    foreach (var conta in item.ContasBancarias.Where(c => c != null))
+                    {
+                        conta.Id = 0;
+                        conta.Transportadora = null;
+                        conta.Estacionamento = null;
+                    }
+                }
+
+                await _context.AddAsync(item);
+            }
+            catch (DbUpdateException)
+            {
+                throw;
+            }
+
+            return item;
+        }
+
+        /// <summary>
         /// O <see cref="BaseRepositoriesNone{T}.Alterar(T)"/> só aplica <c>SetValues</c> em <c>Transportadora</c>;
         /// a tabela <c>Pessoa</c> não é atualizada sem incluir e copiar os escalares explicitamente.
         /// Contas em <c>ContaBancaria</c> precisam ser atualizadas ou inseridas explicitamente.
         /// </summary>
-
-        /// 
-
         public override async Task<Transportadora> Alterar(Transportadora item)
         {
             try
@@ -187,6 +215,17 @@ namespace Estac.Infra.Repositories
                     TelefoneResponsavel = x.ResponsavelTelefone.FormatarTelefone()
                 })
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> ExistePorCnpjAsync(string cnpj)
+        {
+            var cnpjNormalizado = cnpj.SomenteAlfanumericos();
+            if (string.IsNullOrWhiteSpace(cnpjNormalizado))
+                return false;
+
+            return await _context.Set<Pessoa>()
+                .AsNoTracking()
+                .AnyAsync(p => p.Documento == cnpjNormalizado);
         }
 
         public Task<bool> PossuiVeiculoVinculadoAsync(int transportadoraId) =>

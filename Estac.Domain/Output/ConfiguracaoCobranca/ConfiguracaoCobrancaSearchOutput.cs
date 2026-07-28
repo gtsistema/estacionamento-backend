@@ -14,5 +14,6 @@ namespace Estac.Domain.Output.ConfiguracaoCobranca
         public decimal? ValorEstadia { get; set; }
         public string EmailFinanceiro { get; set; }
         public DateTime DataCriacao { get; set; }
+        public bool? GerarFaturaAutomaticamente { get; set; }
     }
 }
