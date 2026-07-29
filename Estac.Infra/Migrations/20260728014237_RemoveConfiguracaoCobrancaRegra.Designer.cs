@@ -4,6 +4,7 @@ using Estac.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Estac.Infra.Migrations
 {
     [DbContext(typeof(GtsContext))]
-    partial class GtsContextModelSnapshot : ModelSnapshot
+    [Migration("20260728014237_RemoveConfiguracaoCobrancaRegra")]
+    partial class RemoveConfiguracaoCobrancaRegra
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,68 +24,6 @@ namespace Estac.Infra.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Estac.Domain.Models.ConfiguracaoAgendamento", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Ativo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
-                    b.Property<int>("ConfiguracaoCobrancaId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DataAtualizacao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DataCadastro")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
-
-                    b.Property<int?>("DiaMes")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DiaSemana")
-                        .HasColumnType("int");
-
-                    b.Property<TimeSpan>("HoraExecucao")
-                        .HasColumnType("time");
-
-                    b.Property<int>("Intervalo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(1);
-
-                    b.Property<int>("Periodicidade")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ProximaExecucao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("TipoJob")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UltimaExecucao")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Ativo")
-                        .HasDatabaseName("IX_ConfiguracaoAgendamento_Ativo");
-
-                    b.HasIndex("ConfiguracaoCobrancaId")
-                        .HasDatabaseName("IX_ConfiguracaoAgendamento_ConfiguracaoCobrancaId");
-
-                    b.HasIndex("TipoJob")
-                        .HasDatabaseName("IX_ConfiguracaoAgendamento_TipoJob");
-
-                    b.ToTable("ConfiguracaoAgendamento", "gts");
-                });
 
             modelBuilder.Entity("Estac.Domain.Models.ConfiguracaoCobranca", b =>
                 {
@@ -1213,17 +1154,6 @@ namespace Estac.Infra.Migrations
                     b.ToTable("VeiculoPlaca", "gts");
                 });
 
-            modelBuilder.Entity("Estac.Domain.Models.ConfiguracaoAgendamento", b =>
-                {
-                    b.HasOne("Estac.Domain.Models.ConfiguracaoCobranca", "ConfiguracaoCobranca")
-                        .WithMany("ConfiguracoesAgendamento")
-                        .HasForeignKey("ConfiguracaoCobrancaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("ConfiguracaoCobranca");
-                });
-
             modelBuilder.Entity("Estac.Domain.Models.ConfiguracaoCobranca", b =>
                 {
                     b.HasOne("Estac.Domain.Models.Estacionamento", "Estacionamento")
@@ -1497,11 +1427,6 @@ namespace Estac.Infra.Migrations
                         .IsRequired();
 
                     b.Navigation("Veiculo");
-                });
-
-            modelBuilder.Entity("Estac.Domain.Models.ConfiguracaoCobranca", b =>
-                {
-                    b.Navigation("ConfiguracoesAgendamento");
                 });
 
             modelBuilder.Entity("Estac.Domain.Models.EntradaSaida", b =>

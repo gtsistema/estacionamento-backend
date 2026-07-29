@@ -28,9 +28,8 @@ namespace Estac.Domain.Models
         public bool AgruparPorPlaca { get; set; }
         public bool AgruparPorPeriodo { get; set; }
         public bool AgruparPorTransportadora { get; set; }
-
         public Transportadora Transportadora { get; set; }
         public Estacionamento Estacionamento { get; set; }
-        public ConfiguracaoCobrancaRegra Regra { get; set; }
+        public ICollection<ConfiguracaoAgendamento> ConfiguracoesAgendamento { get; set; } = new List<ConfiguracaoAgendamento>();
     }
 }

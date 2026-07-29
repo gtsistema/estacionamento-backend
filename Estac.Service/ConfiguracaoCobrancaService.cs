@@ -73,7 +73,8 @@ namespace Estac.Service
                 await _repositories.Gravar(entity);
                 await _unitOfWork.CommitAsync();
 
-                return await RetornOk(await _repositories.SelecionarPorIdCompleto(entity.Id));
+                var completo = await _repositories.SelecionarPorIdCompleto(entity.Id);
+                return await RetornOk(_mapper.Map<ConfiguracaoCobrancaOutput>(completo));
             }
             catch (Exception ex)
             {
@@ -110,7 +111,8 @@ namespace Estac.Service
                 await _repositories.Alterar(entity);
                 await _unitOfWork.CommitAsync();
 
-                return await RetornOk(await _repositories.SelecionarPorIdCompleto(input.Id));
+                var completo = await _repositories.SelecionarPorIdCompleto(input.Id);
+                return await RetornOk(_mapper.Map<ConfiguracaoCobrancaOutput>(completo));
             }
             catch (Exception ex)
             {
@@ -145,8 +147,23 @@ namespace Estac.Service
             if (string.IsNullOrWhiteSpace(entity.Descricao))
                 entity.Descricao = $"Cobrança {entity.TransportadoraId}/{entity.EstacionamentoId}";
 
-            if (entity.Regra != null && string.IsNullOrWhiteSpace(entity.Regra.Descricao))
-                entity.Regra.Descricao = "Regra de cobrança";
+            entity.ConfiguracoesAgendamento ??= new List<ConfiguracaoAgendamento>();
+
+            var agora = DateTime.Now;
+
+            foreach (var agendamento in entity.ConfiguracoesAgendamento.Where(a => a != null))
+            {
+                if (agendamento.Id == Guid.Empty)
+                    agendamento.Id = Guid.NewGuid();
+
+                if (agendamento.Intervalo <= 0)
+                    agendamento.Intervalo = 1;
+
+                if (agendamento.DataCadastro == default)
+                    agendamento.DataCadastro = agora;
+
+                agendamento.ConfiguracaoCobranca = null;
+            }
         }
     }
 }

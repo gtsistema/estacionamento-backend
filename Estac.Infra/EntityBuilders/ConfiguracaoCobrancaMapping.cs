@@ -123,11 +123,6 @@ namespace Estac.Infra.EntityBuilders
                    .HasForeignKey(x => x.EstacionamentoId)
                    .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(x => x.Regra)
-                   .WithOne(x => x.ConfiguracaoCobranca)
-                   .HasForeignKey<ConfiguracaoCobrancaRegra>(x => x.ConfiguracaoCobrancaId)
-                   .OnDelete(DeleteBehavior.Cascade);
-
             builder.HasIndex(x => new { x.TransportadoraId, x.EstacionamentoId })
                    .IsUnique()
                    .HasDatabaseName("IX_ConfiguracaoCobranca_Transportadora_Estacionamento");

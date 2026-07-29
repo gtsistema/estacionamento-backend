@@ -9,9 +9,21 @@ namespace Estac.Domain.Mappers
     {
         public ConfiguracaoCobrancaProfile()
         {
-            CreateMap<ConfiguracaoCobrancaPostInput, ConfiguracaoCobranca>();
-            CreateMap<ConfiguracaoCobrancaPutInput, ConfiguracaoCobranca>();
-            CreateMap<ConfiguracaoCobrancaRegraInput, ConfiguracaoCobrancaRegra>();
+            CreateMap<ConfiguracaoAgendamentoInput, ConfiguracaoAgendamento>()
+                .ForMember(dest => dest.ConfiguracaoCobrancaId, opt => opt.Ignore())
+                .ForMember(dest => dest.ConfiguracaoCobranca, opt => opt.Ignore())
+                .ForMember(dest => dest.UltimaExecucao, opt => opt.Ignore())
+                .ForMember(dest => dest.ProximaExecucao, opt => opt.Ignore())
+                .ForMember(dest => dest.DataCadastro, opt => opt.Ignore())
+                .ForMember(dest => dest.DataAtualizacao, opt => opt.Ignore());
+
+            CreateMap<ConfiguracaoAgendamento, ConfiguracaoAgendamentoOutput>();
+
+            CreateMap<ConfiguracaoCobrancaPostInput, ConfiguracaoCobranca>()
+                .ForMember(dest => dest.ConfiguracoesAgendamento, opt => opt.MapFrom(src => src.ConfiguracoesAgendamento));
+
+            CreateMap<ConfiguracaoCobrancaPutInput, ConfiguracaoCobranca>()
+                .ForMember(dest => dest.ConfiguracoesAgendamento, opt => opt.MapFrom(src => src.ConfiguracoesAgendamento));
 
             CreateMap<ConfiguracaoCobranca, ConfiguracaoCobrancaOutput>()
                 .ForMember(dest => dest.TransportadoraNome,
@@ -21,9 +33,9 @@ namespace Estac.Domain.Mappers
                 .ForMember(dest => dest.EstacionamentoNome,
                     opt => opt.MapFrom(src => src.Estacionamento != null
                         ? src.Estacionamento.Descricao
-                        : null));
-
-            CreateMap<ConfiguracaoCobrancaRegra, ConfiguracaoCobrancaRegraOutput>();
+                        : null))
+                .ForMember(dest => dest.ConfiguracoesAgendamento,
+                    opt => opt.MapFrom(src => src.ConfiguracoesAgendamento));
         }
     }
 }

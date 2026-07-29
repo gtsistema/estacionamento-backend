@@ -24,7 +24,6 @@ namespace Estac.Domain.Models
         public DateTime PeriodoFim { get; set; }
         public string EmailEnvio { get; set; }
         public string Observacao { get; set; }
-
         public Transportadora Transportadora { get; set; }
         public Estacionamento Estacionamento { get; set; }
         public ConfiguracaoCobranca ConfiguracaoCobranca { get; set; }

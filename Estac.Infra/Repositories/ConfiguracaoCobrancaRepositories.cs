@@ -24,9 +24,9 @@ namespace Estac.Infra.Repositories
         {
             return await _dataset
                 .AsNoTracking()
-                .Include(x => x.Regra)
                 .Include(x => x.Transportadora)
                 .Include(x => x.Estacionamento)
+                .Include(x => x.ConfiguracoesAgendamento)
                 .SingleOrDefaultAsync(x => x.Id == id);
         }
 
@@ -94,11 +94,14 @@ namespace Estac.Infra.Repositories
         {
             try
             {
-                var incomingRegra = item.Regra;
-                item.Regra = null;
+                var incomingAgendamentos = item.ConfiguracoesAgendamento?
+                    .Where(a => a != null)
+                    .ToList() ?? new List<ConfiguracaoAgendamento>();
+
+                item.ConfiguracoesAgendamento = null;
 
                 var result = await _dataset
-                    .Include(x => x.Regra)
+                    .Include(x => x.ConfiguracoesAgendamento)
                     .SingleOrDefaultAsync(p => p.Id == item.Id);
 
                 if (result == null)
@@ -108,25 +111,7 @@ namespace Estac.Infra.Repositories
                 item.DataAtualizacao = DateTime.Now;
                 _context.Entry(result).CurrentValues.SetValues(item);
 
-                if (incomingRegra != null)
-                {
-                    if (result.Regra != null)
-                    {
-                        var dataCriacao = result.Regra.DataCriacao;
-                        incomingRegra.Id = result.Regra.Id;
-                        incomingRegra.ConfiguracaoCobrancaId = result.Id;
-                        incomingRegra.DataCriacao = dataCriacao;
-                        incomingRegra.DataAtualizacao = DateTime.Now;
-                        _context.Entry(result.Regra).CurrentValues.SetValues(incomingRegra);
-                    }
-                    else
-                    {
-                        incomingRegra.Id = 0;
-                        incomingRegra.ConfiguracaoCobrancaId = result.Id;
-                        incomingRegra.DataCriacao = DateTime.Now;
-                        await _context.Set<ConfiguracaoCobrancaRegra>().AddAsync(incomingRegra);
-                    }
-                }
+                SincronizarAgendamentos(result, incomingAgendamentos);
             }
             catch (DbUpdateException)
             {
@@ -141,17 +126,78 @@ namespace Estac.Infra.Repositories
             try
             {
                 var configuracao = await _dataset
-                    .Include(x => x.Regra)
+                    .Include(x => x.ConfiguracoesAgendamento)
                     .FirstOrDefaultAsync(x => x.Id == id);
 
                 if (configuracao is null)
                     return;
+
+                if (configuracao.ConfiguracoesAgendamento?.Count > 0)
+                    _context.RemoveRange(configuracao.ConfiguracoesAgendamento);
 
                 _context.Remove(configuracao);
             }
             catch (DbUpdateException)
             {
                 throw;
+            }
+        }
+
+        private void SincronizarAgendamentos(ConfiguracaoCobranca existente, List<ConfiguracaoAgendamento> incoming)
+        {
+            existente.ConfiguracoesAgendamento ??= new List<ConfiguracaoAgendamento>();
+
+            var existentes = existente.ConfiguracoesAgendamento.ToList();
+            var incomingIds = incoming
+                .Where(a => a.Id != Guid.Empty)
+                .Select(a => a.Id)
+                .ToHashSet();
+
+            foreach (var remover in existentes.Where(e => !incomingIds.Contains(e.Id)).ToList())
+            {
+                existente.ConfiguracoesAgendamento.Remove(remover);
+                _context.Remove(remover);
+            }
+
+            var agora = DateTime.Now;
+
+            foreach (var item in incoming)
+            {
+                if (item.Intervalo <= 0)
+                    item.Intervalo = 1;
+
+                if (item.Id != Guid.Empty)
+                {
+                    var alvo = existentes.FirstOrDefault(e => e.Id == item.Id);
+                    if (alvo == null)
+                        continue;
+
+                    alvo.TipoJob = item.TipoJob;
+                    alvo.Periodicidade = item.Periodicidade;
+                    alvo.Intervalo = item.Intervalo;
+                    alvo.DiaSemana = item.DiaSemana;
+                    alvo.DiaMes = item.DiaMes;
+                    alvo.HoraExecucao = item.HoraExecucao;
+                    alvo.Ativo = item.Ativo;
+                    alvo.DataAtualizacao = agora;
+                    continue;
+                }
+
+                var novo = new ConfiguracaoAgendamento
+                {
+                    Id = Guid.NewGuid(),
+                    ConfiguracaoCobrancaId = existente.Id,
+                    TipoJob = item.TipoJob,
+                    Periodicidade = item.Periodicidade,
+                    Intervalo = item.Intervalo,
+                    DiaSemana = item.DiaSemana,
+                    DiaMes = item.DiaMes,
+                    HoraExecucao = item.HoraExecucao,
+                    Ativo = item.Ativo,
+                    DataCadastro = agora
+                };
+
+                existente.ConfiguracoesAgendamento.Add(novo);
             }
         }
     }

@@ -76,26 +76,9 @@ namespace Estac.Domain.Validators
                 .When(x => x.ValorEstadia.HasValue)
                 .WithMessage("Valor da estadia não pode ser negativo.");
 
-            RuleFor(x => x.Regra)
-                .NotNull().WithMessage("Regra de cobrança é obrigatória.");
-
-            RuleFor(x => x.Regra)
-                .Must(PossuiAoMenosUmaRegraDeCobranca)
-                .When(x => x.Regra != null)
-                .WithMessage("Selecione ao menos uma regra de cobrança.");
-        }
-
-        private static bool PossuiAoMenosUmaRegraDeCobranca(ConfiguracaoCobrancaRegraInput regra)
-        {
-            return regra.CobrarDiaria
-                || regra.CobrarSemanal
-                || regra.CobrarQuinzenal
-                || regra.CobrarMensal
-                || regra.CobrarDataPersonalizada
-                || regra.CobrarLavagem
-                || regra.CobrarPernoite
-                || regra.CobrarServicosExtras
-                || regra.ConsiderarBeneficioAbastecimento;
+            RuleForEach(x => x.ConfiguracoesAgendamento)
+                .SetValidator(new ConfiguracaoAgendamentoInputValidator())
+                .When(x => x.ConfiguracoesAgendamento != null && x.ConfiguracoesAgendamento.Count > 0);
         }
     }
 }
