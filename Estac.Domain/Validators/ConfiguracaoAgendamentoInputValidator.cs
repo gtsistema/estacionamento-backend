@@ -12,6 +12,10 @@ namespace Estac.Domain.Validators
                 .IsInEnum()
                 .WithMessage("Tipo de job inválido.");
 
+            RuleFor(x => x.TipoJob)
+                .Equal(TipoJob.GerarFaturamento)
+                .WithMessage("TipoJob deve ser GerarFaturamento.");
+
             RuleFor(x => x.Periodicidade)
                 .IsInEnum()
                 .WithMessage("Periodicidade inválida.");

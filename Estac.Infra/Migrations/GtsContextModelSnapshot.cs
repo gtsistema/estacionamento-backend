@@ -75,8 +75,9 @@ namespace Estac.Infra.Migrations
                     b.HasIndex("Ativo")
                         .HasDatabaseName("IX_ConfiguracaoAgendamento_Ativo");
 
-                    b.HasIndex("ConfiguracaoCobrancaId")
-                        .HasDatabaseName("IX_ConfiguracaoAgendamento_ConfiguracaoCobrancaId");
+                    b.HasIndex("ConfiguracaoCobrancaId", "TipoJob")
+                        .IsUnique()
+                        .HasDatabaseName("IX_ConfiguracaoAgendamento_ConfiguracaoCobrancaId_TipoJob");
 
                     b.HasIndex("TipoJob")
                         .HasDatabaseName("IX_ConfiguracaoAgendamento_TipoJob");

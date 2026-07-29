@@ -76,9 +76,20 @@ namespace Estac.Domain.Validators
                 .When(x => x.ValorEstadia.HasValue)
                 .WithMessage("Valor da estadia não pode ser negativo.");
 
+            RuleFor(x => x.ConfiguracoesAgendamento)
+                .Must(list => list != null && list.Count == 1)
+                .When(x => x.GerarFaturaAutomaticamente)
+                .WithMessage("Informe exatamente um agendamento quando GerarFaturaAutomaticamente estiver ativo.");
+
+            RuleFor(x => x.ConfiguracoesAgendamento)
+                .Must(list => list == null || list.Count <= 1)
+                .WithMessage("Só é permitido um ConfiguracaoAgendamento por configuração de cobrança.");
+
             RuleForEach(x => x.ConfiguracoesAgendamento)
                 .SetValidator(new ConfiguracaoAgendamentoInputValidator())
-                .When(x => x.ConfiguracoesAgendamento != null && x.ConfiguracoesAgendamento.Count > 0);
+                .When(x => x.GerarFaturaAutomaticamente
+                    && x.ConfiguracoesAgendamento != null
+                    && x.ConfiguracoesAgendamento.Count > 0);
         }
     }
 }

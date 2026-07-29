@@ -3,6 +3,7 @@ using Estac.Domain.Input.ConfiguracaoCobranca;
 using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Interface.Services;
 using Estac.Domain.Models;
+using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output;
 using Estac.Domain.Output.ConfiguracaoCobranca;
 using Estac.Service.Extensions;
@@ -69,6 +70,7 @@ namespace Estac.Service
             {
                 var entity = _mapper.Map<ConfiguracaoCobranca>(input);
                 ValoresPadrao(entity);
+                NormalizarAgendamentoGerarFaturamento(entity);
 
                 await _repositories.Gravar(entity);
                 await _unitOfWork.CommitAsync();
@@ -107,6 +109,7 @@ namespace Estac.Service
             {
                 var entity = _mapper.Map<ConfiguracaoCobranca>(input);
                 ValoresPadrao(entity);
+                NormalizarAgendamentoGerarFaturamento(entity);
 
                 await _repositories.Alterar(entity);
                 await _unitOfWork.CommitAsync();
@@ -146,24 +149,50 @@ namespace Estac.Service
         {
             if (string.IsNullOrWhiteSpace(entity.Descricao))
                 entity.Descricao = $"Cobrança {entity.TransportadoraId}/{entity.EstacionamentoId}";
+        }
 
+        /// <summary>
+        /// Só persiste ConfiguracaoAgendamento quando GerarFaturaAutomaticamente = true.
+        /// Garante exatamente 1 registro com TipoJob = GerarFaturamento por ConfiguracaoCobranca.
+        /// </summary>
+        private static void NormalizarAgendamentoGerarFaturamento(ConfiguracaoCobranca entity)
+        {
             entity.ConfiguracoesAgendamento ??= new List<ConfiguracaoAgendamento>();
+
+            if (!entity.GerarFaturaAutomaticamente)
+            {
+                entity.ConfiguracoesAgendamento.Clear();
+                return;
+            }
+
+            var origem = entity.ConfiguracoesAgendamento
+                .Where(a => a != null)
+                .OrderByDescending(a => a.TipoJob == TipoJob.GerarFaturamento)
+                .ThenByDescending(a => a.Id != Guid.Empty)
+                .FirstOrDefault();
+
+            if (origem is null)
+            {
+                entity.ConfiguracoesAgendamento.Clear();
+                return;
+            }
 
             var agora = DateTime.Now;
 
-            foreach (var agendamento in entity.ConfiguracoesAgendamento.Where(a => a != null))
-            {
-                if (agendamento.Id == Guid.Empty)
-                    agendamento.Id = Guid.NewGuid();
+            if (origem.Id == Guid.Empty)
+                origem.Id = Guid.NewGuid();
 
-                if (agendamento.Intervalo <= 0)
-                    agendamento.Intervalo = 1;
+            origem.TipoJob = TipoJob.GerarFaturamento;
 
-                if (agendamento.DataCadastro == default)
-                    agendamento.DataCadastro = agora;
+            if (origem.Intervalo <= 0)
+                origem.Intervalo = 1;
 
-                agendamento.ConfiguracaoCobranca = null;
-            }
+            if (origem.DataCadastro == default)
+                origem.DataCadastro = agora;
+
+            origem.ConfiguracaoCobranca = null;
+
+            entity.ConfiguracoesAgendamento = new List<ConfiguracaoAgendamento> { origem };
         }
     }
 }

@@ -3,6 +3,7 @@ using Estac.Domain.Extensions;
 using Estac.Domain.Input.ConfiguracaoCobranca;
 using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Models;
+using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output.ConfiguracaoCobranca;
 using Estac.Domain.Shared;
 using Estac.Infra.Context;
@@ -148,57 +149,61 @@ namespace Estac.Infra.Repositories
             existente.ConfiguracoesAgendamento ??= new List<ConfiguracaoAgendamento>();
 
             var existentes = existente.ConfiguracoesAgendamento.ToList();
-            var incomingIds = incoming
-                .Where(a => a.Id != Guid.Empty)
-                .Select(a => a.Id)
-                .ToHashSet();
+            var agora = DateTime.Now;
 
-            foreach (var remover in existentes.Where(e => !incomingIds.Contains(e.Id)).ToList())
+            // Regra: no máximo 1 agendamento por ConfiguracaoCobranca (TipoJob GerarFaturamento).
+            var item = incoming.FirstOrDefault();
+            if (item is null)
+            {
+                foreach (var remover in existentes)
+                {
+                    existente.ConfiguracoesAgendamento.Remove(remover);
+                    _context.Remove(remover);
+                }
+                return;
+            }
+
+            if (item.Intervalo <= 0)
+                item.Intervalo = 1;
+
+            item.TipoJob = TipoJob.GerarFaturamento;
+
+            var alvo = existentes.FirstOrDefault(e => e.Id == item.Id && item.Id != Guid.Empty)
+                ?? existentes.FirstOrDefault(e => e.TipoJob == TipoJob.GerarFaturamento)
+                ?? existentes.FirstOrDefault();
+
+            foreach (var remover in existentes.Where(e => alvo == null || e.Id != alvo.Id).ToList())
             {
                 existente.ConfiguracoesAgendamento.Remove(remover);
                 _context.Remove(remover);
             }
 
-            var agora = DateTime.Now;
-
-            foreach (var item in incoming)
+            if (alvo != null)
             {
-                if (item.Intervalo <= 0)
-                    item.Intervalo = 1;
-
-                if (item.Id != Guid.Empty)
-                {
-                    var alvo = existentes.FirstOrDefault(e => e.Id == item.Id);
-                    if (alvo == null)
-                        continue;
-
-                    alvo.TipoJob = item.TipoJob;
-                    alvo.Periodicidade = item.Periodicidade;
-                    alvo.Intervalo = item.Intervalo;
-                    alvo.DiaSemana = item.DiaSemana;
-                    alvo.DiaMes = item.DiaMes;
-                    alvo.HoraExecucao = item.HoraExecucao;
-                    alvo.Ativo = item.Ativo;
-                    alvo.DataAtualizacao = agora;
-                    continue;
-                }
-
-                var novo = new ConfiguracaoAgendamento
-                {
-                    Id = Guid.NewGuid(),
-                    ConfiguracaoCobrancaId = existente.Id,
-                    TipoJob = item.TipoJob,
-                    Periodicidade = item.Periodicidade,
-                    Intervalo = item.Intervalo,
-                    DiaSemana = item.DiaSemana,
-                    DiaMes = item.DiaMes,
-                    HoraExecucao = item.HoraExecucao,
-                    Ativo = item.Ativo,
-                    DataCadastro = agora
-                };
-
-                existente.ConfiguracoesAgendamento.Add(novo);
+                alvo.TipoJob = item.TipoJob;
+                alvo.Periodicidade = item.Periodicidade;
+                alvo.Intervalo = item.Intervalo;
+                alvo.DiaSemana = item.DiaSemana;
+                alvo.DiaMes = item.DiaMes;
+                alvo.HoraExecucao = item.HoraExecucao;
+                alvo.Ativo = item.Ativo;
+                alvo.DataAtualizacao = agora;
+                return;
             }
+
+            existente.ConfiguracoesAgendamento.Add(new ConfiguracaoAgendamento
+            {
+                Id = item.Id != Guid.Empty ? item.Id : Guid.NewGuid(),
+                ConfiguracaoCobrancaId = existente.Id,
+                TipoJob = item.TipoJob,
+                Periodicidade = item.Periodicidade,
+                Intervalo = item.Intervalo,
+                DiaSemana = item.DiaSemana,
+                DiaMes = item.DiaMes,
+                HoraExecucao = item.HoraExecucao,
+                Ativo = item.Ativo,
+                DataCadastro = agora
+            });
         }
     }
 }

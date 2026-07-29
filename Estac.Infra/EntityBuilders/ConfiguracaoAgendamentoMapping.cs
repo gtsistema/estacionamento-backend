@@ -63,8 +63,10 @@ namespace Estac.Infra.EntityBuilders
                    .HasForeignKey(x => x.ConfiguracaoCobrancaId)
                    .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasIndex(x => x.ConfiguracaoCobrancaId)
-                   .HasDatabaseName("IX_ConfiguracaoAgendamento_ConfiguracaoCobrancaId");
+            // Um agendamento por configuração de cobrança + tipo de job (ex.: GerarFaturamento).
+            builder.HasIndex(x => new { x.ConfiguracaoCobrancaId, x.TipoJob })
+                   .IsUnique()
+                   .HasDatabaseName("IX_ConfiguracaoAgendamento_ConfiguracaoCobrancaId_TipoJob");
 
             builder.HasIndex(x => x.TipoJob)
                    .HasDatabaseName("IX_ConfiguracaoAgendamento_TipoJob");
