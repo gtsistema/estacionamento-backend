@@ -22,7 +22,7 @@ namespace Estac.Infra.EntityBuilders
                    .HasConversion<int>()
                    .IsRequired();
 
-            builder.Property(x => x.Periodicidade)
+            builder.Property(x => x.ModalidadeCobranca)
                    .HasConversion<int>()
                    .IsRequired();
 

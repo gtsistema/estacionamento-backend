@@ -6,7 +6,7 @@ namespace Estac.Domain.Input.ConfiguracaoCobranca
     {
         public int? ConfiguracaoCobrancaId { get; set; }
         public TipoJob? TipoJob { get; set; }
-        public Periodicidade? Periodicidade { get; set; }
+        public ModalidadeCobranca? ModalidadeCobranca { get; set; }
         public bool? Ativo { get; set; }
     }
 }

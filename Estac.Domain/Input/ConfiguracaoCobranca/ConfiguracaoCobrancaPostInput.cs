@@ -31,7 +31,6 @@ namespace Estac.Domain.Input.ConfiguracaoCobranca
         public bool AgruparPorPlaca { get; set; }
         public bool AgruparPorPeriodo { get; set; }
         public bool AgruparPorTransportadora { get; set; }
-        public ConfiguracaoAgendamentoInput ConfiguracaoAgendamento { get; set; }
 
         public static ValidationResult Validar(ConfiguracaoCobrancaPostInput input) =>
             new ConfiguracaoCobrancaPostInputValidator().Validate(input);

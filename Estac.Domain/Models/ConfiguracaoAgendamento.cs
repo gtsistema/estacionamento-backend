@@ -7,7 +7,7 @@ namespace Estac.Domain.Models
         public Guid Id { get; set; }
         public int ConfiguracaoCobrancaId { get; set; }
         public TipoJob TipoJob { get; set; }
-        public Periodicidade Periodicidade { get; set; }
+        public ModalidadeCobranca ModalidadeCobranca { get; set; }
         public int Intervalo { get; set; } = 1;
         public DayOfWeek? DiaSemana { get; set; }
         public int? DiaMes { get; set; }

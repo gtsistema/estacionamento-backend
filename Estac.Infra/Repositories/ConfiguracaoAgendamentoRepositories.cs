@@ -37,8 +37,8 @@ namespace Estac.Infra.Repositories
             if (input.TipoJob.HasValue)
                 query = query.Where(x => x.TipoJob == input.TipoJob.Value);
 
-            if (input.Periodicidade.HasValue)
-                query = query.Where(x => x.Periodicidade == input.Periodicidade.Value);
+            if (input.ModalidadeCobranca.HasValue)
+                query = query.Where(x => x.ModalidadeCobranca == input.ModalidadeCobranca.Value);
 
             if (input.Ativo.HasValue)
                 query = query.Where(x => x.Ativo == input.Ativo.Value);
@@ -56,7 +56,7 @@ namespace Estac.Infra.Repositories
                     Id = x.Id,
                     ConfiguracaoCobrancaId = x.ConfiguracaoCobrancaId,
                     TipoJob = x.TipoJob,
-                    Periodicidade = x.Periodicidade,
+                    ModalidadeCobranca = x.ModalidadeCobranca,
                     Intervalo = x.Intervalo,
                     DiaSemana = x.DiaSemana,
                     DiaMes = x.DiaMes,
@@ -68,6 +68,12 @@ namespace Estac.Infra.Repositories
                     DataAtualizacao = x.DataAtualizacao
                 })
                 .GetPaged(input.NumeroPagina, input.TamanhoPagina);
+        }
+
+        public async Task<ConfiguracaoAgendamento> SelecionarPorConfiguracaoCobranca(int id)
+        {
+            return await _dataset
+                .SingleOrDefaultAsync(x => x.ConfiguracaoCobrancaId == id);
         }
     }
 }

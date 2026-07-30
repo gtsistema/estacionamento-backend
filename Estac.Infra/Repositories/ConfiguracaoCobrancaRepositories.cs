@@ -142,16 +142,20 @@ namespace Estac.Infra.Repositories
             }
         }
 
-        private void SincronizarAgendamento(
+        /// <summary>
+        /// Preserva o registro existente para não perder UltimaExecucao/ProximaExecucao:
+        /// sem agendamento novo, apenas inativa o atual.
+        /// </summary>
+        private static void SincronizarAgendamento(
             ConfiguracaoCobranca configuracao,
             ConfiguracaoAgendamento incoming)
         {
             var agora = DateTime.Now;
             var existente = configuracao.ConfiguracaoAgendamento;
 
-            if (!configuracao.GerarFaturaAutomaticamente)
+            if (incoming is null)
             {
-                if (existente is not null)
+                if (existente is not null && existente.Ativo)
                 {
                     existente.Ativo = false;
                     existente.DataAtualizacao = agora;
@@ -160,35 +164,36 @@ namespace Estac.Infra.Repositories
                 return;
             }
 
-            if (incoming is null)
-                return;
-
-            if (existente is not null)
+            if (existente is null)
             {
-                existente.TipoJob = incoming.TipoJob;
-                existente.Periodicidade = incoming.Periodicidade;
-                existente.Intervalo = incoming.Intervalo;
-                existente.DiaSemana = incoming.DiaSemana;
-                existente.DiaMes = incoming.DiaMes;
-                existente.HoraExecucao = incoming.HoraExecucao;
-                existente.Ativo = incoming.Ativo;
-                existente.DataAtualizacao = agora;
+                incoming.ConfiguracaoCobrancaId = configuracao.Id;
+                configuracao.ConfiguracaoAgendamento = incoming;
                 return;
             }
 
-            configuracao.ConfiguracaoAgendamento = new ConfiguracaoAgendamento
-            {
-                Id = incoming.Id != Guid.Empty ? incoming.Id : Guid.NewGuid(),
-                ConfiguracaoCobrancaId = configuracao.Id,
-                TipoJob = incoming.TipoJob,
-                Periodicidade = incoming.Periodicidade,
-                Intervalo = incoming.Intervalo,
-                DiaSemana = incoming.DiaSemana,
-                DiaMes = incoming.DiaMes,
-                HoraExecucao = incoming.HoraExecucao,
-                Ativo = incoming.Ativo,
-                DataCadastro = agora
-            };
+            // Alterar a janela de execução invalida a próxima data já calculada pelo job.
+            if (AgendamentoFoiReprogramado(existente, incoming))
+                existente.ProximaExecucao = null;
+
+            existente.TipoJob = incoming.TipoJob;
+            existente.ModalidadeCobranca = incoming.ModalidadeCobranca;
+            existente.Intervalo = incoming.Intervalo;
+            existente.DiaSemana = incoming.DiaSemana;
+            existente.DiaMes = incoming.DiaMes;
+            existente.HoraExecucao = incoming.HoraExecucao;
+            existente.Ativo = incoming.Ativo;
+            existente.DataAtualizacao = agora;
+        }
+
+        private static bool AgendamentoFoiReprogramado(
+            ConfiguracaoAgendamento existente,
+            ConfiguracaoAgendamento incoming)
+        {
+            return existente.ModalidadeCobranca != incoming.ModalidadeCobranca
+                || existente.Intervalo != incoming.Intervalo
+                || existente.DiaSemana != incoming.DiaSemana
+                || existente.DiaMes != incoming.DiaMes
+                || existente.HoraExecucao != incoming.HoraExecucao;
         }
     }
 }

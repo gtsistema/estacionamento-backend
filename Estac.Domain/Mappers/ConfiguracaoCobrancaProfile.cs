@@ -9,21 +9,14 @@ namespace Estac.Domain.Mappers
     {
         public ConfiguracaoCobrancaProfile()
         {
-            CreateMap<ConfiguracaoAgendamentoInput, ConfiguracaoAgendamento>()
-                .ForMember(dest => dest.ConfiguracaoCobrancaId, opt => opt.Ignore())
-                .ForMember(dest => dest.ConfiguracaoCobranca, opt => opt.Ignore())
-                .ForMember(dest => dest.UltimaExecucao, opt => opt.Ignore())
-                .ForMember(dest => dest.ProximaExecucao, opt => opt.Ignore())
-                .ForMember(dest => dest.DataCadastro, opt => opt.Ignore())
-                .ForMember(dest => dest.DataAtualizacao, opt => opt.Ignore());
-
             CreateMap<ConfiguracaoAgendamento, ConfiguracaoAgendamentoOutput>();
 
+            // O agendamento é derivado da própria configuração de cobrança, nunca recebido do cliente.
             CreateMap<ConfiguracaoCobrancaPostInput, ConfiguracaoCobranca>()
-                .ForMember(dest => dest.ConfiguracaoAgendamento, opt => opt.MapFrom(src => src.ConfiguracaoAgendamento));
+                .ForMember(dest => dest.ConfiguracaoAgendamento, opt => opt.Ignore());
 
             CreateMap<ConfiguracaoCobrancaPutInput, ConfiguracaoCobranca>()
-                .ForMember(dest => dest.ConfiguracaoAgendamento, opt => opt.MapFrom(src => src.ConfiguracaoAgendamento));
+                .ForMember(dest => dest.ConfiguracaoAgendamento, opt => opt.Ignore());
 
             CreateMap<ConfiguracaoCobranca, ConfiguracaoCobrancaOutput>()
                 .ForMember(dest => dest.TransportadoraNome,

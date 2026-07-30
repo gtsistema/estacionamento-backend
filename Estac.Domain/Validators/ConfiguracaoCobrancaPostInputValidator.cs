@@ -1,4 +1,5 @@
 using Estac.Domain.Input.ConfiguracaoCobranca;
+using Estac.Domain.Models.Enuns;
 using FluentValidation;
 
 namespace Estac.Domain.Validators
@@ -29,6 +30,11 @@ namespace Estac.Domain.Validators
                 .InclusiveBetween((byte)1, (byte)31)
                 .When(x => x.DiaFechamento.HasValue)
                 .WithMessage("Dia de fechamento deve estar entre 1 e 31.");
+
+            RuleFor(x => x.DiaFechamento)
+                .NotNull()
+                .When(x => x.RegraFechamento == RegraFechamento.DiaFixo)
+                .WithMessage("Dia de fechamento é obrigatório quando a regra de fechamento for dia fixo.");
 
             RuleFor(x => x.EmailFinanceiro)
                 .NotEmpty().WithMessage("E-mail financeiro é obrigatório.")
@@ -75,21 +81,6 @@ namespace Estac.Domain.Validators
                 .GreaterThanOrEqualTo(0)
                 .When(x => x.ValorEstadia.HasValue)
                 .WithMessage("Valor da estadia não pode ser negativo.");
-
-            RuleFor(x => x.ConfiguracaoAgendamento)
-                .NotNull()
-                .When(x => x.GerarFaturaAutomaticamente)
-                .WithMessage("Informe o agendamento quando GerarFaturaAutomaticamente estiver ativo.");
-
-            RuleFor(x => x.ConfiguracaoAgendamento)
-                .Null()
-                .When(x => !x.GerarFaturaAutomaticamente)
-                .WithMessage("O agendamento só pode ser informado quando GerarFaturaAutomaticamente estiver ativo.");
-
-            RuleFor(x => x.ConfiguracaoAgendamento)
-                .SetValidator(new ConfiguracaoAgendamentoInputValidator())
-                .When(x => x.GerarFaturaAutomaticamente
-                    && x.ConfiguracaoAgendamento != null);
         }
     }
 }

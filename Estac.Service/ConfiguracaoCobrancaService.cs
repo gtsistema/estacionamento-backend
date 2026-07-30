@@ -1,9 +1,9 @@
 using AutoMapper;
+using Estac.Domain.Factories;
 using Estac.Domain.Input.ConfiguracaoCobranca;
 using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Interface.Services;
 using Estac.Domain.Models;
-using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output;
 using Estac.Domain.Output.ConfiguracaoCobranca;
 using Estac.Service.Extensions;
@@ -152,35 +152,12 @@ namespace Estac.Service
         }
 
         /// <summary>
-        /// Só cria ConfiguracaoAgendamento quando GerarFaturaAutomaticamente = true.
+        /// Só monta ConfiguracaoAgendamento quando GerarFaturaAutomaticamente = true.
         /// Ao desativar a geração, o repositório preserva e inativa o agendamento existente.
         /// </summary>
         private static void NormalizarAgendamentoGerarFaturamento(ConfiguracaoCobranca entity)
         {
-            if (!entity.GerarFaturaAutomaticamente)
-            {
-                entity.ConfiguracaoAgendamento = null;
-                return;
-            }
-
-            var agendamento = entity.ConfiguracaoAgendamento;
-            if (agendamento is null)
-                return;
-
-            var agora = DateTime.Now;
-
-            if (agendamento.Id == Guid.Empty)
-                agendamento.Id = Guid.NewGuid();
-
-            agendamento.TipoJob = TipoJob.GerarFaturamento;
-
-            if (agendamento.Intervalo <= 0)
-                agendamento.Intervalo = 1;
-
-            if (agendamento.DataCadastro == default)
-                agendamento.DataCadastro = agora;
-
-            agendamento.ConfiguracaoCobranca = null;
+            entity.ConfiguracaoAgendamento = ConfiguracaoAgendamentoFactory.Criar(entity);
         }
     }
 }
