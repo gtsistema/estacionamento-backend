@@ -59,13 +59,13 @@ namespace Estac.Domain.Factories
         }
 
         /// <summary>
-        /// Cobrança por data personalizada: a data de execução vem da regra de fechamento
-        /// escolhida no cadastro, sem periodicidade fixa de dia da semana.
+        /// Cobrança por data personalizada: a data informada no cadastro define o dia de execução.
+        /// Sem a data, recai na regra de fechamento, sem periodicidade fixa de dia da semana.
         /// </summary>
         private static void AplicarCobrancaPersonalizada(ConfiguracaoCobranca cobranca, ConfiguracaoAgendamento agendamento)
         {
             agendamento.DiaSemana = null;
-            agendamento.DiaMes = DiaMesFechamento(cobranca);
+            agendamento.DiaMes = cobranca.DataCobranca?.Day ?? DiaMesFechamento(cobranca);
         }
 
         /// <summary>Null indica último dia do mês, resolvido pelo job em tempo de execução.</summary>

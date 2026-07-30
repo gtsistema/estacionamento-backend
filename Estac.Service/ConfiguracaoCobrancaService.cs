@@ -4,6 +4,7 @@ using Estac.Domain.Input.ConfiguracaoCobranca;
 using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Interface.Services;
 using Estac.Domain.Models;
+using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output;
 using Estac.Domain.Output.ConfiguracaoCobranca;
 using Estac.Service.Extensions;
@@ -149,6 +150,30 @@ namespace Estac.Service
         {
             if (string.IsNullOrWhiteSpace(entity.Descricao))
                 entity.Descricao = $"Cobrança {entity.TransportadoraId}/{entity.EstacionamentoId}";
+
+            DescartarValoresInativos(entity);
+        }
+
+        /// <summary>
+        /// Zera o que depende de uma opção desligada, evitando resíduo de configurações anteriores
+        /// que voltaria ao cliente na próxima leitura.
+        /// </summary>
+        private static void DescartarValoresInativos(ConfiguracaoCobranca entity)
+        {
+            if (entity.ModalidadeCobranca != ModalidadeCobranca.Personalizado)
+                entity.DataCobranca = null;
+
+            if (!entity.CobrarLavagem)
+                entity.ValorLavagem = null;
+
+            if (!entity.CobrarPernoite)
+                entity.ValorPernoite = null;
+
+            if (!entity.CobrarServicosExtras)
+                entity.ValorServicosExtras = null;
+
+            if (!entity.ConsiderarBeneficioAbastecimento)
+                entity.ValorBeneficioAbastecimento = null;
         }
 
         /// <summary>

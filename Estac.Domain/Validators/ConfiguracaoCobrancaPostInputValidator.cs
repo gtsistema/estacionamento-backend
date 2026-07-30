@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Estac.Domain.Input.ConfiguracaoCobranca;
 using Estac.Domain.Models.Enuns;
 using FluentValidation;
@@ -81,6 +82,41 @@ namespace Estac.Domain.Validators
                 .GreaterThanOrEqualTo(0)
                 .When(x => x.ValorEstadia.HasValue)
                 .WithMessage("Valor da estadia não pode ser negativo.");
+
+            RuleFor(x => x.DataCobranca)
+                .NotNull()
+                .When(x => x.ModalidadeCobranca == ModalidadeCobranca.Personalizado)
+                .WithMessage("Data da cobrança é obrigatória para cobrança em data personalizada.");
+
+            RegraServicoAdicional(x => x.ValorLavagem, x => x.CobrarLavagem, "valor da lavagem");
+            RegraServicoAdicional(x => x.ValorPernoite, x => x.CobrarPernoite, "valor da pernoite");
+            RegraServicoAdicional(x => x.ValorServicosExtras, x => x.CobrarServicosExtras, "valor dos serviços extras");
+            RegraServicoAdicional(
+                x => x.ValorBeneficioAbastecimento,
+                x => x.ConsiderarBeneficioAbastecimento,
+                "valor do benefício por abastecimento");
+        }
+
+        /// <summary>
+        /// Serviço adicional habilitado exige valor maior que zero; quando desabilitado o valor é
+        /// descartado pelo serviço, então aqui só é validado o sinal.
+        /// </summary>
+        private void RegraServicoAdicional(
+            Expression<Func<ConfiguracaoCobrancaPostInput, decimal?>> valor,
+            Func<ConfiguracaoCobrancaPostInput, bool> habilitado,
+            string descricao)
+        {
+            var lerValor = valor.Compile();
+
+            RuleFor(valor)
+                .NotNull().WithMessage($"Informe o {descricao} quando o serviço estiver habilitado.")
+                .GreaterThan(0m).WithMessage($"Informe o {descricao} maior que zero.")
+                .When(habilitado);
+
+            RuleFor(valor)
+                .GreaterThanOrEqualTo(0m)
+                .When(input => lerValor(input).HasValue)
+                .WithMessage($"O {descricao} não pode ser negativo.");
         }
     }
 }

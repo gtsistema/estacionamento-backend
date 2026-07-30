@@ -94,6 +94,37 @@ namespace Estac.Infra.EntityBuilders
             builder.Property(x => x.ValorEstadia)
                    .HasColumnType("decimal(18,2)");
 
+            builder.Property(x => x.DataCobranca)
+                   .HasColumnType("date");
+
+            builder.Property(x => x.CobrarLavagem)
+                   .HasDefaultValue(false)
+                   .IsRequired();
+
+            builder.Property(x => x.ValorLavagem)
+                   .HasColumnType("decimal(18,2)");
+
+            builder.Property(x => x.CobrarPernoite)
+                   .HasDefaultValue(false)
+                   .IsRequired();
+
+            builder.Property(x => x.ValorPernoite)
+                   .HasColumnType("decimal(18,2)");
+
+            builder.Property(x => x.CobrarServicosExtras)
+                   .HasDefaultValue(false)
+                   .IsRequired();
+
+            builder.Property(x => x.ValorServicosExtras)
+                   .HasColumnType("decimal(18,2)");
+
+            builder.Property(x => x.ConsiderarBeneficioAbastecimento)
+                   .HasDefaultValue(false)
+                   .IsRequired();
+
+            builder.Property(x => x.ValorBeneficioAbastecimento)
+                   .HasColumnType("decimal(18,2)");
+
             builder.Property(x => x.AgruparPorPlaca)
                    .HasDefaultValue(false)
                    .IsRequired();
