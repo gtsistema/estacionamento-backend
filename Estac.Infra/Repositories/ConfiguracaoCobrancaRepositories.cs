@@ -146,7 +146,7 @@ namespace Estac.Infra.Repositories
         /// Preserva o registro existente para não perder UltimaExecucao/ProximaExecucao:
         /// sem agendamento novo, apenas inativa o atual.
         /// </summary>
-        private static void SincronizarAgendamento(
+        private void SincronizarAgendamento(
             ConfiguracaoCobranca configuracao,
             ConfiguracaoAgendamento incoming)
         {
@@ -166,8 +166,16 @@ namespace Estac.Infra.Repositories
 
             if (existente is null)
             {
+                // Guid já preenchido + FK preenchida faz o EF marcar como Modified (UPDATE 0 linhas).
+                // Add explícito garante INSERT.
+                if (incoming.Id == Guid.Empty)
+                    incoming.Id = Guid.NewGuid();
+
                 incoming.ConfiguracaoCobrancaId = configuracao.Id;
+                incoming.ConfiguracaoCobranca = null;
+                incoming.DataCadastro = agora;
                 configuracao.ConfiguracaoAgendamento = incoming;
+                _context.Add(incoming);
                 return;
             }
 

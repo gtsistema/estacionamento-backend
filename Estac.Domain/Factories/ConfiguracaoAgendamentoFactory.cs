@@ -22,7 +22,6 @@ namespace Estac.Domain.Factories
             var agendamento = new ConfiguracaoAgendamento
             {
                 Id = Guid.NewGuid(),
-                ConfiguracaoCobrancaId = cobranca.Id,
                 TipoJob = TipoJob.GerarFaturamento,
                 ModalidadeCobranca = cobranca.ModalidadeCobranca,
                 Intervalo = 1,
