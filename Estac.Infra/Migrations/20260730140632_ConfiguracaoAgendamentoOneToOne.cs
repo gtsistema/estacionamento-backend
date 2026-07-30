@@ -10,10 +10,18 @@ namespace Estac.Infra.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_ConfiguracaoAgendamento_ConfiguracaoCobrancaId_TipoJob",
-                schema: "gts",
-                table: "ConfiguracaoAgendamento");
+            migrationBuilder.Sql(
+                """
+                IF EXISTS
+                (
+                    SELECT 1
+                    FROM sys.indexes
+                    WHERE name = N'IX_ConfiguracaoAgendamento_ConfiguracaoCobrancaId_TipoJob'
+                      AND object_id = OBJECT_ID(N'[gts].[ConfiguracaoAgendamento]')
+                )
+                DROP INDEX [IX_ConfiguracaoAgendamento_ConfiguracaoCobrancaId_TipoJob]
+                    ON [gts].[ConfiguracaoAgendamento];
+                """);
 
             migrationBuilder.Sql(
                 """
@@ -32,28 +40,48 @@ namespace Estac.Infra.Migrations
                 WHERE Ordem > 1;
                 """);
 
-            migrationBuilder.CreateIndex(
-                name: "IX_ConfiguracaoAgendamento_ConfiguracaoCobrancaId",
-                schema: "gts",
-                table: "ConfiguracaoAgendamento",
-                column: "ConfiguracaoCobrancaId",
-                unique: true);
+            migrationBuilder.Sql(
+                """
+                IF NOT EXISTS
+                (
+                    SELECT 1
+                    FROM sys.indexes
+                    WHERE name = N'IX_ConfiguracaoAgendamento_ConfiguracaoCobrancaId'
+                      AND object_id = OBJECT_ID(N'[gts].[ConfiguracaoAgendamento]')
+                )
+                CREATE UNIQUE INDEX [IX_ConfiguracaoAgendamento_ConfiguracaoCobrancaId]
+                    ON [gts].[ConfiguracaoAgendamento] ([ConfiguracaoCobrancaId]);
+                """);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_ConfiguracaoAgendamento_ConfiguracaoCobrancaId",
-                schema: "gts",
-                table: "ConfiguracaoAgendamento");
+            migrationBuilder.Sql(
+                """
+                IF EXISTS
+                (
+                    SELECT 1
+                    FROM sys.indexes
+                    WHERE name = N'IX_ConfiguracaoAgendamento_ConfiguracaoCobrancaId'
+                      AND object_id = OBJECT_ID(N'[gts].[ConfiguracaoAgendamento]')
+                )
+                DROP INDEX [IX_ConfiguracaoAgendamento_ConfiguracaoCobrancaId]
+                    ON [gts].[ConfiguracaoAgendamento];
+                """);
 
-            migrationBuilder.CreateIndex(
-                name: "IX_ConfiguracaoAgendamento_ConfiguracaoCobrancaId_TipoJob",
-                schema: "gts",
-                table: "ConfiguracaoAgendamento",
-                columns: new[] { "ConfiguracaoCobrancaId", "TipoJob" },
-                unique: true);
+            migrationBuilder.Sql(
+                """
+                IF NOT EXISTS
+                (
+                    SELECT 1
+                    FROM sys.indexes
+                    WHERE name = N'IX_ConfiguracaoAgendamento_ConfiguracaoCobrancaId_TipoJob'
+                      AND object_id = OBJECT_ID(N'[gts].[ConfiguracaoAgendamento]')
+                )
+                CREATE UNIQUE INDEX [IX_ConfiguracaoAgendamento_ConfiguracaoCobrancaId_TipoJob]
+                    ON [gts].[ConfiguracaoAgendamento] ([ConfiguracaoCobrancaId], [TipoJob]);
+                """);
         }
     }
 }
