@@ -30,6 +30,6 @@ namespace Estac.Domain.Output.ConfiguracaoCobranca
         public bool AgruparPorPlaca { get; set; }
         public bool AgruparPorPeriodo { get; set; }
         public bool AgruparPorTransportadora { get; set; }
-        public List<ConfiguracaoAgendamentoOutput> ConfiguracoesAgendamento { get; set; } = new();
+        public ConfiguracaoAgendamentoOutput ConfiguracaoAgendamento { get; set; }
     }
 }

@@ -122,7 +122,7 @@ namespace Estac.Service
                 await _unitOfWork.RollbackAsync();
                 return await RetornNo(false, ex.Message);
             }
-        }
+         }
 
         public async Task<ActionResult> Excluir(int id)
         {
@@ -152,47 +152,35 @@ namespace Estac.Service
         }
 
         /// <summary>
-        /// Só persiste ConfiguracaoAgendamento quando GerarFaturaAutomaticamente = true.
-        /// Garante exatamente 1 registro com TipoJob = GerarFaturamento por ConfiguracaoCobranca.
+        /// Só cria ConfiguracaoAgendamento quando GerarFaturaAutomaticamente = true.
+        /// Ao desativar a geração, o repositório preserva e inativa o agendamento existente.
         /// </summary>
         private static void NormalizarAgendamentoGerarFaturamento(ConfiguracaoCobranca entity)
         {
-            entity.ConfiguracoesAgendamento ??= new List<ConfiguracaoAgendamento>();
-
             if (!entity.GerarFaturaAutomaticamente)
             {
-                entity.ConfiguracoesAgendamento.Clear();
+                entity.ConfiguracaoAgendamento = null;
                 return;
             }
 
-            var origem = entity.ConfiguracoesAgendamento
-                .Where(a => a != null)
-                .OrderByDescending(a => a.TipoJob == TipoJob.GerarFaturamento)
-                .ThenByDescending(a => a.Id != Guid.Empty)
-                .FirstOrDefault();
-
-            if (origem is null)
-            {
-                entity.ConfiguracoesAgendamento.Clear();
+            var agendamento = entity.ConfiguracaoAgendamento;
+            if (agendamento is null)
                 return;
-            }
 
             var agora = DateTime.Now;
 
-            if (origem.Id == Guid.Empty)
-                origem.Id = Guid.NewGuid();
+            if (agendamento.Id == Guid.Empty)
+                agendamento.Id = Guid.NewGuid();
 
-            origem.TipoJob = TipoJob.GerarFaturamento;
+            agendamento.TipoJob = TipoJob.GerarFaturamento;
 
-            if (origem.Intervalo <= 0)
-                origem.Intervalo = 1;
+            if (agendamento.Intervalo <= 0)
+                agendamento.Intervalo = 1;
 
-            if (origem.DataCadastro == default)
-                origem.DataCadastro = agora;
+            if (agendamento.DataCadastro == default)
+                agendamento.DataCadastro = agora;
 
-            origem.ConfiguracaoCobranca = null;
-
-            entity.ConfiguracoesAgendamento = new List<ConfiguracaoAgendamento> { origem };
+            agendamento.ConfiguracaoCobranca = null;
         }
     }
 }

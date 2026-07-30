@@ -20,10 +20,10 @@ namespace Estac.Domain.Mappers
             CreateMap<ConfiguracaoAgendamento, ConfiguracaoAgendamentoOutput>();
 
             CreateMap<ConfiguracaoCobrancaPostInput, ConfiguracaoCobranca>()
-                .ForMember(dest => dest.ConfiguracoesAgendamento, opt => opt.MapFrom(src => src.ConfiguracoesAgendamento));
+                .ForMember(dest => dest.ConfiguracaoAgendamento, opt => opt.MapFrom(src => src.ConfiguracaoAgendamento));
 
             CreateMap<ConfiguracaoCobrancaPutInput, ConfiguracaoCobranca>()
-                .ForMember(dest => dest.ConfiguracoesAgendamento, opt => opt.MapFrom(src => src.ConfiguracoesAgendamento));
+                .ForMember(dest => dest.ConfiguracaoAgendamento, opt => opt.MapFrom(src => src.ConfiguracaoAgendamento));
 
             CreateMap<ConfiguracaoCobranca, ConfiguracaoCobrancaOutput>()
                 .ForMember(dest => dest.TransportadoraNome,
@@ -34,8 +34,8 @@ namespace Estac.Domain.Mappers
                     opt => opt.MapFrom(src => src.Estacionamento != null
                         ? src.Estacionamento.Descricao
                         : null))
-                .ForMember(dest => dest.ConfiguracoesAgendamento,
-                    opt => opt.MapFrom(src => src.ConfiguracoesAgendamento));
+                .ForMember(dest => dest.ConfiguracaoAgendamento,
+                    opt => opt.MapFrom(src => src.ConfiguracaoAgendamento));
         }
     }
 }
