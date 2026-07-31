@@ -53,6 +53,7 @@ namespace Estac.Infra.Context
             modelBuilder.Entity<ConfiguracaoCobranca>(new ConfiguracaoCobrancaMapping().Configure);
             modelBuilder.Entity<ConfiguracaoAgendamento>(new ConfiguracaoAgendamentoMapping().Configure);
             modelBuilder.Entity<Fatura>(new FaturaMapping().Configure);
+            modelBuilder.Entity<FaturaItem>(new FaturaItemMapping().Configure);
 
         }
 
@@ -86,6 +87,7 @@ namespace Estac.Infra.Context
         public DbSet<ConfiguracaoCobranca> ConfiguracaoCobranca { get; set; }
         public DbSet<ConfiguracaoAgendamento> ConfiguracoesAgendamento { get; set; }
         public DbSet<Fatura> Fatura { get; set; }
+        public DbSet<FaturaItem> FaturaItem { get; set; }
 
     }
 }

@@ -11,6 +11,7 @@ namespace Estac.Domain.Interface.Repositories
         Task<PagedResult<FaturaSearchOutput>> Paginar(FaturaFilterInput input);
         Task<FaturaVisaoGeralOutput> ObterVisaoGeral(FaturaFilterInput input);
         Task<bool> ExisteNumeroAsync(string numero, int? ignorarId = null);
+        Task<IList<int>> ObterEntradaSaidaJaFaturadas(IEnumerable<int> entradaSaidaIds);
         Task Remove(int id);
     }
 }

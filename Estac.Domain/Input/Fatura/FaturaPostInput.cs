@@ -27,6 +27,7 @@ namespace Estac.Domain.Input.Fatura
         public DateTime PeriodoFim { get; set; }
         public string EmailEnvio { get; set; }
         public string Observacao { get; set; }
+        public List<FaturaItemPostInput> Itens { get; set; } = new();
 
         public static ValidationResult Validar(FaturaPostInput input) =>
             new FaturaPostInputValidator().Validate(input);

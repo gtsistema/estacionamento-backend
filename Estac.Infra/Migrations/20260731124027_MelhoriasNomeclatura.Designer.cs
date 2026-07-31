@@ -4,6 +4,7 @@ using Estac.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Estac.Infra.Migrations
 {
     [DbContext(typeof(GtsContext))]
-    partial class GtsContextModelSnapshot : ModelSnapshot
+    [Migration("20260731124027_MelhoriasNomeclatura")]
+    partial class MelhoriasNomeclatura
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -227,7 +230,7 @@ namespace Estac.Infra.Migrations
                         .HasColumnType("decimal(18,2)")
                         .HasDefaultValue(0m);
 
-                    b.Property<decimal?>("ValorEstadia")
+                    b.Property<decimal?>("ValorEstacionamento")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal?>("ValorLavagem")
@@ -349,9 +352,6 @@ namespace Estac.Infra.Migrations
                     b.Property<DateTime>("DataCriacao")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DataFaturado")
-                        .HasColumnType("datetime");
-
                     b.Property<DateTime>("DataHoraEntrada")
                         .HasColumnType("datetime");
 
@@ -370,11 +370,6 @@ namespace Estac.Infra.Migrations
 
                     b.Property<int>("EstacionamentoId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("Faturado")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
 
                     b.Property<bool>("Finalizado")
                         .ValueGeneratedOnAdd()
@@ -437,7 +432,7 @@ namespace Estac.Infra.Migrations
 
                     b.HasIndex("EstacionamentoId", "TransportadoraId", "DataHoraSaida")
                         .HasDatabaseName("IX_EntradaSaida_Faturamento")
-                        .HasFilter("[Finalizado] = 1 AND [Faturado] = 0");
+                        .HasFilter("[Finalizado] = 1");
 
                     b.ToTable("EntradaSaida", "gts");
                 });

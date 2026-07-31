@@ -18,6 +18,9 @@ namespace Estac.Domain.Mappers
                 .ForMember(dest => dest.Motorista, opt => opt.Ignore())
                 .ForMember(dest => dest.Transportadora, opt => opt.Ignore())
                 .ForMember(dest => dest.Veiculo, opt => opt.Ignore())
+                .ForMember(dest => dest.EstacionamentoId, opt => opt.Ignore())
+                .ForMember(dest => dest.Faturado, opt => opt.Ignore())
+                .ForMember(dest => dest.DataFaturado, opt => opt.Ignore())
                 .ForMember(dest => dest.Suspensoes, opt => opt.Ignore());
             CreateMap<Estac.Domain.Models.EntradaSaida, EntradaSaidaOutput>()
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.GetDescription()));

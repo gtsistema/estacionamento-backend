@@ -78,6 +78,22 @@ namespace Estac.Domain.Validators
                 .NotNull()
                 .When(x => x.Status is StatusFatura.Pago or StatusFatura.Parcial)
                 .WithMessage("Modalidade de recebimento é obrigatória para faturas pagas ou parciais.");
+
+            RuleForEach(x => x.Itens).ChildRules(item =>
+            {
+                item.RuleFor(x => x.EntradaSaidaId)
+                    .GreaterThan(0).WithMessage("EntradaSaidaId do item é obrigatório.");
+
+                item.RuleFor(x => x.DataHoraSaida)
+                    .GreaterThanOrEqualTo(x => x.DataHoraEntrada)
+                    .WithMessage("Data/hora de saída do item deve ser igual ou posterior à entrada.");
+
+                item.RuleFor(x => x.ValorTotal)
+                    .GreaterThanOrEqualTo(0).WithMessage("Valor total do item não pode ser negativo.");
+
+                item.RuleFor(x => x.Placa)
+                    .MaximumLength(10);
+            });
         }
     }
 }

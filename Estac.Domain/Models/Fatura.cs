@@ -27,6 +27,7 @@ namespace Estac.Domain.Models
         public Transportadora Transportadora { get; set; }
         public Estacionamento Estacionamento { get; set; }
         public ConfiguracaoCobranca ConfiguracaoCobranca { get; set; }
+        public ICollection<FaturaItem> Itens { get; set; } = new List<FaturaItem>();
 
         public decimal ValorEmAberto => Math.Max(0, ValorTotal - ValorRecebido);
     }

@@ -79,6 +79,15 @@ namespace Estac.Infra.EntityBuilders
                 .IsRequired()
                 .HasDefaultValue(false);
 
+            builder.Property(x => x.Faturado)
+                .HasColumnType("bit")
+                .IsRequired()
+                .HasDefaultValue(false);
+
+            builder.Property(x => x.DataFaturado)
+                .HasColumnType("datetime")
+                .IsRequired(false);
+
             builder.Property(x => x.Status)
                 .HasConversion<byte>()
                 .HasColumnType("tinyint")
@@ -99,10 +108,20 @@ namespace Estac.Infra.EntityBuilders
                 .HasForeignKey(x => x.TransportadoraId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.HasOne(x => x.Estacionamento)
+                .WithMany()
+                .HasForeignKey(x => x.EstacionamentoId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.HasOne(x => x.Veiculo)
                 .WithMany()
                 .HasForeignKey(x => x.VeiculoId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Cobre a busca de movimentos elegíveis a faturamento por pátio, transportadora e período.
+            builder.HasIndex(x => new { x.EstacionamentoId, x.TransportadoraId, x.DataHoraSaida })
+                .HasDatabaseName("IX_EntradaSaida_Faturamento")
+                .HasFilter("[Finalizado] = 1 AND [Faturado] = 0");
         }
     }
 }

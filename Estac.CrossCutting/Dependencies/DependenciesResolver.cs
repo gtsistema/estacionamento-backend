@@ -63,6 +63,7 @@ namespace Estac.CrossCutting.Dependencies
             services.AddScoped<IConfiguracaoCobrancaService, ConfiguracaoCobrancaService>();
             services.AddScoped<IConfiguracaoAgendamentoService, ConfiguracaoAgendamentoService>();
             services.AddScoped<IFaturaService, FaturaService>();
+            services.AddScoped<IFaturamentoService, FaturamentoService>();
 
 
             // repositories
@@ -86,6 +87,7 @@ namespace Estac.CrossCutting.Dependencies
             services.AddScoped<IConfiguracaoCobrancaRepositories, ConfiguracaoCobrancaRepositories>();
             services.AddScoped<IConfiguracaoAgendamentoRepositories, ConfiguracaoAgendamentoRepositories>();
             services.AddScoped<IFaturaRepositories, FaturaRepositories>();
+            services.AddScoped<IFaturamentoRepositories, FaturamentoRepositories>();
 
 
             return services;

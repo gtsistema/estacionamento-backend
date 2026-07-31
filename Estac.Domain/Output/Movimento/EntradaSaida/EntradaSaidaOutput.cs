@@ -23,6 +23,8 @@ namespace Estac.Domain.Output.Movimento.EntradaSaida
         public int TempoTotalSuspensaoMinutos { get; set; }
         public bool PermanenciaSuspensa { get; set; }
         public bool Finalizado { get; set; }
+        public bool Faturado { get; set; }
+        public DateTime? DataFaturado { get; set; }
         public string Observacao { get; set; }
         public DateTime? DataHoraFinalizacao { get; set; }
         public MotoristaOutput Motorista { get; set; }

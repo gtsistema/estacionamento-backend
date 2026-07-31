@@ -8,7 +8,9 @@ namespace Estac.Domain.Interface.Repositories
     public interface IConfiguracaoAgendamentoRepositories
     {
         Task<ConfiguracaoAgendamento> SelecionarPorIdCompleto(Guid id);
+        Task<ConfiguracaoAgendamento> SelecionarPorIdParaAtualizacao(Guid id);
         Task<PagedResult<ConfiguracaoAgendamentoOutput>> Paginar(ConfiguracaoAgendamentoFilterInput input);
         Task<ConfiguracaoAgendamento> SelecionarPorConfiguracaoCobranca(int id);
+        Task AtualizarExecucao(ConfiguracaoAgendamento agendamento);
     }
 }

@@ -108,7 +108,9 @@ namespace Estac.Infra.Repositories
                     PlacaVeiculo = x.Veiculo.Placa,
                     DataHoraEntrada = x.DataHoraEntrada,
                     DataHoraSaida = x.DataHoraSaida,
-                    Status = x.Status
+                    Status = x.Status,
+                    Faturado = x.Faturado,
+                    DataFaturado = x.DataFaturado
                 })
                 .GetPaged(input.NumeroPagina, input.TamanhoPagina);
 
@@ -126,6 +128,20 @@ namespace Estac.Infra.Repositories
                 .Where(x => x.Id == id)
                 .ExecuteUpdateAsync(b =>
                     b.SetProperty(x => x.Observacao, _ => observacao));
+        }
+
+        public async Task MarcarComoFaturadasAsync(IEnumerable<int> entradaSaidaIds, DateTime dataFaturado)
+        {
+            var ids = entradaSaidaIds?.Distinct().ToList() ?? new List<int>();
+            if (ids.Count == 0)
+                return;
+
+            await _dataset
+                .Where(x => ids.Contains(x.Id) && !x.Faturado)
+                .ExecuteUpdateAsync(b => b
+                    .SetProperty(x => x.Faturado, _ => true)
+                    .SetProperty(x => x.DataFaturado, _ => dataFaturado)
+                    .SetProperty(x => x.DataAtualizacao, _ => dataFaturado));
         }
     }
 }

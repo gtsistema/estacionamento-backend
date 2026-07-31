@@ -25,6 +25,17 @@ namespace Estac.Infra.Repositories
                 .SingleOrDefaultAsync(x => x.Id == id);
         }
 
+        public async Task<ConfiguracaoAgendamento> SelecionarPorIdParaAtualizacao(Guid id)
+        {
+            return await _dataset.SingleOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task AtualizarExecucao(ConfiguracaoAgendamento agendamento)
+        {
+            _dataset.Update(agendamento);
+            await Task.CompletedTask;
+        }
+
         public async Task<PagedResult<ConfiguracaoAgendamentoOutput>> Paginar(ConfiguracaoAgendamentoFilterInput input)
         {
             var query = _dataset

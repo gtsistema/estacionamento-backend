@@ -13,5 +13,6 @@ namespace Estac.Domain.Interface.Repositories
         Task<EntradaSaida> SelecionarEmAbertoPorPlaca(string placa);
         Task<PagedResult<EntradaSaidaSearchOutput>> Paginar(EntradaSaidaFilterInput input);
         Task AtualizarObservacaoAsync(int id, string observacao);
+        Task MarcarComoFaturadasAsync(IEnumerable<int> entradaSaidaIds, DateTime dataFaturado);
     }
 }

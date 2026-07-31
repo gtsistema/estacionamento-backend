@@ -27,7 +27,28 @@ namespace Estac.Infra.Repositories
                 .Include(x => x.Transportadora)
                 .Include(x => x.Estacionamento)
                 .Include(x => x.ConfiguracaoCobranca)
+                .Include(x => x.Itens)
                 .SingleOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<IList<int>> ObterEntradaSaidaJaFaturadas(IEnumerable<int> entradaSaidaIds)
+        {
+            var ids = entradaSaidaIds?.Distinct().ToList() ?? new List<int>();
+            if (ids.Count == 0)
+                return new List<int>();
+
+            return await _context.Set<EntradaSaida>()
+                .AsNoTracking()
+                .Where(movimento => ids.Contains(movimento.Id) && movimento.Faturado)
+                .Select(movimento => movimento.Id)
+                .Union(
+                    _context.Set<FaturaItem>()
+                        .AsNoTracking()
+                        .Where(item => ids.Contains(item.EntradaSaidaId)
+                            && item.Fatura.Status != StatusFatura.Cancelada)
+                        .Select(item => item.EntradaSaidaId))
+                .Distinct()
+                .ToListAsync();
         }
 
         public async Task<PagedResult<FaturaSearchOutput>> Paginar(FaturaFilterInput input)

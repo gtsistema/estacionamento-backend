@@ -16,5 +16,7 @@ namespace Estac.Domain.Output.Movimento.EntradaSaida
         public DateTime DataHoraEntrada { get; set; }
         public DateTime? DataHoraSaida { get; set; }
         public EntradaSaidaStatus Status { get; set; }
+        public bool Faturado { get; set; }
+        public DateTime? DataFaturado { get; set; }
     }
 }

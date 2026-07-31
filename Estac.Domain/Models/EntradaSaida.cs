@@ -7,6 +7,7 @@ namespace Estac.Domain.Models
     {
         public int MotoristaId { get; set; }
         public int? TransportadoraId { get; set; }
+        public int EstacionamentoId { get; set; }
         public int VeiculoId { get; set; }
         public DateTime DataHoraEntrada { get; set; }
         public DateTime? DataHoraSaida { get; set; }
@@ -19,12 +20,15 @@ namespace Estac.Domain.Models
         public int TempoTotalSuspensaoMinutos { get; set; }
         public bool PermanenciaSuspensa { get; set; }
         public bool Finalizado { get; set; }
+        public bool Faturado { get; set; }
+        public DateTime? DataFaturado { get; set; }
         public EntradaSaidaStatus Status { get; set; }
         public DateTime? DataHoraFinalizacao { get; set; }
         public string Observacao { get; set; }
         public Motorista Motorista { get; set; }
         public Transportadora Transportadora { get; set; }
         public Veiculo Veiculo { get; set; }
+        public Estacionamento Estacionamento { get; set; }
         public ICollection<EntradaSaidaSuspensao> Suspensoes { get; set; } = new List<EntradaSaidaSuspensao>();
     }
 }

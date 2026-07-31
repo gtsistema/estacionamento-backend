@@ -17,6 +17,7 @@ namespace Estac.Service
         private readonly ITransportadoraRepositories _transportadoraRepositories;
         private readonly IEstacionamentoRepositories _estacionamentoRepositories;
         private readonly IConfiguracaoCobrancaRepositories _configuracaoCobrancaRepositories;
+        private readonly IEntradaSaidaRepositories _entradaSaidaRepositories;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
@@ -26,6 +27,7 @@ namespace Estac.Service
             ITransportadoraRepositories transportadoraRepositories,
             IEstacionamentoRepositories estacionamentoRepositories,
             IConfiguracaoCobrancaRepositories configuracaoCobrancaRepositories,
+            IEntradaSaidaRepositories entradaSaidaRepositories,
             IMapper mapper,
             IUnitOfWork unitOfWork) : base(errorServices)
         {
@@ -33,6 +35,7 @@ namespace Estac.Service
             _transportadoraRepositories = transportadoraRepositories;
             _estacionamentoRepositories = estacionamentoRepositories;
             _configuracaoCobrancaRepositories = configuracaoCobrancaRepositories;
+            _entradaSaidaRepositories = entradaSaidaRepositories;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -72,17 +75,39 @@ namespace Estac.Service
                 && await _repositories.ExisteNumeroAsync(input.Numero.Trim()))
                 return await RetornNo(false, "Já existe uma fatura com este número.");
 
+            if (input.Itens is { Count: > 0 })
+            {
+                var jaFaturados = await _repositories.ObterEntradaSaidaJaFaturadas(
+                    input.Itens.Select(x => x.EntradaSaidaId));
+
+                if (jaFaturados.Count > 0)
+                {
+                    return await RetornNo(
+                        false,
+                        $"Existem movimentações já faturadas: {string.Join(", ", jaFaturados)}.");
+                }
+            }
+
             await _unitOfWork.BeginTransactionAsync();
 
             try
             {
                 var entity = _mapper.Map<Fatura>(input);
                 ValoresPadrao(entity);
+                MapearItens(entity, input.Itens);
 
                 if (string.IsNullOrWhiteSpace(entity.Numero))
                     entity.Numero = GerarNumeroProvisorio(entity.DataEmissao);
 
                 await _repositories.Gravar(entity);
+
+                if (input.Itens is { Count: > 0 })
+                {
+                    await _entradaSaidaRepositories.MarcarComoFaturadasAsync(
+                        input.Itens.Select(x => x.EntradaSaidaId),
+                        DateTime.Now);
+                }
+
                 await _unitOfWork.CommitAsync();
 
                 return await RetornOk(await _repositories.SelecionarPorIdCompleto(entity.Id));
@@ -181,6 +206,37 @@ namespace Estac.Service
 
             if (entity.Status == default)
                 entity.Status = StatusFatura.AguardandoEnvio;
+        }
+
+        private static void MapearItens(Fatura entity, List<FaturaItemPostInput> itens)
+        {
+            entity.Itens ??= new List<FaturaItem>();
+            entity.Itens.Clear();
+
+            if (itens is null || itens.Count == 0)
+                return;
+
+            foreach (var item in itens)
+            {
+                entity.Itens.Add(new FaturaItem
+                {
+                    EntradaSaidaId = item.EntradaSaidaId,
+                    Placa = item.Placa,
+                    DataHoraEntrada = item.DataHoraEntrada,
+                    DataHoraSaida = item.DataHoraSaida,
+                    TempoPermanenciaMinutos = item.TempoPermanenciaMinutos,
+                    ValorEstacionamento = item.ValorEstacionamento,
+                    ValorLavagem = item.ValorLavagem,
+                    ValorPernoite = item.ValorPernoite,
+                    ValorServicosExtras = item.ValorServicosExtras,
+                    ValorBeneficioAbastecimento = item.ValorBeneficioAbastecimento,
+                    ValorTotal = item.ValorTotal,
+                    Descricao = string.IsNullOrWhiteSpace(item.Descricao)
+                        ? $"Movimento {item.EntradaSaidaId}"
+                        : item.Descricao,
+                    DataCriacao = DateTime.Now
+                });
+            }
         }
 
         private static string GerarNumeroProvisorio(DateTime dataEmissao) =>

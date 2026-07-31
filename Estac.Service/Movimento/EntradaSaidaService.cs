@@ -399,6 +399,7 @@ namespace Estac.Service.Movimento
             result.DataHoraUltimaEntradaPatio = null;
             result.Status = EntradaSaidaStatus.Suspenso;
 
+            AplicarEstacionamentoDoUsuario(result);
             await _repositories.Alterar(result);
             await NotificarWorkersMovimentacaoTempoRealAsync(result.Id);
 
@@ -433,6 +434,7 @@ namespace Estac.Service.Movimento
             result.DataHoraUltimaEntradaPatio = dataEvento;
             result.Status = EntradaSaidaStatus.Entrada;
 
+            AplicarEstacionamentoDoUsuario(result);
             await _repositories.Alterar(result);
             await NotificarWorkersMovimentacaoTempoRealAsync(result.Id);
 
@@ -484,6 +486,7 @@ namespace Estac.Service.Movimento
             result.Finalizado = true;
             result.Status = EntradaSaidaStatus.Saida;
 
+            AplicarEstacionamentoDoUsuario(result);
             await _repositories.Alterar(result);
             await NotificarWorkersMovimentacaoTempoRealAsync(result.Id);
 
@@ -554,6 +557,7 @@ namespace Estac.Service.Movimento
             var veiculoId = await ResolverVeiculoId(input.Veiculo, transportadoraId);
             transportadoraId ??= await ObterTransportadoraDoVeiculo(veiculoId);
 
+            result.EstacionamentoId = ObterEstacionamentoIdDoUsuario();
             result.TransportadoraId = transportadoraId;
             result.MotoristaId = motoristaId;
             result.VeiculoId = veiculoId;
@@ -567,6 +571,19 @@ namespace Estac.Service.Movimento
             result.UsuarioRegistroEntradaNome = _currentUser.Name;
             result.Descricao = $"{input.Veiculo?.Placa} - {input.Motorista?.Nome}";
             result.Status = input.DataHoraEntrada.HasValue ? EntradaSaidaStatus.Entrada : EntradaSaidaStatus.Agendado;
+        }
+
+        private int ObterEstacionamentoIdDoUsuario()
+        {
+            if (_currentUser.EmpresaId <= 0)
+                throw new InvalidOperationException("Usuário logado sem estacionamento vinculado.");
+
+            return _currentUser.EmpresaId;
+        }
+
+        private void AplicarEstacionamentoDoUsuario(EntradaSaida result)
+        {
+            result.EstacionamentoId = ObterEstacionamentoIdDoUsuario();
         }
 
     }
