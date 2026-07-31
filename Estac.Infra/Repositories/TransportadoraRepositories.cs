@@ -175,7 +175,11 @@ namespace Estac.Infra.Repositories
                             ResponsavelLegal = x.ResponsavelLegal,
                             ResponsavelCpf = x.ResponsavelCpf,
                             ResponsavelEmail = x.ResponsavelEmail,
-                            ResponsavelTelefone = x.ResponsavelTelefone
+                            ResponsavelTelefone = x.ResponsavelTelefone,
+                            QuantidadeVeiculo = x.Veiculos.Count(v => v.Ativo),
+                            DataAtualizacao = x.Veiculos
+                                .Where(v => v.Ativo)
+                                .Max(v => (DateTime?)v.DataAtualizacao)
                         })
                         .GetPaged(input.NumeroPagina, input.TamanhoPagina);
 

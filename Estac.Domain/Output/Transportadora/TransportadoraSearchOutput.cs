@@ -14,5 +14,7 @@
         public string ResponsavelCpf { get; set; }
         public string ResponsavelEmail { get; set; }
         public string ResponsavelTelefone { get; set; }
+        public int QuantidadeVeiculo { get; set; }
+        public DateTime? DataAtualizacao { get; set; }
     }
 }
