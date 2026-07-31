@@ -59,6 +59,7 @@ namespace Estac.Infra.Repositories
                                 {
                                     Id = vm.MotoristaId,
                                     Motorista = vm.Motorista.Descricao,
+                                    Cpf = vm.Motorista.Pessoa != null ? vm.Motorista.Pessoa.Documento : null,
                                     Principal = vm.Principal
                                 })
                                 .ToList(),
