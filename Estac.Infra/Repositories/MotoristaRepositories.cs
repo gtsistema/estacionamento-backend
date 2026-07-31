@@ -27,6 +27,49 @@ namespace Estac.Infra.Repositories
             _dataset = context.Set<Motorista>();
         }
 
+        /// <summary>
+        /// O <see cref="BaseRepositoriesNone{T}.Alterar(T)"/> só aplica <c>SetValues</c> em <c>Motorista</c>;
+        /// a tabela <c>Pessoa</c> não é atualizada sem incluir e copiar os escalares explicitamente.
+        /// </summary>
+        public override async Task<Motorista> Alterar(Motorista item)
+        {
+            try
+            {
+                var result = await _dataset
+                    .Include(x => x.Pessoa)
+                    .SingleOrDefaultAsync(p => p.Id.Equals(item.Id));
+
+                if (result == null)
+                    return null;
+
+                item.PessoaId = result.PessoaId;
+                _context.Entry(result).CurrentValues.SetValues(item);
+
+                if (item.Pessoa != null && result.Pessoa != null)
+                {
+                    var destino = result.Pessoa;
+                    var origem = item.Pessoa;
+                    var dataCriacao = destino.DataCriacao;
+
+                    destino.TipoPessoa = origem.TipoPessoa;
+                    destino.NomeRazaoSocial = origem.NomeRazaoSocial;
+                    destino.Documento = origem.Documento;
+                    destino.Ativo = origem.Ativo;
+                    destino.Descricao = origem.Descricao;
+                    destino.DataCriacao = dataCriacao;
+                    destino.DataAtualizacao = DateTime.Now;
+                }
+
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                throw;
+            }
+
+            return item;
+        }
+
         public async Task<PagedResult<MotoristaSearchOutput>> Paginar(MotoristaFilterInput input)
         {
             var termoBusca = string.IsNullOrWhiteSpace(input.Descricao) ? null : input.Descricao.Trim().ToLower();
@@ -54,12 +97,18 @@ namespace Estac.Infra.Repositories
                             ValidadeCNH = x.ValidadeCNH,
                             DataCriacao = x.Pessoa.DataCriacao,
                             DataAtualizacao = x.Pessoa.DataAtualizacao,
-                            Cpf = x.Pessoa.Documento
+                            Cpf = x.Pessoa.Documento,
+                            Ativo = x.Pessoa.Ativo,
+                            Celular = x.Pessoa.Contatos
+                                .OrderByDescending(c => c.Principal)
+                                .Select(c => c.Telefone)
+                                .FirstOrDefault(),
+                            Email = x.Pessoa.Contatos
+                                .OrderByDescending(c => c.Principal)
+                                .Select(c => c.Email)
+                                .FirstOrDefault()
                         })
                         .GetPaged(input.NumeroPagina, input.TamanhoPagina);
-
-            foreach (var item in result.Results)
-                item.Cpf = item.Cpf.FormatarCpf();
 
             return result;
         }

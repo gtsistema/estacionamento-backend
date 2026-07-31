@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Estac.Domain.Extensions;
 using Estac.Domain.Input.Motorista;
 using Estac.Domain.Interface.Repositories;
@@ -79,14 +79,18 @@ namespace Estac.Service
             try
             {
                 var motorista = _mapper.Map<Motorista>(input);
+                var (contatos, enderecos) = MapearContatosEnderecos(input?.PessoaFisica);
 
                 ValoresPadrao(motorista);
 
                 await _repositories.Gravar(motorista);
 
+                await _contatoRepositories.AtualizarContatos(motorista.Pessoa.Id, contatos);
+                await _enderecoRepositories.AtualizarEndereco(motorista.Pessoa.Id, enderecos);
+
                 await _unitOfWork.CommitAsync();
 
-                return await RetornOk(motorista);
+                return await RetornOk(_mapper.Map<MotoristaOutput>(await _repositories.SelecionarPorIdCompleto(motorista.Id)));
             }
             catch (Exception ex) 
             {
@@ -112,22 +116,33 @@ namespace Estac.Service
             if (contatosInvalidos.Count > 0)
                 return await RetornNo(new { }, contatosInvalidos);
 
+            var existente = await _repositories.Selecionar(input.Id);
+            if (existente == null)
+                return await RetornNo(false, "Motorista não localizado na base de dados.", statusCode: 404);
+
             await _unitOfWork.BeginTransactionAsync();
 
             try
             {
                 var motorista = _mapper.Map<Motorista>(input);
+                var (contatos, enderecos) = MapearContatosEnderecos(input?.PessoaFisica);
 
-                await _contatoRepositories.AtualizarContatos(motorista.Pessoa.Id, motorista.Pessoa.Contatos);
-                await _enderecoRepositories.AtualizarEndereco(motorista.Pessoa.Id, motorista.Pessoa.Enderecos);
+                motorista.Id = input.Id;
+                motorista.PessoaId = existente.PessoaId;
+                if (motorista.Pessoa == null)
+                    motorista.Pessoa = new Pessoa();
+                motorista.Pessoa.Id = existente.PessoaId;
+
+                await _contatoRepositories.AtualizarContatos(existente.PessoaId, contatos);
+                await _enderecoRepositories.AtualizarEndereco(existente.PessoaId, enderecos);
 
                 ValoresPadrao(motorista);
 
-                var motoristaAlterado = await _repositories.Alterar(motorista);
+                await _repositories.Alterar(motorista);
 
                 await _unitOfWork.CommitAsync();
 
-                return await RetornOk(motoristaAlterado);
+                return await RetornOk(_mapper.Map<MotoristaOutput>(await _repositories.SelecionarPorIdCompleto(motorista.Id)));
             }
             catch (Exception ex) 
             {
@@ -135,6 +150,13 @@ namespace Estac.Service
 
                 return await RetornNo(false, ex.Message);
             }
+        }
+
+        private (List<PessoaContato> Contatos, List<PessoaEndereco> Enderecos) MapearContatosEnderecos(Domain.Input.Pessoa.PessoaMotoristaInput pessoaFisica)
+        {
+            var contatos = _mapper.Map<List<PessoaContato>>(pessoaFisica?.Contatos ?? Enumerable.Empty<Domain.Input.PessoaContato.PessoaContatoInput>());
+            var enderecos = _mapper.Map<List<PessoaEndereco>>(pessoaFisica?.Enderecos ?? Enumerable.Empty<Domain.Input.Endereco.PessoaEnderecoInput>());
+            return (contatos, enderecos);
         }
 
         public async Task<ActionResult> Excluir(int id)

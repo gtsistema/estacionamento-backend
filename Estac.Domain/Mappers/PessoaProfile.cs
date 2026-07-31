@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Estac.Domain.Input.Endereco;
 using Estac.Domain.Input.Pessoa;
 using Estac.Domain.Input.PessoaContato;
@@ -30,7 +30,11 @@ namespace Estac.Domain.Mappers.Auth
 
 
             CreateMap<PessoaEnderecoInput, PessoaEndereco>()
-               .ForMember(dest => dest.Cep, opt => opt.MapFrom(src => src.Cep.SomenteDigitos()));
+               .ForMember(dest => dest.Cep, opt => opt.MapFrom(src => src.Cep.SomenteDigitos()))
+               .ForMember(dest => dest.Pessoa, opt => opt.Ignore())
+               .ForMember(dest => dest.Descricao, opt => opt.Ignore())
+               .ForMember(dest => dest.DataCriacao, opt => opt.Ignore())
+               .ForMember(dest => dest.DataAtualizacao, opt => opt.Ignore());
 
             CreateMap<PessoaEndereco, PessoaEnderecoOutput>();
 

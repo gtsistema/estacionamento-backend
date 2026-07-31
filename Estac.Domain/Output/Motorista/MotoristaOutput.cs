@@ -1,4 +1,4 @@
-﻿using Estac.Domain.Output.Base;
+using Estac.Domain.Output.Base;
 using Estac.Domain.Output.Pessoa;
 
 namespace Estac.Domain.Output.Motorista
@@ -8,6 +8,8 @@ namespace Estac.Domain.Output.Motorista
         public string CNH { get; set; }
         public DateTime? ValidadeCNH { get; set; }
         public int? TransportadoraId { get; set; }
+        public int PessoaId { get; set; }
         public string Descricao { get; set; }
+        public PessoaMotoristaOutput PessoaFisica { get; set; }
     }
 }

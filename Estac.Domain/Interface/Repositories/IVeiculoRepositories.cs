@@ -20,5 +20,7 @@ namespace Estac.Domain.Interface.Repositories
         Task<bool> PossuiVeiculoMotoristaParaMotoristaAsync(int motoristaId);
         Task<bool> ExcluirCompleto(int id);
         Task<EntradaSaidaVinculoOutput> ObterVinculosPorPlaca(string placa);
+        /// <summary>Indica se já existe veículo com a placa normalizada. Em alteração, informe <paramref name="ignorarVeiculoId"/>.</summary>
+        Task<bool> ExistePorPlacaAsync(string placa, int? ignorarVeiculoId = null);
     }
 }

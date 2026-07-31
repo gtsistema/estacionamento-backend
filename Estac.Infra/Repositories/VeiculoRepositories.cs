@@ -51,12 +51,16 @@ namespace Estac.Infra.Repositories
                             TipoCarga = x.TipoCarga,
                             Modelo = x.VeiculoModelo != null ? x.VeiculoModelo.Descricao : null,
                             Marca = x.VeiculoModelo != null && x.VeiculoModelo.VeiculoMarca != null ? x.VeiculoModelo.VeiculoMarca.Descricao : null,
-                            MotoristaIds = x.VeiculoMotoristas
-                                .Select(vm => vm.MotoristaId)
-                                .ToList(),
                             Motoristas = x.VeiculoMotoristas
                                 .Where(vm => vm.Motorista != null)
-                                .Select(vm => vm.Motorista.Descricao)
+                                .OrderByDescending(vm => vm.Principal == true)
+                                .ThenBy(vm => vm.Motorista.Descricao)
+                                .Select(vm => new VeiculoMotoristaSearchOutput
+                                {
+                                    Id = vm.MotoristaId,
+                                    Motorista = vm.Motorista.Descricao,
+                                    Principal = vm.Principal
+                                })
                                 .ToList(),
                         })
                         .GetPaged(input.NumeroPagina, input.TamanhoPagina);
@@ -291,6 +295,21 @@ namespace Estac.Infra.Repositories
                     })
                     .FirstOrDefault()
             };
+        }
+
+        public async Task<bool> ExistePorPlacaAsync(string placa, int? ignorarVeiculoId = null)
+        {
+            var placaNorm = VeiculoPlacaHelper.Normalizar(placa);
+            if (string.IsNullOrWhiteSpace(placaNorm))
+                return false;
+
+            var query = _dataset.AsNoTracking()
+                .Where(v => v.Placa != null && v.Placa == placaNorm);
+
+            if (ignorarVeiculoId.HasValue && ignorarVeiculoId.Value > 0)
+                query = query.Where(v => v.Id != ignorarVeiculoId.Value);
+
+            return await query.AnyAsync();
         }
     }
 }

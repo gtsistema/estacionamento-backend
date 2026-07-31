@@ -6,7 +6,7 @@ using Estac.Domain.Interface.Services;
 using Estac.Domain.Models;
 using Estac.Domain.Output;
 using Estac.Domain.Output.Veiculo;
-using Estac.Infra.Repositories;
+using Estac.Domain.Shared;
 using Estac.Service.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -56,6 +56,14 @@ namespace Estac.Service
         {
             try
             {
+                var placaInvalida = await ValidarPlacaAsync(input.Placa);
+                if (placaInvalida != null)
+                    return placaInvalida;
+
+                var resolucaoInvalida = await ResolverModeloMarcaPorDescricaoAsync(input);
+                if (resolucaoInvalida != null)
+                    return resolucaoInvalida;
+
                 var referenciasInvalidas = await ValidarReferenciasAsync(input);
 
                 if (referenciasInvalidas != null)
@@ -74,6 +82,14 @@ namespace Estac.Service
 
         public async Task<ActionResult> Alterar(VeiculoPutInput input)
         {
+            var placaInvalida = await ValidarPlacaAsync(input.Placa, input.Id);
+            if (placaInvalida != null)
+                return placaInvalida;
+
+            var resolucaoInvalida = await ResolverModeloMarcaPorDescricaoAsync(input);
+            if (resolucaoInvalida != null)
+                return resolucaoInvalida;
+
             var referenciasInvalidas = await ValidarReferenciasAsync(input);
             if (referenciasInvalidas != null)
                 return referenciasInvalidas;
@@ -126,6 +142,66 @@ namespace Estac.Service
                 return await RetornNo(false,
                     "Não é possível excluir o veículo: existem registros vinculados (ex.: movimentações de entrada/saída ou outros vínculos).");
             }
+        }
+
+        private async Task<ActionResult> ValidarPlacaAsync(string placa, int? ignorarVeiculoId = null)
+        {
+            var placaNorm = VeiculoPlacaHelper.Normalizar(placa);
+            if (string.IsNullOrWhiteSpace(placaNorm))
+                return await RetornNo(false, "Placa é obrigatória.");
+
+            if (await _repositories.ExistePorPlacaAsync(placaNorm, ignorarVeiculoId))
+                return await RetornNo(false, "Já existe um veículo cadastrado com esta placa.");
+
+            return null;
+        }
+
+        private async Task<ActionResult> ResolverModeloMarcaPorDescricaoAsync(VeiculoPostInput input)
+        {
+            var marcaId = input.Marca?.Id > 0
+                ? input.Marca.Id
+                : (input.Modelo?.Marca?.Id > 0 ? input.Modelo.Marca.Id : 0);
+
+            var marcaDescricao = !string.IsNullOrWhiteSpace(input.Marca?.Descricao)
+                ? input.Marca.Descricao
+                : input.Modelo?.Marca?.Descricao;
+
+            if (marcaId <= 0 && !string.IsNullOrWhiteSpace(marcaDescricao))
+            {
+                marcaId = await _veiculoModeloRepositories.ObterOuCriarMarcaIdPorDescricaoAsync(marcaDescricao);
+                input.Marca ??= new VeiculoMarcaInput();
+                input.Marca.Id = marcaId;
+                input.Marca.Descricao = marcaDescricao.Trim();
+
+                if (input.Modelo != null)
+                {
+                    input.Modelo.Marca ??= new VeiculoMarcaInput();
+                    input.Modelo.Marca.Id = marcaId;
+                    input.Modelo.Marca.Descricao = marcaDescricao.Trim();
+                }
+            }
+
+            var modeloId = input.Modelo?.Id > 0 ? input.Modelo.Id : 0;
+            var modeloDescricao = input.Modelo?.Descricao;
+
+            if (modeloId <= 0 && !string.IsNullOrWhiteSpace(modeloDescricao))
+            {
+                if (marcaId <= 0)
+                    return await RetornNo(false, "Informe a marca (id ou descrição) para vincular ou cadastrar o modelo do veículo.");
+
+                modeloId = await _veiculoModeloRepositories.ObterOuCriarModeloIdPorDescricaoAsync(modeloDescricao, marcaId);
+
+                input.Modelo ??= new VeiculoModeloInput();
+                input.Modelo.Id = modeloId;
+                input.Modelo.Descricao = modeloDescricao.Trim();
+                input.Modelo.Marca ??= new VeiculoMarcaInput();
+                input.Modelo.Marca.Id = marcaId;
+
+                input.Marca ??= new VeiculoMarcaInput();
+                input.Marca.Id = marcaId;
+            }
+
+            return null;
         }
 
         private async Task<ActionResult> ValidarReferenciasAsync(VeiculoPostInput input)
