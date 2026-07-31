@@ -14,7 +14,7 @@ namespace Estac.Domain.Output.ConfiguracaoCobranca
         public byte? DiaFechamento { get; set; }
         public RegraFechamento RegraFechamento { get; set; }
         public int PrazoVencimentoDias { get; set; }
-        public decimal? ValorEstadia { get; set; }
+        public decimal? ValorEstacionamento { get; set; }
         public string EmailFinanceiro { get; set; }
         public bool EnvioAutomaticoEmail { get; set; }
         public DateTime DataCriacao { get; set; }

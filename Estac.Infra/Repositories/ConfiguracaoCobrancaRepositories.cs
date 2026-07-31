@@ -77,7 +77,7 @@ namespace Estac.Infra.Repositories
                     DiaFechamento = x.DiaFechamento,
                     RegraFechamento = x.RegraFechamento,
                     PrazoVencimentoDias = x.PrazoVencimentoDias,
-                    ValorEstadia = x.ValorEstadia,
+                    ValorEstacionamento = x.ValorEstacionamento,
                     EmailFinanceiro = x.EmailFinanceiro,
                     EnvioAutomaticoEmail = x.EnvioAutomaticoEmail,
                     GerarFaturaAutomaticamente = x.GerarFaturaAutomaticamente,

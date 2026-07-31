@@ -63,7 +63,7 @@ namespace Estac.Infra.Repositories
                         DiaFechamento = agendamento.ConfiguracaoCobranca.DiaFechamento,
                         DataCobranca = agendamento.ConfiguracaoCobranca.DataCobranca,
                         PrazoVencimentoDias = agendamento.ConfiguracaoCobranca.PrazoVencimentoDias,
-                        ValorEstacionamento = agendamento.ConfiguracaoCobranca.ValorEstadia,
+                        ValorEstacionamento = agendamento.ConfiguracaoCobranca.ValorEstacionamento,
                         CobrarLavagem = agendamento.ConfiguracaoCobranca.CobrarLavagem,
                         ValorLavagem = agendamento.ConfiguracaoCobranca.ValorLavagem,
                         CobrarPernoite = agendamento.ConfiguracaoCobranca.CobrarPernoite,

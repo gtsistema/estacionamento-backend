@@ -26,7 +26,7 @@ namespace Estac.Domain.Output.ConfiguracaoCobranca
         public decimal ValorDescontoFixo { get; set; }
         public bool AplicarAcrescimoFixo { get; set; }
         public decimal ValorAcrescimoFixo { get; set; }
-        public decimal? ValorEstadia { get; set; }
+        public decimal? ValorEstacionamento { get; set; }
         public DateTime? DataCobranca { get; set; }
         public bool CobrarLavagem { get; set; }
         public decimal? ValorLavagem { get; set; }

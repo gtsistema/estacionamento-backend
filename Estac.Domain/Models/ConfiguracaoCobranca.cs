@@ -24,7 +24,7 @@ namespace Estac.Domain.Models
         public decimal ValorDescontoFixo { get; set; }
         public bool AplicarAcrescimoFixo { get; set; }
         public decimal ValorAcrescimoFixo { get; set; }
-        public decimal? ValorEstadia { get; set; }
+        public decimal? ValorEstacionamento { get; set; }
         /// <summary>Data de faturamento informada apenas quando a modalidade é Personalizado.</summary>
         public DateTime? DataCobranca { get; set; }
         public bool CobrarLavagem { get; set; }

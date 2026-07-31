@@ -91,7 +91,7 @@ namespace Estac.Infra.EntityBuilders
                    .HasDefaultValue(0m)
                    .IsRequired();
 
-            builder.Property(x => x.ValorEstadia)
+            builder.Property(x => x.ValorEstacionamento)
                    .HasColumnType("decimal(18,2)");
 
             builder.Property(x => x.DataCobranca)
