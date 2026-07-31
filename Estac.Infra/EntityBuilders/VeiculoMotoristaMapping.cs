@@ -18,6 +18,9 @@ namespace Estac.Infra.EntityBuilders
             builder.Property(x => x.VeiculoId)
                 .IsRequired();
 
+            builder.Property(x => x.Principal)
+                .HasColumnType("bit");
+
             builder.HasOne(x => x.Motorista)
                 .WithMany(m => m.VeiculoMotoristas)
                 .HasForeignKey(x => x.MotoristaId)

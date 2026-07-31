@@ -181,32 +181,40 @@ namespace Estac.Infra.Repositories
 
         private static void AtualizarVinculosMotorista(Veiculo entity, Veiculo dados)
         {
-            var idsDesejados = (dados.VeiculoMotoristas ?? new List<VeiculoMotorista>())
-                .Select(x => x.MotoristaId)
-                .Distinct()
-                .ToHashSet();
+            var desejados = (dados.VeiculoMotoristas ?? new List<VeiculoMotorista>())
+                .GroupBy(x => x.MotoristaId)
+                .Select(g => g.Last())
+                .ToDictionary(x => x.MotoristaId, x => x.Principal);
 
             var remover = entity.VeiculoMotoristas
-                .Where(x => !idsDesejados.Contains(x.MotoristaId))
+                .Where(x => !desejados.ContainsKey(x.MotoristaId))
                 .ToList();
 
             foreach (var item in remover)
                 entity.VeiculoMotoristas.Remove(item);
 
-            var existentes = entity.VeiculoMotoristas
+            foreach (var existente in entity.VeiculoMotoristas)
+            {
+                if (desejados.TryGetValue(existente.MotoristaId, out var principal))
+                    existente.Principal = principal;
+            }
+
+            var existentesIds = entity.VeiculoMotoristas
                 .Select(x => x.MotoristaId)
                 .ToHashSet();
 
-            var incluir = idsDesejados
-                .Where(id => !existentes.Contains(id))
-                .Select(id => new VeiculoMotorista
-                {
-                    MotoristaId = id,
-                    VeiculoId = entity.Id
-                });
+            foreach (var (motoristaId, principal) in desejados)
+            {
+                if (existentesIds.Contains(motoristaId))
+                    continue;
 
-            foreach (var item in incluir)
-                entity.VeiculoMotoristas.Add(item);
+                entity.VeiculoMotoristas.Add(new VeiculoMotorista
+                {
+                    MotoristaId = motoristaId,
+                    VeiculoId = entity.Id,
+                    Principal = principal
+                });
+            }
         }
 
         public Task<bool> PossuiMotoristaVinculadoAsync(int veiculoId) =>
@@ -272,12 +280,14 @@ namespace Estac.Infra.Repositories
                 ResponsavelTelefone = veiculo.Transportadora?.ResponsavelTelefone.FormatarTelefone(),
                 Motorista = veiculo.VeiculoMotoristas
                     .Where(vm => vm.Motorista != null)
-                    .OrderByDescending(vm => vm.Id)
+                    .OrderByDescending(vm => vm.Principal == true)
+                    .ThenByDescending(vm => vm.Id)
                     .Select(vm => new EntradaSaidaMotoristaVinculoOutput
                     {
                         Id = vm.Motorista.Id,
                         Nome = vm.Motorista.Pessoa != null ? vm.Motorista.Pessoa.NomeRazaoSocial : vm.Motorista.Descricao,
-                        Cpf = vm.Motorista.Pessoa != null ? vm.Motorista.Pessoa.Documento.FormatarCpf() : null
+                        Cpf = vm.Motorista.Pessoa != null ? vm.Motorista.Pessoa.Documento.FormatarCpf() : null,
+                        Principal = vm.Principal
                     })
                     .FirstOrDefault()
             };

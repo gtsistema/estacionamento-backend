@@ -23,20 +23,36 @@ namespace Estac.Domain.Mappers.Auth
                 .ForMember(dest => dest.VeiculoMotoristas, opt => opt.MapFrom(src =>
                     (src.Motoristas ?? new List<MotoristaVinculoInput>())
                         .Where(m => m != null && m.Id > 0)
-                        .Select(m => m.Id)
-                        .Distinct()
-                        .Select(id => new VeiculoMotorista { MotoristaId = id })))
+                        .GroupBy(m => m.Id)
+                        .Select(g => g.Last())
+                        .Select(m => new VeiculoMotorista
+                        {
+                            MotoristaId = m.Id,
+                            Principal = m.Principal
+                        })))
                 .ForMember(dest => dest.VeiculoDetalhe, opt => opt.MapFrom(src => src.VeiculoDetalhe));
 
             CreateMap<VeiculoPutInput, Veiculo>()
                 .IncludeBase<VeiculoPostInput, Veiculo>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
 
+            CreateMap<Motorista, MotoristaVinculoOutput>();
+
+            CreateMap<VeiculoMotorista, MotoristaVinculoOutput>()
+                .ConvertUsing((src, _, ctx) =>
+                {
+                    var output = ctx.Mapper.Map<MotoristaVinculoOutput>(src.Motorista);
+                    if (output == null)
+                        return null;
+
+                    output.Principal = src.Principal;
+                    return output;
+                });
+
             CreateMap<Veiculo, VeiculoOutput>()
               .ForMember(dest => dest.Placa, opt => opt.MapFrom(src => VeiculoPlacaHelper.FormatarExibicao(src.Placa)))
               .ForMember(dest => dest.Detalhe, opt => opt.MapFrom(src => src.VeiculoDetalhe))
-              .ForMember(dest => dest.Motoristas, opt => opt.MapFrom(src =>
-                    src.VeiculoMotoristas.Select(vm => vm.Motorista)))
+              .ForMember(dest => dest.Motoristas, opt => opt.MapFrom(src => src.VeiculoMotoristas))
               .ForMember(dest => dest.Modelo, opt => opt.MapFrom(src => src.VeiculoModelo));
 
 
