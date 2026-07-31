@@ -2,6 +2,5 @@
 {
     public class VeiculoPutInput : VeiculoPostInput
     {
-        public int Id { get; set; }
     }
 }

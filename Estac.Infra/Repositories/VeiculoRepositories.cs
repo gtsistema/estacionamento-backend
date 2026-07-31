@@ -304,13 +304,15 @@ namespace Estac.Infra.Repositories
             if (string.IsNullOrWhiteSpace(placaNorm))
                 return false;
 
-            var query = _dataset.AsNoTracking()
-                .Where(v => v.Placa != null && v.Placa == placaNorm);
+            // Variável local (não nullable) para o EF traduzir corretamente o filtro de exclusão na alteração.
+            var idParaIgnorar = ignorarVeiculoId.GetValueOrDefault();
 
-            if (ignorarVeiculoId.HasValue && ignorarVeiculoId.Value > 0)
-                query = query.Where(v => v.Id != ignorarVeiculoId.Value);
-
-            return await query.AnyAsync();
+            return await _dataset.AsNoTracking()
+                .AnyAsync(v =>
+                    v.Placa != null
+                    && (idParaIgnorar <= 0 || v.Id != idParaIgnorar)
+                    && (v.Placa == placaNorm
+                        || v.Placa.Replace("-", "").Replace(" ", "").ToUpper() == placaNorm));
         }
     }
 }

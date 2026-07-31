@@ -6,6 +6,7 @@ namespace Estac.Domain.Input.Veiculo
 {
     public class VeiculoPostInput : BaseIntInput
     {
+        public int Id { get; set; }
         public string Placa { get; set; }
         public int? Ano { get; set; }
         public bool Ativo { get; set; }

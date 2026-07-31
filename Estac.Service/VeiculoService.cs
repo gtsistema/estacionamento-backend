@@ -82,6 +82,10 @@ namespace Estac.Service
 
         public async Task<ActionResult> Alterar(VeiculoPutInput input)
         {
+            if (input.Id <= 0)
+                return await RetornNo(false, "Id do veículo é obrigatório para alteração.");
+
+            // Na alteração, ignora o próprio Id para não bloquear quando a placa não mudou.
             var placaInvalida = await ValidarPlacaAsync(input.Placa, input.Id);
             if (placaInvalida != null)
                 return placaInvalida;

@@ -561,7 +561,7 @@ namespace Estac.Service.Movimento
             result.TransportadoraId = transportadoraId;
             result.MotoristaId = motoristaId;
             result.VeiculoId = veiculoId;
-            result.DataHoraEntrada = input.DataHoraEntrada ?? DateTime.Now;
+            result.DataHoraEntrada = input.DataHoraEntrada ?? DateTime.UtcNow;
             result.DataHoraUltimaEntradaPatio = result.DataHoraEntrada;
             result.PermanenciaSuspensa = false;
             result.Finalizado = false;
