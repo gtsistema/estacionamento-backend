@@ -4,7 +4,7 @@ namespace Estac.Domain.Interface.Services
 {
     /// <summary>
     /// Contexto do estacionamento do usuário logado.
-    /// TimeZone vem de: claim JWT (login) → cache memória → banco (1x) → fallback DateTime.Now.
+    /// TimeZone: cache memória → claim JWT → banco → fallback DateTime.Now.
     /// </summary>
     public interface IEstacionamentoContexto
     {
@@ -20,11 +20,15 @@ namespace Estac.Domain.Interface.Services
         Task<string> ObterTimeZoneIdAsync();
 
         /// <summary>
-        /// Agora para persistência: UTC se houver fuso configurado; senão DateTime.Now (nunca nulo).
+        /// Agora no fuso do estacionamento (ex.: Cuiabá). Sem config → DateTime.Now.
+        /// Valor usado na persistência das movimentações.
         /// </summary>
         DateTime AgoraUtc();
 
+        /// <summary>Converte horário informado pelo client (local do pátio) para persistência.</summary>
         Task<DateTime> ParaUtcAsync(DateTime dataLocal);
-        Task<DateTime> ParaLocalAsync(DateTime dataUtc);
+
+        /// <summary>Converte valor persistido para exibição no fuso do estacionamento.</summary>
+        Task<DateTime> ParaLocalAsync(DateTime dataPersistida);
     }
 }

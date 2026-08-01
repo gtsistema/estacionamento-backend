@@ -47,12 +47,12 @@ namespace Estac.Service
 
         public DateTime AgoraUtc()
         {
-            // Com fuso configurado: persistimos em UTC de verdade.
-            // Sem configuração: DateTime.Now para não quebrar o fluxo legado.
-            if (PossuiConfiguracaoFuso)
-                return _clock.UtcNow.UtcDateTime;
+            // Sem fuso: relógio do servidor (legado).
+            if (!PossuiConfiguracaoFuso)
+                return DateTime.Now;
 
-            return DateTime.Now;
+            // Com fuso (ex.: America/Cuiaba): horário LOCAL desse fuso — o que o pátio enxerga.
+            return TimeZoneHelper.FromUtc(_clock.UtcNow.UtcDateTime, TimeZoneId);
         }
 
         public async Task<EstacionamentoConfiguracao> ObterConfiguracaoAsync()
@@ -96,20 +96,24 @@ namespace Estac.Service
 
         public async Task<DateTime> ParaUtcAsync(DateTime dataLocal)
         {
-            var tz = await ObterTimeZoneIdAsync();
-            if (string.IsNullOrWhiteSpace(tz))
-                return dataLocal;
-
-            return TimeZoneHelper.ToUtc(dataLocal, tz);
+            // Front e pátio trabalham no fuso do estacionamento; gravamos esse horário local.
+            // (Não convertemos para UTC de parede — evita “03:54” quando em Cuiabá são 23:54.)
+            await ObterTimeZoneIdAsync();
+            return DateTime.SpecifyKind(dataLocal, DateTimeKind.Unspecified);
         }
 
-        public async Task<DateTime> ParaLocalAsync(DateTime dataUtc)
+        public async Task<DateTime> ParaLocalAsync(DateTime dataPersistida)
         {
             var tz = await ObterTimeZoneIdAsync();
             if (string.IsNullOrWhiteSpace(tz))
-                return dataUtc;
+                return dataPersistida;
 
-            return TimeZoneHelper.FromUtc(dataUtc, tz);
+            // Só converte se o valor foi gravado como UTC de verdade (Kind=Utc).
+            // Valores Unspecified já estão no fuso do pátio.
+            if (dataPersistida.Kind == DateTimeKind.Utc)
+                return TimeZoneHelper.FromUtc(dataPersistida, tz);
+
+            return dataPersistida;
         }
 
         /// <summary>

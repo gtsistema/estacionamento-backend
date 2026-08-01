@@ -568,9 +568,7 @@ namespace Estac.Service.Movimento
             result.TransportadoraId = transportadoraId;
             result.MotoristaId = motoristaId;
             result.VeiculoId = veiculoId;
-            result.DataHoraEntrada = input.DataHoraEntrada.HasValue
-                ? await _estacionamentoContexto.ParaUtcAsync(input.DataHoraEntrada.Value)
-                : _estacionamentoContexto.AgoraUtc();
+            result.DataHoraEntrada = input.DataAgendamento ?? _estacionamentoContexto.AgoraUtc();
             result.DataHoraUltimaEntradaPatio = result.DataHoraEntrada;
             result.PermanenciaSuspensa = false;
             result.Finalizado = false;
@@ -579,7 +577,7 @@ namespace Estac.Service.Movimento
             result.UsuarioRegistroEntradaId = _currentUser.Id;
             result.UsuarioRegistroEntradaNome = _currentUser.Name;
             result.Descricao = $"{input.Veiculo?.Placa} - {input.Motorista?.Nome}";
-            result.Status = input.DataHoraEntrada.HasValue ? EntradaSaidaStatus.Entrada : EntradaSaidaStatus.Agendado;
+            result.Status = input.DataAgendamento.HasValue ? EntradaSaidaStatus.Agendado : EntradaSaidaStatus.Entrada;
         }
 
         private async Task<EntradaSaidaOutput> MapearOutputLocalAsync(EntradaSaida result)
