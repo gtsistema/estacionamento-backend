@@ -40,14 +40,18 @@ namespace Estac.Domain.Models.Auth
             }
         }
 
+        public string TimeZoneId =>
+            _acessor.HttpContext?.User?.Claims
+                .FirstOrDefault(c => c.Type == "TimeZoneId")?.Value;
+
         public int RoleId
         {
             get
             {
-                var empresaId = _acessor.HttpContext?.User?.Claims
+                var roleId = _acessor.HttpContext?.User?.Claims
                     .FirstOrDefault(c => c.Type == "RoleId")?.Value;
 
-                if (int.TryParse(empresaId, out var id) && id > 0)
+                if (int.TryParse(roleId, out var id) && id > 0)
                     return id;
 
                 return 0;

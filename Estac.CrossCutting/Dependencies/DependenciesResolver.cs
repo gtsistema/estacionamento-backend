@@ -44,11 +44,14 @@ namespace Estac.CrossCutting.Dependencies
                 });
             services.AddScoped<IEmailSenderService, SmtpEmailSenderService>();
 
+            services.AddMemoryCache();
             services.AddScoped<INotifier, Notifier>();
             services.AddScoped<IClock, Clock>();
             services.AddScoped<ICurrentUser, CurrentUser>();
             services.AddScoped<IErrorServices, ErrorServices>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddSingleton<IEstacionamentoTimeZoneCache, EstacionamentoTimeZoneCache>();
+            services.AddScoped<IEstacionamentoContexto, EstacionamentoContexto>();
 
             //services
             services.AddScoped<IUserServices, UserServices>();
@@ -60,7 +63,6 @@ namespace Estac.CrossCutting.Dependencies
             services.AddScoped<ITransportadoraService, TransportadoraService>();
             services.AddScoped<IEstacionamentoService, EstacionamentoService>();
             services.AddScoped<IEstacionamentoConfiguracaoService, EstacionamentoConfiguracaoService>();
-            services.AddScoped<IEstacionamentoContexto, EstacionamentoContexto>();
             services.AddScoped<IEntradaSaidaService, EntradaSaidaService>();
             services.AddScoped<IConfiguracaoCobrancaService, ConfiguracaoCobrancaService>();
             services.AddScoped<IConfiguracaoAgendamentoService, ConfiguracaoAgendamentoService>();

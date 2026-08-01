@@ -13,5 +13,7 @@ namespace Estac.Domain.Models.Auth
         IEnumerable<Claim> Claims { get; }
         bool IsInRole(string role);
         int EmpresaId { get; }
+        /// <summary>Fuso IANA do estacionamento (claim TimeZoneId no JWT), se houver.</summary>
+        string TimeZoneId { get; }
     }
 }

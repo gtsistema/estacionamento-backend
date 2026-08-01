@@ -39,6 +39,8 @@ namespace Estac.Service.Auth
         private readonly ILogger<UserServices> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPessoaContatoRepositories _pessoaContatoRepositories;
+        private readonly IEstacionamentoConfiguracaoRepositories _estacionamentoConfiguracaoRepositories;
+        private readonly IEstacionamentoTimeZoneCache _timeZoneCache;
 
         public UserServices(
             IApplicationUserManager userManager,
@@ -56,7 +58,9 @@ namespace Estac.Service.Auth
             IUsuarioRepositories usuarioRepositories,
             RoleManager<ApplicationRole> identityRoleManager,
             IUnitOfWork unitOfWork,
-            IPessoaContatoRepositories pessoaContatoRepositories)
+            IPessoaContatoRepositories pessoaContatoRepositories,
+            IEstacionamentoConfiguracaoRepositories estacionamentoConfiguracaoRepositories,
+            IEstacionamentoTimeZoneCache timeZoneCache)
             : base(errorApplication)
         {
             _bearerTokenSettings = bearerTokenSettings.Value;
@@ -74,6 +78,8 @@ namespace Estac.Service.Auth
             _identityRoleManager = identityRoleManager;
             _unitOfWork = unitOfWork;
             _pessoaContatoRepositories = pessoaContatoRepositories;
+            _estacionamentoConfiguracaoRepositories = estacionamentoConfiguracaoRepositories;
+            _timeZoneCache = timeZoneCache;
         }
 
         public async Task<ActionResult> LoginAsync(LoginInput dto)

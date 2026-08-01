@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Estac.Domain.Permission;
 using Estac.Api.Extensions;
@@ -146,6 +146,7 @@ namespace Estac.Api
                 cfg.AddProfile<VeiculoProfile>();
                 cfg.AddProfile<MotoristaProfile>();
                 cfg.AddProfile<EstacionamentoProfile>();
+                cfg.AddProfile<EstacionamentoConfiguracaoProfile>();
                 cfg.AddProfile<PessoaProfile>();
                 cfg.AddProfile<MenuProfile>();
                 cfg.AddProfile<EntradaSaidaProfile>();

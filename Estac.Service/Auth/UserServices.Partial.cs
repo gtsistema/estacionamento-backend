@@ -351,6 +351,22 @@ namespace Estac.Service.Auth
                     ? acesso.EstacionamentoId?.ToString()
                     : acesso.TransportadoraId?.ToString())
             };
+
+            if (acesso.EstacionamentoId is int estacionamentoId && estacionamentoId > 0)
+            {
+                var config = await _estacionamentoConfiguracaoRepositories.ObterPorEstacionamentoIdAsync(estacionamentoId);
+                if (config != null && config.Ativo && !string.IsNullOrWhiteSpace(config.TimeZoneId))
+                {
+                    var tz = config.TimeZoneId.Trim();
+                    claims.Add(new Claim("TimeZoneId", tz));
+                    _timeZoneCache.Set(estacionamentoId, tz);
+                }
+                else
+                {
+                    _timeZoneCache.Remove(estacionamentoId);
+                }
+            }
+
             foreach (var permissao in acesso.Permissions.Select(p => p.Descricao).Distinct())
             {
                 if (permissao is not null)

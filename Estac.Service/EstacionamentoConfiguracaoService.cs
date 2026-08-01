@@ -17,16 +17,19 @@ namespace Estac.Service
         private readonly IEstacionamentoConfiguracaoRepositories _repositories;
         private readonly ICurrentUser _currentUser;
         private readonly IMapper _mapper;
+        private readonly IEstacionamentoTimeZoneCache _timeZoneCache;
 
         public EstacionamentoConfiguracaoService(
             IErrorServices errorServices,
             IEstacionamentoConfiguracaoRepositories repositories,
             ICurrentUser currentUser,
-            IMapper mapper) : base(errorServices)
+            IMapper mapper,
+            IEstacionamentoTimeZoneCache timeZoneCache) : base(errorServices)
         {
             _repositories = repositories;
             _currentUser = currentUser;
             _mapper = mapper;
+            _timeZoneCache = timeZoneCache;
         }
 
         public Task<ActionResult> ListarPadroesBrasil()
@@ -84,6 +87,7 @@ namespace Estac.Service
             };
 
             var salvo = await _repositories.GravarAsync(entity);
+            _timeZoneCache.Set(estacionamentoId, salvo.TimeZoneId);
             return await RetornOk(MapearOutput(salvo));
         }
 
@@ -108,6 +112,7 @@ namespace Estac.Service
             existente.Ativo = true;
 
             var atualizado = await _repositories.AlterarAsync(existente);
+            _timeZoneCache.Set(atualizado.EstacionamentoId, atualizado.TimeZoneId);
             return await RetornOk(MapearOutput(atualizado));
         }
 
