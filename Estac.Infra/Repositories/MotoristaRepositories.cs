@@ -57,7 +57,7 @@ namespace Estac.Infra.Repositories
                     destino.Ativo = origem.Ativo;
                     destino.Descricao = origem.Descricao;
                     destino.DataCriacao = dataCriacao;
-                    destino.DataAtualizacao = DateTime.Now;
+                    destino.DataAtualizacao = DateTime.UtcNow;
                 }
 
                 await _context.SaveChangesAsync();

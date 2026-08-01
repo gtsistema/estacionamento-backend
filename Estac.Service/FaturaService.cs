@@ -105,7 +105,7 @@ namespace Estac.Service
                 {
                     await _entradaSaidaRepositories.MarcarComoFaturadasAsync(
                         input.Itens.Select(x => x.EntradaSaidaId),
-                        DateTime.Now);
+                        DateTime.UtcNow);
                 }
 
                 await _unitOfWork.CommitAsync();
@@ -234,7 +234,7 @@ namespace Estac.Service
                     Descricao = string.IsNullOrWhiteSpace(item.Descricao)
                         ? $"Movimento {item.EntradaSaidaId}"
                         : item.Descricao,
-                    DataCriacao = DateTime.Now
+                    DataCriacao = DateTime.UtcNow
                 });
             }
         }

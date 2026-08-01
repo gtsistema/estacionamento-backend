@@ -99,7 +99,7 @@ namespace Estac.Infra.Repositories
                 veiculo.Descricao = veiculo.Placa ?? string.Empty;
 
             veiculo.Id = 0;
-            veiculo.DataCriacao = DateTime.Now;
+            veiculo.DataCriacao = DateTime.UtcNow;
 
             if (veiculo.VeiculoDetalhe != null)
             {
@@ -160,7 +160,7 @@ namespace Estac.Infra.Repositories
                 }
             }
 
-            entity.DataAtualizacao = DateTime.Now;
+            entity.DataAtualizacao = DateTime.UtcNow;
 
             return entity;
         }

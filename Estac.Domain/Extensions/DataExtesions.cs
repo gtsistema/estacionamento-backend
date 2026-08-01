@@ -6,14 +6,14 @@ namespace Estac.Domain.Extensions
     {
         public static string ObterMesAtualString()
         {
-            int mesAtual = DateTime.Now.Month;
+            int mesAtual = DateTime.UtcNow.Month;
             MesDoAno mesEnum = (MesDoAno)mesAtual;
             return mesEnum.GetDescription();
         }
 
         public static MesDoAno ObterMesAtualEnum()
         {
-            int mesAtual = DateTime.Now.Month;
+            int mesAtual = DateTime.UtcNow.Month;
             MesDoAno mesEnum = (MesDoAno)mesAtual;
             return mesEnum;
         }

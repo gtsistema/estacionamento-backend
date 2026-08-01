@@ -27,7 +27,7 @@ namespace Estac.Domain.Factories
                 Intervalo = 1,
                 HoraExecucao = HoraExecucaoPadrao,
                 Ativo = cobranca.Status == StatusConfiguracaoCobranca.Ativa,
-                DataCadastro = DateTime.Now
+                DataCadastro = DateTime.UtcNow
             };
 
             AplicarModalidade(cobranca, agendamento);
