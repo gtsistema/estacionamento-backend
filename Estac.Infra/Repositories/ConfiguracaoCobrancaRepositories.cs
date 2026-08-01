@@ -111,7 +111,7 @@ namespace Estac.Infra.Repositories
                     return null;
 
                 item.DataCriacao = result.DataCriacao;
-                item.DataAtualizacao = DateTime.UtcNow;
+                item.DataAtualizacao = DateTime.Now;
                 _context.Entry(result).CurrentValues.SetValues(item);
 
                 SincronizarAgendamento(result, incomingAgendamento);
@@ -154,7 +154,7 @@ namespace Estac.Infra.Repositories
             ConfiguracaoCobranca configuracao,
             ConfiguracaoAgendamento incoming)
         {
-            var agora = DateTime.UtcNow;
+            var agora = DateTime.Now;
             var existente = configuracao.ConfiguracaoAgendamento;
 
             if (incoming is null)

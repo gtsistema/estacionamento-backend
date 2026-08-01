@@ -131,7 +131,7 @@ namespace Estac.Service.Movimento
             if (entradaEmAberto is null)
                 return await RetornNo(false, "Nenhuma entrada em aberto encontrada para a placa informada.");
 
-            return await RegistrarSaida(entradaEmAberto.Id, DateTime.UtcNow);
+            return await RegistrarSaida(entradaEmAberto.Id, DateTime.Now);
         }
 
         public async Task<ActionResult> Gravar(EntradaPostInput input)
@@ -176,7 +176,7 @@ namespace Estac.Service.Movimento
                 if (result.Finalizado)
                     return await RetornNo(false, "Permanência já finalizada.");
 
-                var dataEvento = input?.DataHoraEvento ?? DateTime.UtcNow;
+                var dataEvento = input?.DataHoraEvento ?? DateTime.Now;
 
                 if (input?.RetornarAoPatio == true)
                     return await RetornarAoPatio(result, dataEvento);
@@ -203,7 +203,7 @@ namespace Estac.Service.Movimento
                 if (result.Finalizado)
                     return await RetornNo(false, "Permanência já finalizada.");
 
-                return await RetornarAoPatio(result, dataHoraEvento ?? DateTime.UtcNow);
+                return await RetornarAoPatio(result, dataHoraEvento ?? DateTime.Now);
             }
             catch (Exception ex)
             {
@@ -450,7 +450,7 @@ namespace Estac.Service.Movimento
             if (result.Finalizado)
                 return await RetornNo(false, "Permanência já finalizada.");
 
-            var dataFinalizacao = dataHoraSaida ?? DateTime.UtcNow;
+            var dataFinalizacao = dataHoraSaida ?? DateTime.Now;
             if (dataFinalizacao < result.DataHoraEntrada)
                 return await RetornNo(false, "A data de finalização não pode ser menor que a data de entrada.");
 
@@ -561,7 +561,7 @@ namespace Estac.Service.Movimento
             result.TransportadoraId = transportadoraId;
             result.MotoristaId = motoristaId;
             result.VeiculoId = veiculoId;
-            result.DataHoraEntrada = input.DataHoraEntrada ?? DateTime.UtcNow;
+            result.DataHoraEntrada = input.DataHoraEntrada ?? DateTime.Now;
             result.DataHoraUltimaEntradaPatio = result.DataHoraEntrada;
             result.PermanenciaSuspensa = false;
             result.Finalizado = false;

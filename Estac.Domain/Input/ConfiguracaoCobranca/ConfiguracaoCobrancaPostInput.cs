@@ -9,7 +9,6 @@ namespace Estac.Domain.Input.ConfiguracaoCobranca
     {
         public int Id { get; set; }
         public int TransportadoraId { get; set; }
-        public int EstacionamentoId { get; set; }
         public StatusConfiguracaoCobranca Status { get; set; } = StatusConfiguracaoCobranca.Ativa;
         public ModalidadeCobranca ModalidadeCobranca { get; set; }
         public byte? DiaFechamento { get; set; }

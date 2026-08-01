@@ -177,7 +177,7 @@ namespace Estac.Infra.Repositories
                     return null;
 
                 item.DataCriacao = result.DataCriacao;
-                item.DataAtualizacao = DateTime.UtcNow;
+                item.DataAtualizacao = DateTime.Now;
                 _context.Entry(result).CurrentValues.SetValues(item);
             }
             catch (DbUpdateException)

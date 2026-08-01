@@ -33,7 +33,7 @@ namespace Estac.Service
 
         public async Task<ActionResult> ObterElegiveis(DateTime? referencia = null)
         {
-            var agora = referencia ?? DateTime.UtcNow;
+            var agora = referencia ?? DateTime.Now;
             var agendamentos = await _faturamentoRepositories.SelecionarAgendamentosPendentes(agora);
             var resultado = new List<ConfiguracaoFaturavelOutput>();
 
@@ -111,7 +111,7 @@ namespace Estac.Service
             {
                 agendamento.UltimaExecucao = input.UltimaExecucao;
                 agendamento.ProximaExecucao = input.ProximaExecucao;
-                agendamento.DataAtualizacao = DateTime.UtcNow;
+                agendamento.DataAtualizacao = DateTime.Now;
                 await _agendamentoRepositories.AtualizarExecucao(agendamento);
 
                 if (input.EntradaSaidaIds is { Count: > 0 })

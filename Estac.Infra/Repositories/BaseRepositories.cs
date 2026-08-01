@@ -45,7 +45,7 @@ namespace Estac.Infra.Repository
             {
                 if (item.Id == 0)
                 {
-                    item.DataCriacao = DateTime.UtcNow;
+                    item.DataCriacao = DateTime.Now;
                     _context.Add(item);
                 }
 
@@ -94,7 +94,7 @@ namespace Estac.Infra.Repository
                     return null;
                 }
 
-                item.DataAtualizacao = DateTime.UtcNow;
+                item.DataAtualizacao = DateTime.Now;
                 item.DataCriacao = result.DataCriacao;
 
                 _context.Entry(result).CurrentValues.SetValues(item);
@@ -116,7 +116,7 @@ namespace Estac.Infra.Repository
             {
                 if (item.Id == 0)
                 {
-                    item.DataCriacao = DateTime.UtcNow;
+                    item.DataCriacao = DateTime.Now;
                     await _context.AddAsync(item);
                 }
             }

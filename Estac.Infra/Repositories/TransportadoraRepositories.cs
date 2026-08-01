@@ -95,7 +95,7 @@ namespace Estac.Infra.Repositories
                     destino.Ativo = origem.Ativo;
                     destino.Descricao = origem.Descricao;
                     destino.DataCriacao = dataCriacao;
-                    destino.DataAtualizacao = DateTime.UtcNow;
+                    destino.DataAtualizacao = DateTime.Now;
                 }
 
                 if (incomingContas != null && incomingContas.Count > 0)

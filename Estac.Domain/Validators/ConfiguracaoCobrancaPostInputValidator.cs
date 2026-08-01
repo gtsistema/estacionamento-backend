@@ -11,10 +11,6 @@ namespace Estac.Domain.Validators
         {
             RuleFor(x => x.TransportadoraId)
                 .GreaterThan(0).WithMessage("Transportadora é obrigatória.");
-
-            RuleFor(x => x.EstacionamentoId)
-                .GreaterThan(0).WithMessage("Estacionamento é obrigatório.");
-
             RuleFor(x => x.Status)
                 .IsInEnum().WithMessage("Status da configuração inválido.");
 

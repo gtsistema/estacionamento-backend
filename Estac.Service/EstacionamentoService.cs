@@ -108,7 +108,7 @@ namespace Estac.Service
                         Foto = memoryStream.ToArray(),
                         Descricao = arquivo.FileName,
                         ContentType = arquivo.ContentType,
-                        DataCriacao = DateTime.UtcNow,
+                        DataCriacao = DateTime.Now,
                         TamanhoBytes = arquivo.Length,
                     });
                 }

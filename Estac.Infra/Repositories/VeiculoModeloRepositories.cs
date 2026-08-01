@@ -105,7 +105,7 @@ namespace Estac.Infra.Repositories
             {
                 Descricao = descricao.Trim(),
                 VeiculoMarcaId = veiculoMarcaId,
-                DataCriacao = DateTime.UtcNow
+                DataCriacao = DateTime.Now
             };
 
             await Gravar(modelo);

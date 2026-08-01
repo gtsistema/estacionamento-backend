@@ -4,6 +4,7 @@ using Estac.Domain.Input.ConfiguracaoCobranca;
 using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Interface.Services;
 using Estac.Domain.Models;
+using Estac.Domain.Models.Auth;
 using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output;
 using Estac.Domain.Output.ConfiguracaoCobranca;
@@ -19,6 +20,7 @@ namespace Estac.Service
         private readonly IEstacionamentoRepositories _estacionamentoRepositories;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICurrentUser _currentUser;
 
         public ConfiguracaoCobrancaService(
             IErrorServices errorServices,
@@ -26,13 +28,15 @@ namespace Estac.Service
             ITransportadoraRepositories transportadoraRepositories,
             IEstacionamentoRepositories estacionamentoRepositories,
             IMapper mapper,
-            IUnitOfWork unitOfWork) : base(errorServices)
+            IUnitOfWork unitOfWork,
+            ICurrentUser currentUser) : base(errorServices)
         {
             _repositories = repositories;
             _transportadoraRepositories = transportadoraRepositories;
             _estacionamentoRepositories = estacionamentoRepositories;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _currentUser = currentUser;
         }
 
         public async Task<ActionResult> ObterPorId(int id)
@@ -58,12 +62,6 @@ namespace Estac.Service
 
             if (!await _transportadoraRepositories.Existe(input.TransportadoraId))
                 return await RetornNo(false, "Transportadora não localizada na base de dados.", statusCode: 404);
-
-            if (!await _estacionamentoRepositories.Existe(input.EstacionamentoId))
-                return await RetornNo(false, "Estacionamento não localizado na base de dados.", statusCode: 404);
-
-            if (await _repositories.ExistePorTransportadoraEstacionamentoAsync(input.TransportadoraId, input.EstacionamentoId))
-                return await RetornNo(false, "Já existe uma configuração de cobrança para esta transportadora e estacionamento.");
 
             await _unitOfWork.BeginTransactionAsync();
 
@@ -97,13 +95,6 @@ namespace Estac.Service
 
             if (!await _transportadoraRepositories.Existe(input.TransportadoraId))
                 return await RetornNo(false, "Transportadora não localizada na base de dados.", statusCode: 404);
-
-            if (!await _estacionamentoRepositories.Existe(input.EstacionamentoId))
-                return await RetornNo(false, "Estacionamento não localizado na base de dados.", statusCode: 404);
-
-            if (await _repositories.ExistePorTransportadoraEstacionamentoAsync(input.TransportadoraId, input.EstacionamentoId, input.Id))
-                return await RetornNo(false, "Já existe uma configuração de cobrança para esta transportadora e estacionamento.");
-
             await _unitOfWork.BeginTransactionAsync();
 
             try
@@ -146,8 +137,10 @@ namespace Estac.Service
             }
         }
 
-        private static void ValoresPadrao(ConfiguracaoCobranca entity)
+        private void ValoresPadrao(ConfiguracaoCobranca entity)
         {
+            entity.EstacionamentoId = ObterEstacionamentoIdDoUsuario();
+
             if (string.IsNullOrWhiteSpace(entity.Descricao))
                 entity.Descricao = $"Cobrança {entity.TransportadoraId}/{entity.EstacionamentoId}";
 
@@ -183,6 +176,14 @@ namespace Estac.Service
         private static void NormalizarAgendamentoGerarFaturamento(ConfiguracaoCobranca entity)
         {
             entity.ConfiguracaoAgendamento = ConfiguracaoAgendamentoFactory.Criar(entity);
+        }
+
+        private int ObterEstacionamentoIdDoUsuario()
+        {
+            if (_currentUser.EmpresaId <= 0)
+                throw new InvalidOperationException("Usuário logado sem estacionamento vinculado.");
+
+            return _currentUser.EmpresaId;
         }
     }
 }
