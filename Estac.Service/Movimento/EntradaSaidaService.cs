@@ -29,6 +29,7 @@ namespace Estac.Service.Movimento
         private readonly IMapper _mapper;
         private readonly ICurrentUser _currentUser;
         private readonly IEstacionamentoWorkersClient _estacionamentoWorkers;
+        private readonly IEstacionamentoContexto _estacionamentoContexto;
 
         public EntradaSaidaService(
             IErrorServices errorServices,
@@ -40,7 +41,8 @@ namespace Estac.Service.Movimento
             IUnitOfWork unitOfWork,
             IMapper mapper,
             ICurrentUser currentUser,
-            IEstacionamentoWorkersClient estacionamentoWorkers) : base(errorServices)
+            IEstacionamentoWorkersClient estacionamentoWorkers,
+            IEstacionamentoContexto estacionamentoContexto) : base(errorServices)
         {
             _repositories = repositories;
             _motoristaRepositories = motoristaRepositories;
@@ -51,6 +53,7 @@ namespace Estac.Service.Movimento
             _mapper = mapper;
             _currentUser = currentUser;
             _estacionamentoWorkers = estacionamentoWorkers;
+            _estacionamentoContexto = estacionamentoContexto;
         }
 
         public async Task<ActionResult> ObterPorId(int id)
@@ -62,7 +65,7 @@ namespace Estac.Service.Movimento
                 if (result is null)
                     return await RetornNo(false, "Registro não encontrado.");
 
-                return await RetornOk(_mapper.Map<EntradaSaidaOutput>(result));
+                return await RetornOk(await MapearOutputLocalAsync(result));
             }
             catch (Exception ex)
             {
@@ -131,7 +134,7 @@ namespace Estac.Service.Movimento
             if (entradaEmAberto is null)
                 return await RetornNo(false, "Nenhuma entrada em aberto encontrada para a placa informada.");
 
-            return await RegistrarSaida(entradaEmAberto.Id, DateTime.Now);
+            return await RegistrarSaida(entradaEmAberto.Id, _estacionamentoContexto.AgoraUtc());
         }
 
         public async Task<ActionResult> Gravar(EntradaPostInput input)
@@ -156,7 +159,7 @@ namespace Estac.Service.Movimento
 
                 await NotificarWorkersMovimentacaoTempoRealAsync(result.Id);
 
-                return await RetornOk(_mapper.Map<EntradaSaidaOutput>(result));
+                return await RetornOk(await MapearOutputLocalAsync(result));
             }
             catch (Exception ex)
             {
@@ -176,7 +179,9 @@ namespace Estac.Service.Movimento
                 if (result.Finalizado)
                     return await RetornNo(false, "Permanência já finalizada.");
 
-                var dataEvento = input?.DataHoraEvento ?? DateTime.Now;
+                var dataEvento = input?.DataHoraEvento.HasValue == true
+                    ? await _estacionamentoContexto.ParaUtcAsync(input.DataHoraEvento.Value)
+                    : _estacionamentoContexto.AgoraUtc();
 
                 if (input?.RetornarAoPatio == true)
                     return await RetornarAoPatio(result, dataEvento);
@@ -203,7 +208,9 @@ namespace Estac.Service.Movimento
                 if (result.Finalizado)
                     return await RetornNo(false, "Permanência já finalizada.");
 
-                return await RetornarAoPatio(result, dataHoraEvento ?? DateTime.Now);
+                return await RetornarAoPatio(result, dataHoraEvento.HasValue
+                    ? await _estacionamentoContexto.ParaUtcAsync(dataHoraEvento.Value)
+                    : _estacionamentoContexto.AgoraUtc());
             }
             catch (Exception ex)
             {
@@ -403,7 +410,7 @@ namespace Estac.Service.Movimento
             await _repositories.Alterar(result);
             await NotificarWorkersMovimentacaoTempoRealAsync(result.Id);
 
-            return await RetornOk(_mapper.Map<EntradaSaidaOutput>(result));
+            return await RetornOk(await MapearOutputLocalAsync(result));
         }
 
         private async Task<ActionResult> RetornarAoPatio(EntradaSaida result, DateTime dataEvento)
@@ -438,7 +445,7 @@ namespace Estac.Service.Movimento
             await _repositories.Alterar(result);
             await NotificarWorkersMovimentacaoTempoRealAsync(result.Id);
 
-            return await RetornOk(_mapper.Map<EntradaSaidaOutput>(result));
+            return await RetornOk(await MapearOutputLocalAsync(result));
         }
 
         private async Task<ActionResult> RegistrarSaida(int id, DateTime? dataHoraSaida)
@@ -450,7 +457,7 @@ namespace Estac.Service.Movimento
             if (result.Finalizado)
                 return await RetornNo(false, "Permanência já finalizada.");
 
-            var dataFinalizacao = dataHoraSaida ?? DateTime.Now;
+            var dataFinalizacao = dataHoraSaida ?? _estacionamentoContexto.AgoraUtc();
             if (dataFinalizacao < result.DataHoraEntrada)
                 return await RetornNo(false, "A data de finalização não pode ser menor que a data de entrada.");
 
@@ -490,7 +497,7 @@ namespace Estac.Service.Movimento
             await _repositories.Alterar(result);
             await NotificarWorkersMovimentacaoTempoRealAsync(result.Id);
 
-            return await RetornOk(_mapper.Map<EntradaSaidaOutput>(result));
+            return await RetornOk(await MapearOutputLocalAsync(result));
         }
 
         private static void AdicionarMinutosPermanencia(EntradaSaida result, DateTime inicio, DateTime fim)
@@ -561,7 +568,9 @@ namespace Estac.Service.Movimento
             result.TransportadoraId = transportadoraId;
             result.MotoristaId = motoristaId;
             result.VeiculoId = veiculoId;
-            result.DataHoraEntrada = input.DataHoraEntrada ?? DateTime.Now;
+            result.DataHoraEntrada = input.DataHoraEntrada.HasValue
+                ? await _estacionamentoContexto.ParaUtcAsync(input.DataHoraEntrada.Value)
+                : _estacionamentoContexto.AgoraUtc();
             result.DataHoraUltimaEntradaPatio = result.DataHoraEntrada;
             result.PermanenciaSuspensa = false;
             result.Finalizado = false;
@@ -571,6 +580,40 @@ namespace Estac.Service.Movimento
             result.UsuarioRegistroEntradaNome = _currentUser.Name;
             result.Descricao = $"{input.Veiculo?.Placa} - {input.Motorista?.Nome}";
             result.Status = input.DataHoraEntrada.HasValue ? EntradaSaidaStatus.Entrada : EntradaSaidaStatus.Agendado;
+        }
+
+        private async Task<EntradaSaidaOutput> MapearOutputLocalAsync(EntradaSaida result)
+        {
+            var output = _mapper.Map<EntradaSaidaOutput>(result);
+            if (output == null)
+                return null;
+
+            // Persistido em UTC; API devolve no fuso do estacionamento.
+            output.DataHoraEntrada = await _estacionamentoContexto.ParaLocalAsync(output.DataHoraEntrada);
+
+            if (output.DataHoraSaida.HasValue)
+                output.DataHoraSaida = await _estacionamentoContexto.ParaLocalAsync(output.DataHoraSaida.Value);
+
+            if (output.DataHoraUltimaEntradaPatio.HasValue)
+                output.DataHoraUltimaEntradaPatio = await _estacionamentoContexto.ParaLocalAsync(output.DataHoraUltimaEntradaPatio.Value);
+
+            if (output.DataHoraFinalizacao.HasValue)
+                output.DataHoraFinalizacao = await _estacionamentoContexto.ParaLocalAsync(output.DataHoraFinalizacao.Value);
+
+            if (output.DataFaturado.HasValue)
+                output.DataFaturado = await _estacionamentoContexto.ParaLocalAsync(output.DataFaturado.Value);
+
+            if (output.Suspensoes != null)
+            {
+                foreach (var s in output.Suspensoes)
+                {
+                    s.DataHoraInicioSuspensao = await _estacionamentoContexto.ParaLocalAsync(s.DataHoraInicioSuspensao);
+                    if (s.DataHoraFimSuspensao.HasValue)
+                        s.DataHoraFimSuspensao = await _estacionamentoContexto.ParaLocalAsync(s.DataHoraFimSuspensao.Value);
+                }
+            }
+
+            return output;
         }
 
         private int ObterEstacionamentoIdDoUsuario()

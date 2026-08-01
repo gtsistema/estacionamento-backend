@@ -21,5 +21,6 @@ namespace Estac.Domain.Models
         public Pessoa Pessoa { get; set; }
         public ICollection<ContaBancaria> ContasBancarias { get; set; }
         public ICollection<EstacionamentoFoto> Fotos { get; set; }
+        public EstacionamentoConfiguracao Configuracao { get; set; }
     }
 }

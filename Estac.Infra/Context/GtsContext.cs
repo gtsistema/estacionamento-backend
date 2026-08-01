@@ -1,4 +1,4 @@
-﻿using Estac.Domain.Models;
+using Estac.Domain.Models;
 using Estac.Domain.Models.Auth;
 using Estac.Domain.Models.Enuns;
 using Estac.Infra.EntityBuilders;
@@ -45,7 +45,7 @@ namespace Estac.Infra.Context
 
             // ESTACIONAMENTO
             modelBuilder.Entity<Estacionamento>(new EstacionamentoMapping().Configure);
-
+            modelBuilder.Entity<EstacionamentoConfiguracao>(new EstacionamentoConfiguracaoMapping().Configure);
             modelBuilder.Entity<EstacionamentoFoto>(new EstacionamentoFotoMapping().Configure);
             modelBuilder.Entity<ContaBancaria>(new ContaBancariaMapping().Configure);
 
@@ -79,6 +79,7 @@ namespace Estac.Infra.Context
 
         // ESTACIONAMENTO
         public DbSet<Estacionamento> Estacionamento { get; set; }
+        public DbSet<EstacionamentoConfiguracao> EstacionamentoConfiguracao { get; set; }
         public DbSet<EstacionamentoFoto> EstacionamentoFoto { get; set; }
         public DbSet<ContaBancaria> ContaBancaria { get; set; }
         public DbSet<Transportadora> Transportadora { get; set; }

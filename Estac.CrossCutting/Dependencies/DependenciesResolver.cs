@@ -1,4 +1,4 @@
-﻿using Estac.Domain.Clock;
+using Estac.Domain.Clock;
 using Estac.Domain.Extensions.Notifier;
 using Estac.Domain.Auth;
 using Estac.Domain.Interface.Repositories;
@@ -59,6 +59,8 @@ namespace Estac.CrossCutting.Dependencies
             services.AddScoped<IMenuServices, MenuServices>();
             services.AddScoped<ITransportadoraService, TransportadoraService>();
             services.AddScoped<IEstacionamentoService, EstacionamentoService>();
+            services.AddScoped<IEstacionamentoConfiguracaoService, EstacionamentoConfiguracaoService>();
+            services.AddScoped<IEstacionamentoContexto, EstacionamentoContexto>();
             services.AddScoped<IEntradaSaidaService, EntradaSaidaService>();
             services.AddScoped<IConfiguracaoCobrancaService, ConfiguracaoCobrancaService>();
             services.AddScoped<IConfiguracaoAgendamentoService, ConfiguracaoAgendamentoService>();
@@ -83,6 +85,7 @@ namespace Estac.CrossCutting.Dependencies
             services.AddScoped<IPerfilRepositories, PerfilRepositories>();
             services.AddScoped<IUsuarioRepositories, UsuarioRepositories>();
             services.AddScoped<IEstacionamentoRepositories, EstacionamentoRepositories>();
+            services.AddScoped<IEstacionamentoConfiguracaoRepositories, EstacionamentoConfiguracaoRepositories>();
             services.AddScoped<IEntradaSaidaRepositories, EntradaSaidaRepositories>();
             services.AddScoped<IConfiguracaoCobrancaRepositories, ConfiguracaoCobrancaRepositories>();
             services.AddScoped<IConfiguracaoAgendamentoRepositories, ConfiguracaoAgendamentoRepositories>();
