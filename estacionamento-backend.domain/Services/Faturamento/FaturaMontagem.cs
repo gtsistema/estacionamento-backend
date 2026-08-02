@@ -58,7 +58,9 @@ namespace Estac.Domain.Services.Faturamento
         private static FaturaItem MontarItem(EntradaSaidaFaturavelOutput movimento, RegrasCobrancaOutput cobranca)
         {
             var valorEstacionamento = cobranca.ValorEstacionamento ?? 0m;
-            var valorLavagem = cobranca.CobrarLavagem ? cobranca.ValorLavagem ?? 0m : 0m;
+            // ValorLavagem ficará pendente até a model Servicos; mantém o campo zerado.
+            //var valorLavagem = cobranca.CobrarLavagem ? cobranca.ValorLavagem ?? 0m : 0m;
+
             var valorPernoite = cobranca.CobrarPernoite ? cobranca.ValorPernoite ?? 0m : 0m;
             var valorExtras = cobranca.CobrarServicosExtras ? cobranca.ValorServicosExtras ?? 0m : 0m;
             var beneficio = cobranca.ConsiderarBeneficioAbastecimento
