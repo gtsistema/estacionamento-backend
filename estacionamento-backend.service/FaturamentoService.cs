@@ -64,9 +64,7 @@ namespace Estac.Service
 
                 var movimentos = await CarregarTodosMovimentosAsync(
                     agendamento.EstacionamentoId,
-                    agendamento.TransportadoraId,
-                    periodoInicio,
-                    periodoFim);
+                    agendamento.TransportadoraId);
 
                 resultado.Add(new ConfiguracaoFaturavelOutput
                 {
@@ -150,9 +148,7 @@ namespace Estac.Service
 
         private async Task<IList<EntradaSaidaFaturavelOutput>> CarregarTodosMovimentosAsync(
             int estacionamentoId,
-            int transportadoraId,
-            DateTime periodoInicio,
-            DateTime periodoFim)
+            int transportadoraId)
         {
             var todos = new List<EntradaSaidaFaturavelOutput>();
             int? cursor = null;
@@ -165,8 +161,6 @@ namespace Estac.Service
                     {
                         EstacionamentoId = estacionamentoId,
                         TransportadoraId = transportadoraId,
-                        PeriodoInicio = periodoInicio,
-                        PeriodoFim = periodoFim,
                         UltimoId = cursor,
                         Tamanho = TamanhoLoteMovimentos
                     });

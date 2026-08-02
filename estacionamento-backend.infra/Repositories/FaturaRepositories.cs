@@ -346,13 +346,17 @@ namespace Estac.Infra.Repositories
                     && movimento.TransportadoraId == input.TransportadoraId
                     && movimento.Finalizado
                     && !movimento.Faturado
-                    && movimento.Status == EntradaSaidaStatus.Saida
-                    && movimento.DataHoraSaida != null
-                    && movimento.DataHoraSaida >= input.PeriodoInicio
-                    && movimento.DataHoraSaida < input.PeriodoFim
                     && !_context.Set<FaturaItem>().Any(item =>
                         item.EntradaSaidaId == movimento.Id
                         && item.Fatura.Status != StatusFatura.Cancelada));
+
+            if (input.PeriodoInicio.HasValue && input.PeriodoFim.HasValue)
+            {
+                query = query.Where(movimento =>
+                    movimento.DataHoraSaida != null
+                    && movimento.DataHoraSaida >= input.PeriodoInicio.Value
+                    && movimento.DataHoraSaida < input.PeriodoFim.Value);
+            }
 
             if (input.UltimoId.HasValue)
                 query = query.Where(movimento => movimento.Id > input.UltimoId.Value);

@@ -121,15 +121,13 @@ namespace Estac.Service
 
             var movimentos = await CarregarTodosMovimentosAsync(
                 estacionamentoId,
-                input.TransportadoraId,
-                periodoInicio,
-                periodoFim);
+                input.TransportadoraId);
 
             if (movimentos.Count == 0)
             {
                 return await RetornNo(
                     false,
-                    "Não há movimentos faturáveis no período para gerar a fatura.");
+                    "Não há movimentos finalizados e não faturados para gerar a fatura.");
             }
 
             var entity = FaturaMontagem.Montar(agendamento, movimentos, agora, periodoInicio, periodoFim);
@@ -272,9 +270,7 @@ namespace Estac.Service
 
         private async Task<IList<EntradaSaidaFaturavelOutput>> CarregarTodosMovimentosAsync(
             int estacionamentoId,
-            int transportadoraId,
-            DateTime periodoInicio,
-            DateTime periodoFim)
+            int transportadoraId)
         {
             var todos = new List<EntradaSaidaFaturavelOutput>();
             int? cursor = null;
@@ -287,8 +283,6 @@ namespace Estac.Service
                     {
                         EstacionamentoId = estacionamentoId,
                         TransportadoraId = transportadoraId,
-                        PeriodoInicio = periodoInicio,
-                        PeriodoFim = periodoFim,
                         UltimoId = cursor,
                         Tamanho = TamanhoLoteMovimentos
                     });
