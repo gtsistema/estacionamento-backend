@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <RootNamespace>Estac.Domain</RootNamespace>
-    <AssemblyName>Estacionamento.Domain</AssemblyName>
+    <AssemblyName>estacionamento-backend.domain</AssemblyName>
 	  <Nullable>disable</Nullable>
 	  <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>

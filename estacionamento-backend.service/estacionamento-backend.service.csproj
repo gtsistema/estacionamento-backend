@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <RootNamespace>Estac.Service</RootNamespace>
-    <AssemblyName>Estacionamento.Service</AssemblyName>
+    <AssemblyName>estacionamento-backend.service</AssemblyName>
 	  <Nullable>disable</Nullable>
 	  <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Estacionamento.Domain\Estacionamento.Domain.csproj" />
-    <ProjectReference Include="..\Estacionamento.Infra\Estacionamento.Infra.csproj" />
+    <ProjectReference Include="..\estacionamento-backend.domain\estacionamento-backend.domain.csproj" />
+    <ProjectReference Include="..\estacionamento-backend.infra\estacionamento-backend.infra.csproj" />
   </ItemGroup>
 
 </Project>

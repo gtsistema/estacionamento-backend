@@ -159,12 +159,21 @@ namespace Estac.Api
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IdentityContext identitycontext, GtsContext gtsContext,
            ILoggerFactory loggerFactory, IHttpContextAccessor httpContext, IServiceProvider serviceProvider)
         {
+            var pathBase = Configuration["PathBase"];
+            if (!string.IsNullOrWhiteSpace(pathBase))
+            {
+                app.UsePathBase(pathBase);
+            }
+
             app.UseDeveloperExceptionPage();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Meu API V1");
+                var swaggerJson = string.IsNullOrWhiteSpace(pathBase)
+                    ? "/swagger/v1/swagger.json"
+                    : $"{pathBase.TrimEnd('/')}/swagger/v1/swagger.json";
+                c.SwaggerEndpoint(swaggerJson, "Meu API V1");
                 c.RoutePrefix = "swagger";
             });
 
@@ -188,7 +197,8 @@ namespace Estac.Api
 
                 endpoints.MapGet("/", context =>
                 {
-                    context.Response.Redirect("/swagger/index.html");
+                    var swaggerUrl = $"{context.Request.PathBase}/swagger/index.html";
+                    context.Response.Redirect(swaggerUrl);
                     return Task.CompletedTask;
                 });
             });

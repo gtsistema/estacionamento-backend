@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Estacionamento.Jobs": {
+    "estacionamento-backend.jobs": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "environmentVariables": {

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <RootNamespace>Estac.CrossCutting</RootNamespace>
-    <AssemblyName>Estacionamento.CrossCutting</AssemblyName>
+    <AssemblyName>estacionamento-backend.crosscutting</AssemblyName>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
   </PropertyGroup>
@@ -18,9 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Estacionamento.Domain\Estacionamento.Domain.csproj" />
-    <ProjectReference Include="..\Estacionamento.Infra\Estacionamento.Infra.csproj" />
-    <ProjectReference Include="..\Estacionamento.Service\Estacionamento.Service.csproj" />
+    <ProjectReference Include="..\estacionamento-backend.domain\estacionamento-backend.domain.csproj" />
+    <ProjectReference Include="..\estacionamento-backend.infra\estacionamento-backend.infra.csproj" />
+    <ProjectReference Include="..\estacionamento-backend.service\estacionamento-backend.service.csproj" />
   </ItemGroup>
 
 </Project>

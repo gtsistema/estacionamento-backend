@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <RootNamespace>Estac.Infra</RootNamespace>
-    <AssemblyName>Estacionamento.Infra</AssemblyName>
+    <AssemblyName>estacionamento-backend.infra</AssemblyName>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
   </PropertyGroup>
@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Estacionamento.Domain\Estacionamento.Domain.csproj" />
+    <ProjectReference Include="..\estacionamento-backend.domain\estacionamento-backend.domain.csproj" />
   </ItemGroup>
 
 </Project>

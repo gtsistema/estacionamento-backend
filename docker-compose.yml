@@ -1,13 +1,15 @@
 services:
   api:
-    container_name: estacionamento_api
+    image: estacionamento-backend:latest
+    container_name: estacionamento-backend-api
     build:
       context: .
-      dockerfile: Estacionamento.Api/Dockerfile
+      dockerfile: estacionamento-backend.api/Dockerfile
     ports:
       - "5000:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
+      - PathBase=/estac
       - AutomaticRunDbMigrations=true
       - ConnectionStrings__DefaultConnection=Server=db;Database=gts-desenvolvimento;User=sa;Password=@Admin2134;TrustServerCertificate=True;
       - EstacionamentoWorkers__Enabled=true
@@ -16,9 +18,9 @@ services:
     depends_on:
       - db
     networks:
-      - estacionamento-network
+      - estacionamento-backend-network
   db:
-    container_name: estacionamento_sqlserver
+    container_name: estacionamento-backend-sqlserver
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
       - SA_PASSWORD=@Admin2134
@@ -28,8 +30,8 @@ services:
     volumes:
       - sql_data:/var/opt/mssql
     networks:
-      - estacionamento-network
+      - estacionamento-backend-network
 networks:
-  estacionamento-network:
+  estacionamento-backend-network:
 volumes:
   sql_data:

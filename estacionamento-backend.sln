@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
 VisualStudioVersion = 18.8.12021.73 stable
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estacionamento.Api", "Estacionamento.Api\Estacionamento.Api.csproj", "{B2F8EEC0-D080-C581-6B55-08724B026E34}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "estacionamento-backend.api", "estacionamento-backend.api\estacionamento-backend.api.csproj", "{B2F8EEC0-D080-C581-6B55-08724B026E34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estacionamento.Service", "Estacionamento.Service\Estacionamento.Service.csproj", "{3AE4AC1E-6931-CDAE-D419-D37F5E94EEE3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "estacionamento-backend.service", "estacionamento-backend.service\estacionamento-backend.service.csproj", "{3AE4AC1E-6931-CDAE-D419-D37F5E94EEE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estacionamento.Domain", "Estacionamento.Domain\Estacionamento.Domain.csproj", "{83A4D4E5-41DD-544C-8EB3-22A01E11116F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "estacionamento-backend.domain", "estacionamento-backend.domain\estacionamento-backend.domain.csproj", "{83A4D4E5-41DD-544C-8EB3-22A01E11116F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estacionamento.Infra", "Estacionamento.Infra\Estacionamento.Infra.csproj", "{446A528F-FF18-89E6-ED93-7D552462F250}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "estacionamento-backend.infra", "estacionamento-backend.infra\estacionamento-backend.infra.csproj", "{446A528F-FF18-89E6-ED93-7D552462F250}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estacionamento.CrossCutting", "Estacionamento.CrossCutting\Estacionamento.CrossCutting.csproj", "{49822985-AE6C-262E-C941-77A83B515D1F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "estacionamento-backend.crosscutting", "estacionamento-backend.crosscutting\estacionamento-backend.crosscutting.csproj", "{49822985-AE6C-262E-C941-77A83B515D1F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

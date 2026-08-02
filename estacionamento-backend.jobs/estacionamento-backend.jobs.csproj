@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <RootNamespace>Estac.Jobs</RootNamespace>
-    <AssemblyName>Estacionamento.Jobs</AssemblyName>
-    <UserSecretsId>dotnet-Estacionamento.Jobs-1b2a8d89-eb59-4ff9-8ccb-24e076af9188</UserSecretsId>
+    <AssemblyName>estacionamento-backend.jobs</AssemblyName>
+    <UserSecretsId>dotnet-estacionamento-backend.jobs-1b2a8d89-eb59-4ff9-8ccb-24e076af9188</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Estacionamento.Infra\Estacionamento.Infra.csproj" />
+    <ProjectReference Include="..\estacionamento-backend.infra\estacionamento-backend.infra.csproj" />
   </ItemGroup>
 </Project>

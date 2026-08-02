@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <RootNamespace>Estac.Api</RootNamespace>
-    <AssemblyName>Estacionamento.Api</AssemblyName>
+    <AssemblyName>estacionamento-backend.api</AssemblyName>
 	  <Nullable>disable</Nullable>
 	  <ImplicitUsings>enable</ImplicitUsings>
 	  <UserSecretsId>dc0caab1-5f77-42b0-9169-12c0c86633ae</UserSecretsId>
@@ -41,9 +41,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Estacionamento.CrossCutting\Estacionamento.CrossCutting.csproj" />
-    <ProjectReference Include="..\Estacionamento.Domain\Estacionamento.Domain.csproj" />
-    <ProjectReference Include="..\Estacionamento.Infra\Estacionamento.Infra.csproj" />
+    <ProjectReference Include="..\estacionamento-backend.crosscutting\estacionamento-backend.crosscutting.csproj" />
+    <ProjectReference Include="..\estacionamento-backend.domain\estacionamento-backend.domain.csproj" />
+    <ProjectReference Include="..\estacionamento-backend.infra\estacionamento-backend.infra.csproj" />
   </ItemGroup>
 
 </Project>
