@@ -19,8 +19,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Estac.Service.Movimento;
+using Estac.Domain.Integration.Report;
 using Estac.Domain.Integration.Workers;
 using Estac.Domain.Interface.Integration;
+using Estac.Infra.Integration.Http;
+using Estac.Infra.Integration.Report;
 using Estac.Infra.Integration.Workers;
 using Microsoft.Extensions.Options;
 
@@ -32,6 +35,11 @@ namespace Estac.CrossCutting.Dependencies
         {
             services.Configure<SmtpSettings>(configuration.GetSection("Smtp"));
             services.Configure<EstacionamentoWorkersOptions>(configuration.GetSection(EstacionamentoWorkersOptions.SectionName));
+            services.Configure<EstacionamentoReportOptions>(configuration.GetSection(EstacionamentoReportOptions.SectionName));
+
+            services.AddScoped<IHttpApiClient, HttpApiClient>();
+            services.AddScoped<IEstacionamentoReportClient, EstacionamentoReportClient>();
+
             services.AddHttpClient<IEstacionamentoWorkersClient, EstacionamentoWorkersClient>()
                 .ConfigureHttpClient((sp, client) =>
                 {
@@ -42,6 +50,18 @@ namespace Estac.CrossCutting.Dependencies
                     var seconds = opt.TimeoutSeconds < 5 ? 5 : (opt.TimeoutSeconds > 120 ? 120 : opt.TimeoutSeconds);
                     client.Timeout = TimeSpan.FromSeconds(seconds);
                 });
+
+            services.AddHttpClient(EstacionamentoReportOptions.HttpClientName)
+                .ConfigureHttpClient((sp, client) =>
+                {
+                    var opt = sp.GetRequiredService<IOptions<EstacionamentoReportOptions>>().Value;
+                    var baseUrl = (opt.BaseUrl ?? string.Empty).TrimEnd('/');
+                    if (!string.IsNullOrEmpty(baseUrl))
+                        client.BaseAddress = new Uri(baseUrl + "/");
+                    var seconds = opt.TimeoutSeconds < 5 ? 5 : (opt.TimeoutSeconds > 180 ? 180 : opt.TimeoutSeconds);
+                    client.Timeout = TimeSpan.FromSeconds(seconds);
+                });
+
             services.AddScoped<IEmailSenderService, SmtpEmailSenderService>();
 
             services.AddMemoryCache();
@@ -92,7 +112,6 @@ namespace Estac.CrossCutting.Dependencies
             services.AddScoped<IConfiguracaoCobrancaRepositories, ConfiguracaoCobrancaRepositories>();
             services.AddScoped<IConfiguracaoAgendamentoRepositories, ConfiguracaoAgendamentoRepositories>();
             services.AddScoped<IFaturaRepositories, FaturaRepositories>();
-            services.AddScoped<IFaturamentoRepositories, FaturamentoRepositories>();
 
 
             return services;

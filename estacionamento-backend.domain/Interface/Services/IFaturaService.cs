@@ -1,4 +1,5 @@
 using Estac.Domain.Input.Fatura;
+using Estac.Domain.Models.Enuns;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Estac.Domain.Interface.Services
@@ -11,5 +12,7 @@ namespace Estac.Domain.Interface.Services
         Task<ActionResult> Gravar(FaturaPostInput input);
         Task<ActionResult> Alterar(FaturaPutInput input);
         Task<ActionResult> Excluir(int id);
+        Task<ActionResult> GerarRelatorio(int id, FormatoRelatorio formato, CancellationToken cancellationToken = default);
+        Task<ActionResult> GerarExcel(int id, CancellationToken cancellationToken = default);
     }
 }

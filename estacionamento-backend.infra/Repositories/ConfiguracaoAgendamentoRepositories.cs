@@ -22,6 +22,7 @@ namespace Estac.Infra.Repositories
         {
             return await _dataset
                 .AsNoTracking()
+                .Include(x => x.ConfiguracaoCobranca)
                 .SingleOrDefaultAsync(x => x.Id == id);
         }
 
@@ -66,6 +67,8 @@ namespace Estac.Infra.Repositories
                 {
                     Id = x.Id,
                     ConfiguracaoCobrancaId = x.ConfiguracaoCobrancaId,
+                    TransportadoraId = x.ConfiguracaoCobranca.TransportadoraId,
+                    EstacionamentoId = x.ConfiguracaoCobranca.EstacionamentoId,
                     TipoJob = x.TipoJob,
                     ModalidadeCobranca = x.ModalidadeCobranca,
                     Intervalo = x.Intervalo,

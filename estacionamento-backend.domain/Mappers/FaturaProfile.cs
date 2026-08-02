@@ -9,8 +9,6 @@ namespace Estac.Domain.Mappers
     {
         public FaturaProfile()
         {
-            CreateMap<FaturaPostInput, Fatura>()
-                .ForMember(dest => dest.Itens, opt => opt.Ignore());
             CreateMap<FaturaPutInput, Fatura>()
                 .ForMember(dest => dest.Itens, opt => opt.Ignore());
 

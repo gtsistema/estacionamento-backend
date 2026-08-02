@@ -6,6 +6,8 @@ namespace Estac.Domain.Output.ConfiguracaoCobranca
     {
         public Guid Id { get; set; }
         public int ConfiguracaoCobrancaId { get; set; }
+        public int TransportadoraId { get; set; }
+        public int EstacionamentoId { get; set; }
         public TipoJob TipoJob { get; set; }
         public ModalidadeCobranca ModalidadeCobranca { get; set; }
         public int Intervalo { get; set; }

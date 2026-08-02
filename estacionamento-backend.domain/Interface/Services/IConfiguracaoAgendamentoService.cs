@@ -7,5 +7,6 @@ namespace Estac.Domain.Interface.Services
     {
         Task<ActionResult> ObterPorId(Guid id);
         Task<ActionResult> Buscar(ConfiguracaoAgendamentoFilterInput filter);
+        Task<ActionResult> Alterar(ConfiguracaoAgendamentoPutInput input);
     }
 }

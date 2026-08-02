@@ -31,5 +31,15 @@ namespace Estac.Api.Controllers.Financeiro
         {
             return await _services.ObterPorId(id);
         }
+
+        /// <summary>
+        /// Atualiza UltimaExecucao/ProximaExecucao do agendamento após geração de fatura.
+        /// </summary>
+        [PermissionAuthorize(PermissionAcess.ConfiguracaoCobranca.Alterar)]
+        [HttpPut]
+        public async Task<ActionResult> Alterar([FromBody] ConfiguracaoAgendamentoPutInput input)
+        {
+            return await _services.Alterar(input);
+        }
     }
 }

@@ -13,19 +13,19 @@ namespace Estac.Service
     {
         private const int TamanhoLoteMovimentos = 500;
 
-        private readonly IFaturamentoRepositories _faturamentoRepositories;
+        private readonly IFaturaRepositories _faturaRepositories;
         private readonly IConfiguracaoAgendamentoRepositories _agendamentoRepositories;
         private readonly IEntradaSaidaRepositories _entradaSaidaRepositories;
         private readonly IUnitOfWork _unitOfWork;
 
         public FaturamentoService(
             IErrorServices errorServices,
-            IFaturamentoRepositories faturamentoRepositories,
+            IFaturaRepositories faturaRepositories,
             IConfiguracaoAgendamentoRepositories agendamentoRepositories,
             IEntradaSaidaRepositories entradaSaidaRepositories,
             IUnitOfWork unitOfWork) : base(errorServices)
         {
-            _faturamentoRepositories = faturamentoRepositories;
+            _faturaRepositories = faturaRepositories;
             _agendamentoRepositories = agendamentoRepositories;
             _entradaSaidaRepositories = entradaSaidaRepositories;
             _unitOfWork = unitOfWork;
@@ -34,7 +34,7 @@ namespace Estac.Service
         public async Task<ActionResult> ObterElegiveis(DateTime? referencia = null)
         {
             var agora = referencia ?? DateTime.Now;
-            var agendamentos = await _faturamentoRepositories.SelecionarAgendamentosPendentes(agora);
+            var agendamentos = await _faturaRepositories.SelecionarAgendamentosPendentes(agora);
             var resultado = new List<ConfiguracaoFaturavelOutput>();
 
             foreach (var agendamento in agendamentos)
@@ -160,7 +160,7 @@ namespace Estac.Service
 
             do
             {
-                var lote = await _faturamentoRepositories.SelecionarMovimentosFaturaveis(
+                var lote = await _faturaRepositories.SelecionarMovimentosFaturaveis(
                     new EntradaSaidaFaturavelFilterInput
                     {
                         EstacionamentoId = estacionamentoId,

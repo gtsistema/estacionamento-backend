@@ -1,9 +1,12 @@
+using System.Linq.Expressions;
 using Estac.Domain.Extensions;
 using Estac.Domain.Input.Fatura;
+using Estac.Domain.Input.Faturamento;
 using Estac.Domain.Interface.Repositories;
 using Estac.Domain.Models;
 using Estac.Domain.Models.Enuns;
 using Estac.Domain.Output.Fatura;
+using Estac.Domain.Output.Faturamento;
 using Estac.Domain.Shared;
 using Estac.Infra.Context;
 using Estac.Infra.Repository;
@@ -13,11 +16,18 @@ namespace Estac.Infra.Repositories
 {
     public class FaturaRepositories : BaseRepositories<Fatura>, IFaturaRepositories
     {
+        public const int TamanhoLotePadrao = 500;
+        public const int TamanhoLoteMaximo = 5000;
+
         private readonly DbSet<Fatura> _dataset;
+        private readonly DbSet<ConfiguracaoAgendamento> _agendamentos;
+        private readonly DbSet<EntradaSaida> _movimentos;
 
         public FaturaRepositories(GtsContext context) : base(context)
         {
             _dataset = context.Set<Fatura>();
+            _agendamentos = context.Set<ConfiguracaoAgendamento>();
+            _movimentos = context.Set<EntradaSaida>();
         }
 
         public async Task<Fatura> SelecionarPorIdCompleto(int id)
@@ -202,6 +212,152 @@ namespace Estac.Infra.Repositories
             {
                 throw;
             }
+        }
+
+        public async Task<IList<AgendamentoFaturamentoOutput>> SelecionarAgendamentosPendentes(DateTime referencia)
+        {
+            return await QueryAgendamentoBase()
+                .Where(agendamento => agendamento.ProximaExecucao == null || agendamento.ProximaExecucao <= referencia)
+                .OrderBy(agendamento => agendamento.ProximaExecucao)
+                .Select(ProjetarAgendamento())
+                .ToListAsync();
+        }
+
+        public async Task<AgendamentoFaturamentoOutput> SelecionarAgendamentoParaGeracao(
+            int transportadoraId,
+            int estacionamentoId)
+        {
+            return await QueryAgendamentoBase()
+                .Where(agendamento =>
+                    agendamento.ConfiguracaoCobranca.TransportadoraId == transportadoraId
+                    && agendamento.ConfiguracaoCobranca.EstacionamentoId == estacionamentoId)
+                .Select(ProjetarAgendamento())
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<LoteFaturavelOutput> SelecionarMovimentosFaturaveis(EntradaSaidaFaturavelFilterInput input)
+        {
+            var tamanho = Math.Clamp(
+                input.Tamanho <= 0 ? TamanhoLotePadrao : input.Tamanho,
+                1,
+                TamanhoLoteMaximo);
+
+            var query = MontarQueryMovimentosFaturaveis(input);
+
+            var itens = await query
+                .OrderBy(movimento => movimento.Id)
+                .Take(tamanho + 1)
+                .Select(movimento => new EntradaSaidaFaturavelOutput
+                {
+                    Id = movimento.Id,
+                    EstacionamentoId = movimento.EstacionamentoId,
+                    TransportadoraId = movimento.TransportadoraId,
+                    VeiculoId = movimento.VeiculoId,
+                    Placa = movimento.Veiculo.Placa,
+                    MotoristaId = movimento.MotoristaId,
+                    MotoristaNome = movimento.Motorista.Pessoa != null
+                        ? movimento.Motorista.Pessoa.NomeRazaoSocial
+                        : movimento.Motorista.Descricao,
+                    DataHoraEntrada = movimento.DataHoraEntrada,
+                    DataHoraSaida = movimento.DataHoraSaida,
+                    TempoPermanenciaMinutos = movimento.TempoPermanenciaMinutos,
+                    TempoTotalSuspensaoMinutos = movimento.TempoTotalSuspensaoMinutos,
+                    Faturado = movimento.Faturado,
+                    DataFaturado = movimento.DataFaturado
+                })
+                .ToListAsync();
+
+            var possuiMais = itens.Count > tamanho;
+            if (possuiMais)
+                itens.RemoveAt(itens.Count - 1);
+
+            return new LoteFaturavelOutput
+            {
+                Itens = itens,
+                PossuiMais = possuiMais,
+                ProximoCursor = possuiMais && itens.Count > 0 ? itens[^1].Id : null
+            };
+        }
+
+        private IQueryable<ConfiguracaoAgendamento> QueryAgendamentoBase() =>
+            _agendamentos
+                .AsNoTracking()
+                .Where(agendamento => agendamento.Ativo
+                    && agendamento.TipoJob == TipoJob.GerarFaturamento
+                    && agendamento.ConfiguracaoCobranca.GerarFaturaAutomaticamente
+                    && agendamento.ConfiguracaoCobranca.Status == StatusConfiguracaoCobranca.Ativa);
+
+        private Expression<Func<ConfiguracaoAgendamento, AgendamentoFaturamentoOutput>> ProjetarAgendamento() =>
+            agendamento => new AgendamentoFaturamentoOutput
+            {
+                ConfiguracaoAgendamentoId = agendamento.Id,
+                ConfiguracaoCobrancaId = agendamento.ConfiguracaoCobrancaId,
+                TransportadoraId = agendamento.ConfiguracaoCobranca.TransportadoraId,
+                TransportadoraNome = agendamento.ConfiguracaoCobranca.Transportadora.Descricao,
+                EstacionamentoId = agendamento.ConfiguracaoCobranca.EstacionamentoId,
+                EstacionamentoNome = agendamento.ConfiguracaoCobranca.Estacionamento.Descricao,
+                ModalidadeCobranca = agendamento.ModalidadeCobranca,
+                Intervalo = agendamento.Intervalo,
+                DiaSemana = agendamento.DiaSemana,
+                DiaMes = agendamento.DiaMes,
+                HoraExecucao = agendamento.HoraExecucao,
+                UltimaExecucao = agendamento.UltimaExecucao,
+                ProximaExecucao = agendamento.ProximaExecucao,
+                UltimoPeriodoFaturado = _dataset
+                    .Where(fatura => fatura.ConfiguracaoCobrancaId == agendamento.ConfiguracaoCobrancaId
+                        && fatura.Status != StatusFatura.Cancelada)
+                    .Max(fatura => (DateTime?)fatura.PeriodoFim),
+                Cobranca = new RegrasCobrancaOutput
+                {
+                    RegraFechamento = agendamento.ConfiguracaoCobranca.RegraFechamento,
+                    DiaFechamento = agendamento.ConfiguracaoCobranca.DiaFechamento,
+                    DataCobranca = agendamento.ConfiguracaoCobranca.DataCobranca,
+                    PrazoVencimentoDias = agendamento.ConfiguracaoCobranca.PrazoVencimentoDias,
+                    ValorEstacionamento = agendamento.ConfiguracaoCobranca.ValorEstacionamento,
+                    CobrarLavagem = agendamento.ConfiguracaoCobranca.CobrarLavagem,
+                    ValorLavagem = agendamento.ConfiguracaoCobranca.ValorLavagem,
+                    CobrarPernoite = agendamento.ConfiguracaoCobranca.CobrarPernoite,
+                    ValorPernoite = agendamento.ConfiguracaoCobranca.ValorPernoite,
+                    CobrarServicosExtras = agendamento.ConfiguracaoCobranca.CobrarServicosExtras,
+                    ValorServicosExtras = agendamento.ConfiguracaoCobranca.ValorServicosExtras,
+                    ConsiderarBeneficioAbastecimento = agendamento.ConfiguracaoCobranca.ConsiderarBeneficioAbastecimento,
+                    ValorBeneficioAbastecimento = agendamento.ConfiguracaoCobranca.ValorBeneficioAbastecimento,
+                    AplicarMulta = agendamento.ConfiguracaoCobranca.AplicarMulta,
+                    MultaPercentual = agendamento.ConfiguracaoCobranca.MultaPercentual,
+                    AplicarJuros = agendamento.ConfiguracaoCobranca.AplicarJuros,
+                    JurosPercentual = agendamento.ConfiguracaoCobranca.JurosPercentual,
+                    AplicarDescontoFixo = agendamento.ConfiguracaoCobranca.AplicarDescontoFixo,
+                    ValorDescontoFixo = agendamento.ConfiguracaoCobranca.ValorDescontoFixo,
+                    AplicarAcrescimoFixo = agendamento.ConfiguracaoCobranca.AplicarAcrescimoFixo,
+                    ValorAcrescimoFixo = agendamento.ConfiguracaoCobranca.ValorAcrescimoFixo,
+                    AgruparPorPlaca = agendamento.ConfiguracaoCobranca.AgruparPorPlaca,
+                    AgruparPorPeriodo = agendamento.ConfiguracaoCobranca.AgruparPorPeriodo,
+                    AgruparPorTransportadora = agendamento.ConfiguracaoCobranca.AgruparPorTransportadora,
+                    EnvioAutomaticoEmail = agendamento.ConfiguracaoCobranca.EnvioAutomaticoEmail,
+                    EmailFinanceiro = agendamento.ConfiguracaoCobranca.EmailFinanceiro
+                }
+            };
+
+        private IQueryable<EntradaSaida> MontarQueryMovimentosFaturaveis(EntradaSaidaFaturavelFilterInput input)
+        {
+            var query = _movimentos
+                .AsNoTracking()
+                .Where(movimento => movimento.EstacionamentoId == input.EstacionamentoId
+                    && movimento.TransportadoraId == input.TransportadoraId
+                    && movimento.Finalizado
+                    && !movimento.Faturado
+                    && movimento.Status == EntradaSaidaStatus.Saida
+                    && movimento.DataHoraSaida != null
+                    && movimento.DataHoraSaida >= input.PeriodoInicio
+                    && movimento.DataHoraSaida < input.PeriodoFim
+                    && !_context.Set<FaturaItem>().Any(item =>
+                        item.EntradaSaidaId == movimento.Id
+                        && item.Fatura.Status != StatusFatura.Cancelada));
+
+            if (input.UltimoId.HasValue)
+                query = query.Where(movimento => movimento.Id > input.UltimoId.Value);
+
+            return query;
         }
 
         private static IQueryable<Fatura> AplicarFiltros(IQueryable<Fatura> query, FaturaFilterInput input)
