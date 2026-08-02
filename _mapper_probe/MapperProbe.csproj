@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Estac.Domain\Estac.Domain.csproj" />
+    <ProjectReference Include="..\Estacionamento.Domain\Estacionamento.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

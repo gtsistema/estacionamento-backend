@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <RootNamespace>Estac.Service</RootNamespace>
+    <AssemblyName>Estacionamento.Service</AssemblyName>
+	  <Nullable>disable</Nullable>
+	  <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="16.1.1" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="3.4.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Estacionamento.Domain\Estacionamento.Domain.csproj" />
+    <ProjectReference Include="..\Estacionamento.Infra\Estacionamento.Infra.csproj" />
+  </ItemGroup>
+
+</Project>
